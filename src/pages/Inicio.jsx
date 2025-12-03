@@ -35,10 +35,26 @@ const Inicio = () => {
   }, []);
 
   const categoriasPopulares = [
-    { nome: 'Pequeno Almoço', valor: 'Breakfast', cor: 'from-yellow-400 to-orange-500' },
-    { nome: 'Sobremesas', valor: 'Dessert', cor: 'from-pink-400 to-rose-500' },
-    { nome: 'Vegetariano', valor: 'Vegetarian', cor: 'from-green-400 to-emerald-600' },
-    { nome: 'Massas', valor: 'Pasta', cor: 'from-red-400 to-red-600' },
+    { 
+      nome: 'Pequeno Almoço', 
+      valor: 'Breakfast', 
+      imagem: 'https://images.unsplash.com/photo-1533089862017-5614ec95e214?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+    },
+    { 
+      nome: 'Sobremesas', 
+      valor: 'Dessert', 
+      imagem: 'https://images.unsplash.com/photo-1563729768-74915bd6c276?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+    },
+    { 
+      nome: 'Vegetariano', 
+      valor: 'Vegetarian', 
+      imagem: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+    },
+    { 
+      nome: 'Massas', 
+      valor: 'Pasta', 
+      imagem: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+    },
   ];
 
   const navegarParaCategoria = (cat) => {
@@ -90,7 +106,7 @@ const Inicio = () => {
         </Link>
       </motion.section>
 
-      {/* Categorias Rápidas */}
+      {/* Categorias Rápidas (Atualizado com Imagens) */}
       <motion.section variants={itemVariants}>
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
           <Utensils className="mr-2 text-orange-600" />
@@ -101,9 +117,25 @@ const Inicio = () => {
             <button
               key={cat.valor}
               onClick={() => navegarParaCategoria(cat.valor)}
-              className={`h-32 rounded-2xl bg-gradient-to-br ${cat.cor} text-white font-bold text-xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center`}
+              className="group relative h-40 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
             >
-              {cat.nome}
+              {/* Imagem de Fundo */}
+              <img 
+                src={cat.imagem} 
+                alt={cat.nome} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              
+              {/* Overlay Escuro para legibilidade */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 group-hover:from-black/90 group-hover:to-black/30 transition-colors duration-300"></div>
+              
+              {/* Texto */}
+              <div className="absolute bottom-0 left-0 p-4 w-full text-left">
+                <span className="text-white font-bold text-xl block mb-1">{cat.nome}</span>
+                <span className="text-orange-200 text-xs font-medium uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300 block">
+                  Ver Receitas &rarr;
+                </span>
+              </div>
             </button>
           ))}
         </div>
