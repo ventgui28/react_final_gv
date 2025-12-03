@@ -38,22 +38,22 @@ const Inicio = () => {
     { 
       nome: 'Pequeno Almoço', 
       valor: 'Breakfast', 
-      imagem: 'https://images.unsplash.com/photo-1533089862017-5614ec95e214?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+      imagem: 'https://images.unsplash.com/photo-1533089862017-5614ec95e214?auto=format&fit=crop&w=600&q=80' 
     },
     { 
       nome: 'Sobremesas', 
       valor: 'Dessert', 
-      imagem: 'https://images.unsplash.com/photo-1563729768-74915bd6c276?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+      imagem: 'https://images.unsplash.com/photo-1563729768-74915bd6c276?auto=format&fit=crop&w=600&q=80' 
     },
     { 
       nome: 'Vegetariano', 
       valor: 'Vegetarian', 
-      imagem: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+      imagem: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80' 
     },
     { 
       nome: 'Massas', 
       valor: 'Pasta', 
-      imagem: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' 
+      imagem: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=600&q=80' 
     },
   ];
 
