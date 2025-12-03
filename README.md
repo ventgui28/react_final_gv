@@ -2,82 +2,79 @@
 
 Projeto final desenvolvido no âmbito da Unidade Curricular de **Programação Web II**.
 
-## 📋 Sobre o Projeto
+## 📋 Descrição do Tema e Objetivos
 
 Este projeto consiste numa aplicação web desenvolvida em **React** que permite aos utilizadores pesquisar receitas de culinária de todo o mundo e criar a sua própria coleção de favoritos personalizada.
 
-### Objetivos
-- Consumir uma API externa real para obter dados de receitas.
+### Objetivos Principais:
+- Desenvolver uma aplicação SPA (Single Page Application) moderna e responsiva.
+- Consumir uma API externa real para obter dados de receitas dinâmicos.
 - Implementar um sistema de persistência local (CRUD) para gerir receitas favoritas.
-- Criar uma interface moderna, responsiva e intuitiva utilizando TailwindCSS.
-
-## 🚀 Tecnologias Utilizadas
-
-- **React + Vite**: Framework e Build tool para desenvolvimento rápido.
-- **TailwindCSS**: Framework de CSS para estilização.
-- **Axios**: Cliente HTTP para requisições à API.
-- **React Router DOM**: Gestão de rotas e navegação.
-- **JSON Server**: Simulação de Backend/Base de dados REST.
-- **Lucide React**: Biblioteca de ícones.
+- Garantir a sincronização entre o estado da aplicação React e a base de dados local.
+- Criar uma interface limpa e intuitiva utilizando **TailwindCSS**.
 
 ## 🌐 APIs Utilizadas
 
 ### 1. TheMealDB (API Externa)
-Utilizada para pesquisar e obter detalhes das receitas.
-- **Documentação**: [https://www.themealdb.com/api.php](https://www.themealdb.com/api.php)
-- **Endpoints usados**:
-  - `search.php?s={termo}`: Pesquisa de receitas.
-  - `lookup.php?i={id}`: Detalhes de uma receita específica.
-  - `random.php`: Sugestão aleatória.
+API pública utilizada para pesquisar e obter detalhes das receitas.
+- **Método de consumo:** `Axios` (Cliente HTTP)
+- **Documentação:** [https://www.themealdb.com/api.php](https://www.themealdb.com/api.php)
+- **Endpoints usados:**
+  - Pesquisa: `https://www.themealdb.com/api/json/v1/1/search.php?s={termo}`
+  - Detalhes: `https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}`
+  - Aleatório: `https://www.themealdb.com/api/json/v1/1/random.php`
 
 ### 2. JSON Server (API Local)
-Utilizada para persistência dos favoritos.
-- **Endpoint**: `http://localhost:3001/favorites`
+API simulada utilizada para a persistência dos dados dos favoritos.
+- **Método de consumo:** `Axios`
+- **Porto:** `3001`
+- **Recurso:** `/favorites`
 
-## 🛠️ Funcionalidades
+## 📦 Instruções para Correr o Projeto
 
-1.  **Início (Dashboard)**:
-    -   Visualização do total de receitas guardadas.
-    -   Sugestão de receita aleatória ("Sugestão do Dia").
-    -   Acesso rápido à pesquisa.
+O projeto necessita que dois processos estejam a correr simultaneamente em terminais diferentes.
 
-2.  **Pesquisa de Receitas**:
-    -   Pesquisa em tempo real na API TheMealDB.
-    -   Visualização em grelha dos resultados com imagem e categoria.
-
-3.  **Detalhes da Receita**:
-    -   Visualização completa dos ingredientes e instruções.
-    -   Link para vídeo do YouTube (quando disponível).
-    -   **Adicionar/Remover Favoritos**: Botão interativo que persiste a ação no JSON Server.
-
-4.  **Gestão de Favoritos (CRUD)**:
-    -   **Listar**: Ver todas as receitas guardadas.
-    -   **Remover**: Apagar uma receita da lista pessoal.
-    -   **Atualizar (Notas)**: Adicionar ou editar notas pessoais em cada receita favorita.
-
-## 📦 Como Correr o Projeto
-
-Para executar este projeto localmente, siga os passos abaixo:
-
-### 1. Instalar dependências
+### Passo 1: Instalar Dependências
 ```bash
 npm install
 ```
 
-### 2. Iniciar o Servidor Local (JSON Server)
-É necessário correr o JSON Server para a funcionalidade de favoritos funcionar.
+### Passo 2: Iniciar o Servidor Local (JSON Server)
+Este comando inicia a API local no porto 3001, utilizando o ficheiro `db.json` que se encontra na raiz do projeto.
 ```bash
 npx json-server --watch db.json --port 3001
 ```
-*Nota: Mantenha este terminal aberto.*
 
-### 3. Iniciar a Aplicação React
-Num **novo terminal**, inicie o Vite:
+### Passo 3: Iniciar a Aplicação React (Vite)
+Num novo terminal, inicie o servidor de desenvolvimento.
 ```bash
 npm run dev
 ```
-
 A aplicação ficará disponível em `http://localhost:5173`.
+
+## 🛠️ Funcionalidades Implementadas
+
+1.  **Início (Dashboard):**
+    *   Apresenta uma sugestão de receita aleatória ("Sugestão do Dia").
+    *   Mostra estatísticas rápidas sobre o número de receitas guardadas.
+    *   Ponto de entrada para a pesquisa.
+
+2.  **Pesquisa de Receitas:**
+    *   Permite ao utilizador pesquisar receitas por nome (ex: "Chicken", "Pasta").
+    *   Os resultados são obtidos em tempo real da API **TheMealDB**.
+    *   Interface com feedback de carregamento e tratamento de erros.
+
+3.  **Detalhes da Receita:**
+    *   Visualização completa de uma receita: imagem, categoria, origem, ingredientes e instruções.
+    *   Opção de abrir o vídeo de preparação no YouTube.
+    *   **Botão de Favoritos:** Permite adicionar ou remover a receita da lista pessoal, persistindo a alteração no `db.json`.
+
+4.  **Gestão de Favoritos (CRUD):**
+    *   **Listar (GET):** Visualiza todas as receitas guardadas pelo utilizador.
+    *   **Adicionar (POST):** Feito através da página de detalhes.
+    *   **Remover (DELETE):** Remove uma receita da lista de favoritos.
+    *   **Atualizar (PATCH):** Permite adicionar e editar **notas pessoais** em cada receita favorita (ex: "Adicionar menos sal").
 
 ---
 **Desenvolvido por:** Guilherme Ventura
+**Tecnologias:** React, Vite, TailwindCSS, Axios, JSON Server.
