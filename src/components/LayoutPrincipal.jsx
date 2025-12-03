@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
+import BarraNavegacao from './BarraNavegacao';
 
-const Layout = () => {
+const LayoutPrincipal = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
+      <BarraNavegacao />
       <main className="flex-grow container mx-auto px-4 py-8">
         <Outlet />
       </main>
@@ -15,4 +15,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default LayoutPrincipal;

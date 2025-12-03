@@ -1,80 +1,80 @@
 import { useEffect, useState } from 'react';
-import { getFavorites, removeFavorite, updateFavorite } from '../services/localApi';
+import { obterFavoritos, removerFavorito, atualizarFavorito } from '../services/apiLocal';
 import { Link } from 'react-router-dom';
 import { Trash2, Edit2, Save, X, ExternalLink } from 'lucide-react';
 
-const Favorites = () => {
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState(null);
-  const [editNote, setEditNote] = useState("");
+const Favoritos = () => {
+  const [favoritos, setFavoritos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [idEdicao, setIdEdicao] = useState(null);
+  const [notaEdicao, setNotaEdicao] = useState("");
 
   useEffect(() => {
-    loadFavorites();
+    carregarFavoritos();
   }, []);
 
-  const loadFavorites = async () => {
+  const carregarFavoritos = async () => {
     try {
-      setLoading(true);
-      const data = await getFavorites();
-      setFavorites(data);
-    } catch (error) {
-      console.error("Error loading favorites:", error);
+      setCarregando(true);
+      const dados = await obterFavoritos();
+      setFavoritos(dados);
+    } catch (erro) {
+      console.error("Erro ao carregar favoritos:", erro);
     } finally {
-      setLoading(false);
+      setCarregando(false);
     }
   };
 
-  const handleDelete = async (id) => {
+  const lidarComRemocao = async (id) => {
     if (window.confirm("Tens a certeza que queres remover esta receita dos favoritos?")) {
       try {
-        await removeFavorite(id);
-        setFavorites(favorites.filter(fav => fav.id !== id));
-      } catch (error) {
-        console.error("Error removing favorite:", error);
+        await removerFavorito(id);
+        setFavoritos(favoritos.filter(fav => fav.id !== id));
+      } catch (erro) {
+        console.error("Erro ao remover favorito:", erro);
       }
     }
   };
 
-  const startEditing = (fav) => {
-    setEditingId(fav.id);
-    setEditNote(fav.userNotes || "");
+  const iniciarEdicao = (fav) => {
+    setIdEdicao(fav.id);
+    setNotaEdicao(fav.userNotes || "");
   };
 
-  const cancelEditing = () => {
-    setEditingId(null);
-    setEditNote("");
+  const cancelarEdicao = () => {
+    setIdEdicao(null);
+    setNotaEdicao("");
   };
 
-  const saveNote = async (id) => {
+  const guardarNota = async (id) => {
     try {
-      await updateFavorite(id, { userNotes: editNote });
-      setFavorites(favorites.map(fav => 
-        fav.id === id ? { ...fav, userNotes: editNote } : fav
+      await atualizarFavorito(id, { userNotes: notaEdicao });
+      setFavoritos(favoritos.map(fav => 
+        fav.id === id ? { ...fav, userNotes: notaEdicao } : fav
       ));
-      setEditingId(null);
-    } catch (error) {
-      console.error("Error updating note:", error);
+      setIdEdicao(null);
+    } catch (erro) {
+      console.error("Erro ao atualizar nota:", erro);
       alert("Erro ao guardar nota.");
     }
   };
 
-  if (loading) return <div className="text-center py-12">Carregando favoritos...</div>;
+  if (carregando) return <div className="text-center py-12">Carregando favoritos...</div>;
 
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">As Minhas Receitas Favoritas</h1>
 
-      {favorites.length === 0 ? (
+      {favoritos.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
           <p className="text-xl text-gray-500 mb-4">Ainda não guardaste nenhuma receita.</p>
-          <Link to="/search" className="text-orange-600 font-bold hover:underline">
+          <Link to="/pesquisa" className="text-orange-600 font-bold hover:underline">
             Ir pesquisar receitas agora!
           </Link>
         </div>
       ) : (
         <div className="grid gap-4">
-          {favorites.map((fav) => (
+          {favoritos.map((fav) => (
             <div key={fav.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 transition-all hover:shadow-md">
               <img 
                 src={fav.strMealThumb} 
@@ -88,14 +88,14 @@ const Favorites = () => {
                     <h3 className="text-xl font-bold text-gray-800">{fav.strMeal}</h3>
                     <div className="flex space-x-2">
                       <Link 
-                        to={`/recipe/${fav.idMeal}`} 
+                        to={`/receita/${fav.idMeal}`} 
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                         title="Ver Detalhes"
                       >
                         <ExternalLink size={20} />
                       </Link>
                       <button 
-                        onClick={() => handleDelete(fav.id)}
+                        onClick={() => lidarComRemocao(fav.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
                         title="Remover"
                       >
@@ -107,18 +107,18 @@ const Favorites = () => {
                 </div>
 
                 <div className="mt-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
-                  {editingId === fav.id ? (
+                  {idEdicao === fav.id ? (
                     <div className="flex gap-2">
                       <input 
                         type="text" 
-                        value={editNote}
-                        onChange={(e) => setEditNote(e.target.value)}
+                        value={notaEdicao}
+                        onChange={(e) => setNotaEdicao(e.target.value)}
                         placeholder="Adicione uma nota pessoal..."
                         className="flex-grow px-3 py-1 border rounded text-sm focus:ring-1 focus:ring-orange-500 outline-none"
                         autoFocus
                       />
-                      <button onClick={() => saveNote(fav.id)} className="text-green-600 hover:text-green-700"><Save size={18} /></button>
-                      <button onClick={cancelEditing} className="text-gray-500 hover:text-gray-700"><X size={18} /></button>
+                      <button onClick={() => guardarNota(fav.id)} className="text-green-600 hover:text-green-700"><Save size={18} /></button>
+                      <button onClick={cancelarEdicao} className="text-gray-500 hover:text-gray-700"><X size={18} /></button>
                     </div>
                   ) : (
                     <div className="flex justify-between items-center group">
@@ -126,7 +126,7 @@ const Favorites = () => {
                         {fav.userNotes || "Sem notas pessoais..."}
                       </p>
                       <button 
-                        onClick={() => startEditing(fav)} 
+                        onClick={() => iniciarEdicao(fav)} 
                         className="text-gray-400 hover:text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"
                         title="Editar Nota"
                       >
@@ -144,4 +144,4 @@ const Favorites = () => {
   );
 };
 
-export default Favorites;
+export default Favoritos;

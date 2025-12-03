@@ -1,21 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-
-// Placeholder pages (created temporarily to avoid errors)
-const Home = () => <div className="text-center"><h1 className="text-2xl">Home</h1></div>;
-const Search = () => <div className="text-center"><h1 className="text-2xl">Pesquisa</h1></div>;
-const Favorites = () => <div className="text-center"><h1 className="text-2xl">Favoritos</h1></div>;
-const RecipeDetails = () => <div className="text-center"><h1 className="text-2xl">Detalhes</h1></div>;
+import LayoutPrincipal from './components/LayoutPrincipal';
+import Inicio from './pages/Inicio';
+import Pesquisa from './pages/Pesquisa';
+import Favoritos from './pages/Favoritos';
+import DetalhesReceita from './pages/DetalhesReceita';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="search" element={<Search />} />
-          <Route path="recipe/:id" element={<RecipeDetails />} />
-          <Route path="favorites" element={<Favorites />} />
+        <Route path="/" element={<LayoutPrincipal />}>
+          <Route index element={<Inicio />} />
+          <Route path="pesquisa" element={<Pesquisa />} />
+          <Route path="receita/:id" element={<DetalhesReceita />} />
+          <Route path="favoritos" element={<Favoritos />} />
         </Route>
       </Routes>
     </Router>

@@ -36,7 +36,7 @@ Utilizada para persistência dos favoritos.
 
 ## 🛠️ Funcionalidades
 
-1.  **Dashboard (Home)**:
+1.  **Início (Dashboard)**:
     -   Visualização do total de receitas guardadas.
     -   Sugestão de receita aleatória ("Sugestão do Dia").
     -   Acesso rápido à pesquisa.

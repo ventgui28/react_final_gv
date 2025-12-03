@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { Home, Search, Heart, UtensilsCrossed } from 'lucide-react';
 
-const Navbar = () => {
+const BarraNavegacao = () => {
   return (
     <nav className="bg-orange-600 text-white shadow-md">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -22,7 +22,7 @@ const Navbar = () => {
           </NavLink>
           
           <NavLink 
-            to="/search" 
+            to="/pesquisa" 
             className={({ isActive }) => 
               `flex items-center space-x-1 hover:text-orange-200 transition-colors ${isActive ? 'text-orange-200 font-semibold' : ''}`
             }
@@ -32,7 +32,7 @@ const Navbar = () => {
           </NavLink>
           
           <NavLink 
-            to="/favorites" 
+            to="/favoritos" 
             className={({ isActive }) => 
               `flex items-center space-x-1 hover:text-orange-200 transition-colors ${isActive ? 'text-orange-200 font-semibold' : ''}`
             }
@@ -46,4 +46,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default BarraNavegacao;
