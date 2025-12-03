@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { pesquisarReceitas } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
-import { Search as SearchIcon, Loader2 } from 'lucide-react';
 
+// Versão simplificada para resolver o erro de ecrã branco
 const Pesquisa = () => {
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
@@ -17,11 +17,13 @@ const Pesquisa = () => {
     setCarregando(true);
     setErro(null);
     setJaPesquisou(true);
+    setReceitas([]);
 
     try {
       const dados = await pesquisarReceitas(termo);
       setReceitas(dados);
     } catch (err) {
+      console.error(err);
       setErro('Erro ao pesquisar receitas. Tente novamente.');
     } finally {
       setCarregando(false);
@@ -30,49 +32,55 @@ const Pesquisa = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Pesquisar Receitas</h2>
-        <form onSubmit={lidarComPesquisa} className="flex gap-2">
+      {/* Área de Pesquisa */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg border border-orange-100 text-center max-w-3xl mx-auto">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">O que vamos cozinhar hoje?</h2>
+        <p className="text-gray-500 mb-6">Pesquisa por ingredientes (ex: Frango) ou pratos (ex: Lasanha)</p>
+        
+        <form onSubmit={lidarComPesquisa} className="relative flex items-center max-w-lg mx-auto gap-2">
           <input
             type="text"
             placeholder="Ex: Frango, Bolo, Massa..."
             value={termo}
             onChange={(e) => setTermo(e.target.value)}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+            className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-full focus:ring-4 focus:ring-orange-100 focus:border-orange-400 outline-none transition-all text-lg"
           />
           <button 
             type="submit"
-            disabled={carregando}
-            className="px-6 py-3 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
+            disabled={carregando || !termo.trim()}
+            className="bg-orange-600 text-white px-6 py-4 rounded-full hover:bg-orange-700 disabled:opacity-50 font-bold shadow-md transition-transform hover:scale-105"
           >
-            {carregando ? <Loader2 className="animate-spin" /> : <SearchIcon />}
-            <span className="ml-2 hidden md:inline">Pesquisar</span>
+            {carregando ? '...' : 'Procurar'}
           </button>
         </form>
       </div>
 
+      {/* Resultados */}
       <div className="min-h-[300px]">
         {carregando ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="animate-spin text-orange-600" size={48} />
+          <div className="text-center py-12 text-orange-600 font-bold text-xl">
+            A pesquisar...
           </div>
         ) : erro ? (
-          <div className="text-center py-12 text-red-500 bg-red-50 rounded-xl">
+          <div className="text-center py-12 text-red-500 bg-red-50 rounded-xl mt-6 border border-red-100">
             {erro}
           </div>
         ) : receitas.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
             {receitas.map((receita) => (
-              <CartaoReceita key={receita.idMeal} receita={receita} />
+              <div key={receita.idMeal}>
+                <CartaoReceita receita={receita} />
+              </div>
             ))}
           </div>
         ) : jaPesquisou ? (
-          <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-xl">
-            Nenhuma receita encontrada para "{termo}".
+          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-dashed border-gray-300 mt-6">
+            <h3 className="text-xl font-semibold text-gray-700">Nenhuma receita encontrada</h3>
+            <p className="text-gray-500 mt-1">Tenta pesquisar por outro termo (em inglês).</p>
           </div>
         ) : (
-          <div className="text-center py-12 text-gray-400">
-            Escreve algo acima para começar a procurar.
+          <div className="flex flex-col items-center justify-center py-20 text-gray-400 opacity-50">
+            <p className="text-lg font-medium">As tuas descobertas aparecerão aqui</p>
           </div>
         )}
       </div>
