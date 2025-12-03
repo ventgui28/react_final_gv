@@ -22,7 +22,7 @@ const Pesquisa = () => {
       const dados = await pesquisarReceitas(termo);
       setReceitas(dados);
     } catch (err) {
-      setErro('Erro ao buscar receitas. Tente novamente.');
+      setErro('Erro ao pesquisar receitas. Tente novamente.');
     } finally {
       setCarregando(false);
     }
@@ -35,7 +35,7 @@ const Pesquisa = () => {
         <form onSubmit={lidarComPesquisa} className="flex gap-2">
           <input
             type="text"
-            placeholder="Ex: Chicken, Cake, Pasta..."
+            placeholder="Ex: Frango, Bolo, Massa..."
             value={termo}
             onChange={(e) => setTermo(e.target.value)}
             className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
@@ -72,7 +72,7 @@ const Pesquisa = () => {
           </div>
         ) : (
           <div className="text-center py-12 text-gray-400">
-            Digite algo acima para começar a procurar.
+            Escreve algo acima para começar a procurar.
           </div>
         )}
       </div>

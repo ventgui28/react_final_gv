@@ -59,7 +59,7 @@ const Favoritos = () => {
     }
   };
 
-  if (carregando) return <div className="text-center py-12">Carregando favoritos...</div>;
+  if (carregando) return <div className="text-center py-12">A carregar favoritos...</div>;
 
   return (
     <div className="space-y-6">
@@ -113,7 +113,7 @@ const Favoritos = () => {
                         type="text" 
                         value={notaEdicao}
                         onChange={(e) => setNotaEdicao(e.target.value)}
-                        placeholder="Adicione uma nota pessoal..."
+                        placeholder="Adiciona uma nota pessoal..."
                         className="flex-grow px-3 py-1 border rounded text-sm focus:ring-1 focus:ring-orange-500 outline-none"
                         autoFocus
                       />
