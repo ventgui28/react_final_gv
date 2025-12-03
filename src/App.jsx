@@ -5,6 +5,7 @@ import Pesquisa from './pages/Pesquisa';
 import Favoritos from './pages/Favoritos';
 import DetalhesReceita from './pages/DetalhesReceita';
 import ListaCompras from './pages/ListaCompras';
+import NaoEncontrado from './pages/NaoEncontrado';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="receita/:id" element={<DetalhesReceita />} />
           <Route path="favoritos" element={<Favoritos />} />
           <Route path="lista-compras" element={<ListaCompras />} />
+          <Route path="*" element={<NaoEncontrado />} />
         </Route>
       </Routes>
     </Router>

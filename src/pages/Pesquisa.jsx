@@ -3,8 +3,11 @@ import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCat
 import CartaoReceita from '../components/CartaoReceita';
 import { Search, Loader2, XCircle, ArrowRight, Filter } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 const Pesquisa = () => {
+  const location = useLocation();
+  
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
   const [carregando, setCarregando] = useState(false);
@@ -31,8 +34,19 @@ const Pesquisa = () => {
     carregarFiltros();
   }, []);
 
+  // Efeito para detetar navegação com estado (categorias rápidas)
+  useEffect(() => {
+    if (location.state?.categoria) {
+      const cat = location.state.categoria;
+      setCategoriaSelecionada(cat);
+      // Pequeno timeout para garantir que o estado atualiza antes de chamar a API
+      lidarComFiltroCategoria(cat);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
+
   const lidarComPesquisa = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!termo.trim()) return;
 
     setCarregando(true);

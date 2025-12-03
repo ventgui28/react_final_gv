@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { obterReceitaAleatoria } from '../services/api';
 import { obterFavoritos } from '../services/apiLocal';
-import { ChefHat, Heart, Search, ArrowRight } from 'lucide-react';
+import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Inicio = () => {
+  const navigate = useNavigate();
   const [receitaAleatoria, setReceitaAleatoria] = useState(null);
   const [contagemFavoritos, setContagemFavoritos] = useState(0);
   const [carregando, setCarregando] = useState(true);
+  const [historico, setHistorico] = useState([]);
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -19,6 +21,9 @@ const Inicio = () => {
         
         const favoritos = await obterFavoritos();
         setContagemFavoritos(favoritos.length);
+
+        const historicoGuardado = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
+        setHistorico(historicoGuardado);
       } catch (erro) {
         console.error("Erro ao carregar dados da página inicial:", erro);
       } finally {
@@ -29,9 +34,20 @@ const Inicio = () => {
     carregarDados();
   }, []);
 
+  const categoriasPopulares = [
+    { nome: 'Pequeno Almoço', valor: 'Breakfast', cor: 'from-yellow-400 to-orange-500' },
+    { nome: 'Sobremesas', valor: 'Dessert', cor: 'from-pink-400 to-rose-500' },
+    { nome: 'Vegetariano', valor: 'Vegetarian', cor: 'from-green-400 to-emerald-600' },
+    { nome: 'Massas', valor: 'Pasta', cor: 'from-red-400 to-red-600' },
+  ];
+
+  const navegarParaCategoria = (cat) => {
+    navigate('/pesquisa', { state: { categoria: cat } });
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.2 } }
+    visible: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
@@ -41,7 +57,7 @@ const Inicio = () => {
 
   return (
     <motion.div 
-      className="space-y-8"
+      className="space-y-12"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -72,6 +88,25 @@ const Inicio = () => {
           <Search className="mr-2" size={22} />
           Começar a Explorar
         </Link>
+      </motion.section>
+
+      {/* Categorias Rápidas */}
+      <motion.section variants={itemVariants}>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+          <Utensils className="mr-2 text-orange-600" />
+          Categorias Populares
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {categoriasPopulares.map((cat) => (
+            <button
+              key={cat.valor}
+              onClick={() => navegarParaCategoria(cat.valor)}
+              className={`h-32 rounded-2xl bg-gradient-to-br ${cat.cor} text-white font-bold text-xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center`}
+            >
+              {cat.nome}
+            </button>
+          ))}
+        </div>
       </motion.section>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -150,6 +185,38 @@ const Inicio = () => {
           )}
         </motion.div>
       </div>
+
+      {/* Visto Recentemente */}
+      {historico.length > 0 && (
+        <motion.section variants={itemVariants}>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+            <Clock className="mr-2 text-orange-600" />
+            Visto Recentemente
+          </h2>
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            {historico.map((item) => (
+              <Link 
+                key={item.id} 
+                to={`/receita/${item.id}`} 
+                className="min-w-[160px] w-40 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all group"
+              >
+                <div className="h-24 overflow-hidden">
+                  <img 
+                    src={item.imagem} 
+                    alt={item.nome} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-3">
+                  <h3 className="text-sm font-bold text-gray-800 dark:text-white line-clamp-2 leading-tight">
+                    {item.nome}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </motion.section>
+      )}
     </motion.div>
   );
 };

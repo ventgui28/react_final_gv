@@ -23,6 +23,19 @@ const DetalhesReceita = () => {
         const dados = await obterReceitaPorId(id);
         setReceita(dados);
 
+        if (dados) {
+          // Guardar no Histórico (localStorage)
+          const historico = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
+          const novoItem = { id: dados.idMeal, nome: dados.strMeal, imagem: dados.strMealThumb };
+          
+          // Remover se já existir (para mover para o topo)
+          const historicoFiltrado = historico.filter(item => item.id !== dados.idMeal);
+          
+          // Adicionar ao início e limitar a 6 itens
+          const novoHistorico = [novoItem, ...historicoFiltrado].slice(0, 6);
+          localStorage.setItem('historicoReceitas', JSON.stringify(novoHistorico));
+        }
+
         const favoritos = await obterFavoritos();
         const encontrado = favoritos.find(fav => fav.idMeal === id);
         if (encontrado) {
