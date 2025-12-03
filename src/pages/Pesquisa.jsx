@@ -17,7 +17,6 @@ const Pesquisa = () => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
   const [areaSelecionada, setAreaSelecionada] = useState('');
 
-  // Carregar listas de filtros ao iniciar
   useEffect(() => {
     const carregarFiltros = async () => {
       try {
@@ -40,8 +39,6 @@ const Pesquisa = () => {
     setErro(null);
     setJaPesquisou(true);
     setReceitas([]);
-    
-    // Limpar filtros ao pesquisar por texto
     setCategoriaSelecionada('');
     setAreaSelecionada('');
 
@@ -57,8 +54,8 @@ const Pesquisa = () => {
 
   const lidarComFiltroCategoria = async (cat) => {
     setCategoriaSelecionada(cat);
-    setAreaSelecionada(''); // Reset área
-    setTermo(''); // Reset texto
+    setAreaSelecionada(''); 
+    setTermo('');
     setErro(null);
     setJaPesquisou(true);
     setCarregando(true);
@@ -75,8 +72,8 @@ const Pesquisa = () => {
 
   const lidarComFiltroArea = async (area) => {
     setAreaSelecionada(area);
-    setCategoriaSelecionada(''); // Reset categoria
-    setTermo(''); // Reset texto
+    setCategoriaSelecionada('');
+    setTermo('');
     setErro(null);
     setJaPesquisou(true);
     setCarregando(true);
@@ -91,7 +88,7 @@ const Pesquisa = () => {
     }
   };
 
-  // Variantes de animação simplificadas
+  // Variantes de animação
   const container = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
@@ -104,9 +101,9 @@ const Pesquisa = () => {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white p-8 rounded-2xl shadow-lg border border-orange-100 text-center max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">O que vamos cozinhar hoje?</h2>
-        <p className="text-gray-500 mb-8">Pesquisa por nome ou usa os filtros para explorar novos sabores.</p>
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-orange-100 dark:border-gray-700 text-center max-w-4xl mx-auto transition-colors">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">O que vamos cozinhar hoje?</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-8">Pesquisa por nome ou usa os filtros para explorar novos sabores.</p>
         
         {/* Barra de Pesquisa Texto */}
         <form onSubmit={lidarComPesquisa} className="relative flex items-center max-w-lg mx-auto mb-8">
@@ -116,7 +113,7 @@ const Pesquisa = () => {
             placeholder="Ex: Frango, Bolo, Massa..."
             value={termo}
             onChange={(e) => setTermo(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-full focus:ring-4 focus:ring-orange-100 focus:border-orange-400 outline-none transition-all text-lg"
+            className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/50 focus:border-orange-400 dark:focus:border-orange-500 outline-none transition-all text-lg dark:text-white dark:placeholder-gray-400"
           />
           <button 
             type="submit"
@@ -128,8 +125,8 @@ const Pesquisa = () => {
         </form>
 
         {/* Filtros (Dropdowns) */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6 border-t border-gray-100">
-          <div className="flex items-center gap-2 text-gray-500 font-medium">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6 border-t border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium">
             <Filter size={18} />
             <span>Filtrar por:</span>
           </div>
@@ -137,7 +134,7 @@ const Pesquisa = () => {
           <select 
             value={categoriaSelecionada}
             onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-            className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-200 outline-none text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+            className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
             disabled={carregando}
           >
             <option value="" disabled>Selecionar Categoria</option>
@@ -149,7 +146,7 @@ const Pesquisa = () => {
           <select 
             value={areaSelecionada}
             onChange={(e) => lidarComFiltroArea(e.target.value)}
-            className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-200 outline-none text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+            className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
             disabled={carregando}
           >
             <option value="" disabled>Selecionar Área</option>
@@ -165,17 +162,17 @@ const Pesquisa = () => {
         {carregando ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
              {[...Array(8)].map((_, i) => (
-               <div key={i} className="bg-white h-80 rounded-xl animate-pulse shadow-sm">
-                 <div className="h-48 bg-gray-200 rounded-t-xl"></div>
+               <div key={i} className="bg-white dark:bg-gray-800 h-80 rounded-xl animate-pulse shadow-sm border dark:border-gray-700">
+                 <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-xl"></div>
                  <div className="p-4 space-y-3">
-                   <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                   <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                   <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                   <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
                  </div>
                </div>
              ))}
           </div>
         ) : erro ? (
-          <div className="text-center py-12 text-red-500 bg-red-50 rounded-xl mt-6 border border-red-100">
+          <div className="text-center py-12 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl mt-6 border border-red-100 dark:border-red-900">
             <XCircle className="mx-auto mb-2" size={32} />
             {erro}
           </div>
@@ -193,16 +190,16 @@ const Pesquisa = () => {
             ))}
           </motion.div>
         ) : jaPesquisou ? (
-          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-dashed border-gray-300 mt-6">
-            <div className="bg-gray-50 p-4 rounded-full inline-block mb-4">
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700 mt-6 transition-colors">
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-full inline-block mb-4">
               <Search size={32} className="text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-700">Nenhuma receita encontrada</h3>
-            <p className="text-gray-500 mt-1">Tenta pesquisar por outro termo ou filtro.</p>
+            <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Nenhuma receita encontrada</h3>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Tenta pesquisar por outro termo ou filtro.</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-400 opacity-50">
-            <Search size={64} className="mb-4 text-gray-300" />
+          <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-600 opacity-50 transition-colors">
+            <Search size={64} className="mb-4 text-gray-300 dark:text-gray-600" />
             <p className="text-lg font-medium">As tuas descobertas aparecerão aqui</p>
           </div>
         )}

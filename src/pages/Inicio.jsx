@@ -49,19 +49,19 @@ const Inicio = () => {
       {/* Hero Section */}
       <motion.section 
         variants={itemVariants}
-        className="bg-gradient-to-br from-orange-100 to-white p-8 md:p-12 rounded-3xl shadow-sm text-center border border-orange-100"
+        className="bg-gradient-to-br from-orange-100 to-white dark:from-gray-800 dark:to-gray-900 p-8 md:p-12 rounded-3xl shadow-sm text-center border border-orange-100 dark:border-gray-700"
       >
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h1 className="text-4xl md:text-6xl font-extrabold text-orange-900 mb-4 tracking-tight">
-            Cozinhar nunca foi <span className="text-orange-600">tão fácil</span>.
+          <h1 className="text-4xl md:text-6xl font-extrabold text-orange-900 dark:text-orange-100 mb-4 tracking-tight">
+            Cozinhar nunca foi <span className="text-orange-600 dark:text-orange-400">tão fácil</span>.
           </h1>
         </motion.div>
         
-        <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
           O CookBook é o teu assistente pessoal. Descobre receitas de todo o mundo, guarda as tuas favoritas e cria momentos deliciosos.
         </p>
         
@@ -78,24 +78,24 @@ const Inicio = () => {
         {/* Dashboard Stats */}
         <motion.div 
           variants={itemVariants}
-          className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col justify-between"
+          className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center space-x-4 mb-4">
-              <div className="p-4 bg-red-50 rounded-2xl text-red-500">
+              <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl text-red-500 dark:text-red-400">
                 <Heart size={32} className="fill-current opacity-80" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">Favoritos</h2>
-                <p className="text-gray-500">A tua coleção pessoal</p>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Favoritos</h2>
+                <p className="text-gray-500 dark:text-gray-400">A tua coleção pessoal</p>
               </div>
             </div>
-            <div className="text-4xl font-black text-gray-900 mb-2 ml-2">{contagemFavoritos}</div>
+            <div className="text-4xl font-black text-gray-900 dark:text-white mb-2 ml-2">{contagemFavoritos}</div>
             <p className="text-sm text-gray-400 ml-2">receitas guardadas</p>
           </div>
           
-          <div className="mt-6 pt-4 border-t border-gray-100">
-            <Link to="/favoritos" className="flex items-center text-orange-600 hover:text-orange-700 font-semibold group">
+          <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+            <Link to="/favoritos" className="flex items-center text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-semibold group">
               Ver coleção completa 
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
             </Link>
@@ -105,28 +105,28 @@ const Inicio = () => {
         {/* Daily Recommendation */}
         <motion.div 
           variants={itemVariants}
-          className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col"
         >
           <div className="flex items-center space-x-4 mb-6">
-            <div className="p-4 bg-yellow-50 rounded-2xl text-yellow-600">
+            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl text-yellow-600 dark:text-yellow-400">
               <ChefHat size={32} />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">Sugestão do Dia</h2>
-              <p className="text-gray-500">Para sair da rotina</p>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Sugestão do Dia</h2>
+              <p className="text-gray-500 dark:text-gray-400">Para sair da rotina</p>
             </div>
           </div>
           
           {carregando ? (
             <div className="animate-pulse flex gap-4">
-              <div className="w-24 h-24 bg-gray-200 rounded-xl"></div>
+              <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
               <div className="flex-1 space-y-3 py-2">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
             </div>
           ) : receitaAleatoria ? (
-            <div className="flex gap-5 items-start bg-gray-50 p-4 rounded-xl flex-grow">
+            <div className="flex gap-5 items-start bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl flex-grow">
               <img 
                 src={receitaAleatoria.strMealThumb} 
                 alt={receitaAleatoria.strMeal} 
@@ -134,19 +134,19 @@ const Inicio = () => {
               />
               <div className="flex flex-col h-full justify-between w-full">
                 <div>
-                  <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-2 mb-1">{receitaAleatoria.strMeal}</h3>
-                  <p className="text-sm text-gray-500">{receitaAleatoria.strCategory} • {receitaAleatoria.strArea}</p>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight line-clamp-2 mb-1">{receitaAleatoria.strMeal}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{receitaAleatoria.strCategory} • {receitaAleatoria.strArea}</p>
                 </div>
                 <Link 
                   to={`/receita/${receitaAleatoria.idMeal}`} 
-                  className="text-orange-600 text-sm font-bold hover:underline mt-2 inline-block self-start"
+                  className="text-orange-600 dark:text-orange-400 text-sm font-bold hover:underline mt-2 inline-block self-start"
                 >
                   Ver receita completa &rarr;
                 </Link>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500 italic">Não foi possível carregar a sugestão.</p>
+            <p className="text-gray-500 dark:text-gray-400 italic">Não foi possível carregar a sugestão.</p>
           )}
         </motion.div>
       </div>

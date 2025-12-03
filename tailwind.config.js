@@ -4,9 +4,9 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  darkMode: 'class', // Ativar modo escuro manual
   theme: {
     extend: {},
   },
   plugins: [],
 }
-
