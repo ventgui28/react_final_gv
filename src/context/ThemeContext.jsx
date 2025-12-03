@@ -3,17 +3,24 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+  // Inicializa o estado lendo do localStorage ou da preferência do sistema
   const [temaEscuro, setTemaEscuro] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const temaGuardado = localStorage.getItem('theme');
+    // Se houver preferência guardada, usa-a. Se não, verifica a preferência do sistema.
+    if (temaGuardado) {
+      return temaGuardado === 'dark';
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   useEffect(() => {
+    const root = window.document.documentElement;
+    
     if (temaEscuro) {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
       localStorage.setItem('theme', 'light');
     }
   }, [temaEscuro]);
