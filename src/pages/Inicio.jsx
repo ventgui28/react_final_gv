@@ -43,7 +43,7 @@ const Inicio = () => {
     { 
       nome: 'Sobremesas', 
       valor: 'Dessert', 
-      imagem: 'https://images.pexels.com/photos/376468/pexels-photo-376468.jpeg?auto=compress&cs=tinysrgb&w=600' 
+      imagem: 'https://images.pexels.com/photos/1099890/pexels-photo-1099890.jpeg?auto=compress&cs=tinysrgb&w=600' 
     },
     { 
       nome: 'Vegetariano', 
