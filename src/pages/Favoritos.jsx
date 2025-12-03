@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { obterFavoritos, removerFavorito, atualizarFavorito } from '../services/apiLocal';
 import { Link } from 'react-router-dom';
-import { Trash2, Edit2, Save, X, ExternalLink, BookOpen } from 'lucide-react';
+import { Trash2, Edit2, Save, ExternalLink, BookOpen, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -115,6 +115,14 @@ const Favoritos = () => {
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                  
+                  {/* Rating Display on Image */}
+                  {fav.rating > 0 && (
+                    <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+                      <Star size={12} className="text-yellow-400 fill-yellow-400" />
+                      <span className="text-white text-xs font-bold">{fav.rating}</span>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-between py-2">

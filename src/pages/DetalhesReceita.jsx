@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obterReceitaPorId } from '../services/api';
-import { adicionarFavorito, removerFavorito, obterFavoritos } from '../services/apiLocal';
-import { ArrowLeft, Heart, Loader2, Youtube, List, FileText, Share2 } from 'lucide-react';
+import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito } from '../services/apiLocal';
+import { ArrowLeft, Heart, Loader2, Youtube, List, FileText, Share2, Star, PlayCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
@@ -13,6 +13,7 @@ const DetalhesReceita = () => {
   const [carregando, setCarregando] = useState(true);
   const [eFavorito, setEFavorito] = useState(false);
   const [idFavorito, setIdFavorito] = useState(null);
+  const [classificacao, setClassificacao] = useState(0);
   const [processando, setProcessando] = useState(false);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const DetalhesReceita = () => {
         if (encontrado) {
           setEFavorito(true);
           setIdFavorito(encontrado.id);
+          setClassificacao(encontrado.rating || 0);
         }
       } catch (erro) {
         console.error("Erro ao carregar receita:", erro);
@@ -48,6 +50,7 @@ const DetalhesReceita = () => {
         await removerFavorito(idFavorito);
         setEFavorito(false);
         setIdFavorito(null);
+        setClassificacao(0);
         toast.success("Removido dos favoritos!");
       } else {
         const receitaGuardada = {
@@ -58,7 +61,8 @@ const DetalhesReceita = () => {
           strArea: receita.strArea,
           strInstructions: receita.strInstructions,
           strYoutube: receita.strYoutube,
-          userNotes: ""
+          userNotes: "",
+          rating: 0
         };
         const novoFav = await adicionarFavorito(receitaGuardada);
         setIdFavorito(novoFav.id);
@@ -73,9 +77,32 @@ const DetalhesReceita = () => {
     }
   };
 
+  const atualizarClassificacao = async (novaNota) => {
+    if (!eFavorito) {
+      toast.error("Adiciona aos favoritos para classificar!");
+      return;
+    }
+
+    try {
+      await atualizarFavorito(idFavorito, { rating: novaNota });
+      setClassificacao(novaNota);
+      toast.success(`Classificado com ${novaNota} estrelas!`);
+    } catch (erro) {
+      console.error("Erro ao classificar:", erro);
+      toast.error("Erro ao guardar classificação.");
+    }
+  };
+
   const partilharReceita = () => {
     navigator.clipboard.writeText(window.location.href);
     toast.success("Link copiado para a área de transferência!");
+  };
+
+  const obterIdYoutube = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
   };
 
   if (carregando) return (
@@ -91,6 +118,8 @@ const DetalhesReceita = () => {
       <button onClick={() => navegar(-1)} className="text-orange-600 hover:underline mt-4">Voltar</button>
     </div>
   );
+
+  const videoId = obterIdYoutube(receita.strYoutube);
 
   const ingredientes = [];
   for (let i = 1; i <= 20; i++) {
@@ -118,6 +147,7 @@ const DetalhesReceita = () => {
       </button>
 
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        {/* Header Image */}
         <div className="relative h-80 md:h-[400px]">
           <img 
             src={receita.strMealThumb} 
@@ -125,7 +155,7 @@ const DetalhesReceita = () => {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8 md:p-10">
-            <div className="text-white">
+            <div className="text-white w-full">
               <motion.h1 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -134,34 +164,45 @@ const DetalhesReceita = () => {
               >
                 {receita.strMeal}
               </motion.h1>
-              <p className="text-lg md:text-xl opacity-90 font-medium flex items-center gap-2">
-                <span className="bg-orange-600 px-3 py-1 rounded-full text-sm">{receita.strCategory}</span>
-                <span>•</span>
-                <span>{receita.strArea}</span>
-              </p>
+              <div className="flex justify-between items-end">
+                <p className="text-lg md:text-xl opacity-90 font-medium flex items-center gap-2">
+                  <span className="bg-orange-600 px-3 py-1 rounded-full text-sm">{receita.strCategory}</span>
+                  <span>•</span>
+                  <span>{receita.strArea}</span>
+                </p>
+                
+                {/* Rating System */}
+                {eFavorito && (
+                  <div className="flex bg-black/30 backdrop-blur-sm p-2 rounded-lg">
+                    {[1, 2, 3, 4, 5].map((estrela) => (
+                      <button
+                        key={estrela}
+                        onClick={() => atualizarClassificacao(estrela)}
+                        className="focus:outline-none transform hover:scale-110 transition-transform"
+                      >
+                        <Star 
+                          size={24} 
+                          className={`${estrela <= classificacao ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} transition-colors`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         <div className="p-8 md:p-10">
+          {/* Actions Bar */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-8 border-b border-gray-100 gap-4">
             <div className="flex gap-3 w-full md:w-auto">
-              {receita.strYoutube && (
-                <a 
-                  href={receita.strYoutube} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex-1 md:flex-none flex items-center justify-center px-5 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium shadow-md hover:shadow-lg"
-                >
-                  <Youtube size={20} className="mr-2" />
-                  Vídeo
-                </a>
-              )}
               <button
                 onClick={partilharReceita}
-                className="flex items-center justify-center px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium"
+                className="flex-1 md:flex-none flex items-center justify-center px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium"
               >
-                <Share2 size={20} />
+                <Share2 size={20} className="mr-2" />
+                Partilhar
               </button>
             </div>
 
@@ -179,7 +220,29 @@ const DetalhesReceita = () => {
             </button>
           </div>
 
+          {/* Video Section */}
+          {videoId && (
+            <div className="mb-10">
+              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <PlayCircle className="mr-2 text-red-600" />
+                Preparação em Vídeo
+              </h2>
+              <div className="aspect-video rounded-2xl overflow-hidden shadow-lg bg-black">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          )}
+
           <div className="grid md:grid-cols-3 gap-10">
+            {/* Ingredients */}
             <div className="md:col-span-1">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
                 <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3">
@@ -197,6 +260,7 @@ const DetalhesReceita = () => {
               </ul>
             </div>
 
+            {/* Instructions */}
             <div className="md:col-span-2">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
                 <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3">
