@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { filtrarPorIngrediente } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
 import { Loader2, Plus, X, Search, Refrigerator } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 const Frigorifico = () => {
@@ -48,6 +47,7 @@ const Frigorifico = () => {
         toast('Não encontrámos nada com esse ingrediente.', { icon: '🤷‍♂️' });
       }
     } catch (erro) {
+      console.error(erro);
       toast.error("Erro ao procurar receitas.");
     } finally {
       setCarregando(false);
@@ -57,13 +57,9 @@ const Frigorifico = () => {
   return (
     <div className="space-y-8">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-lg border border-blue-100 dark:border-gray-700 text-center max-w-3xl mx-auto transition-colors">
-        <motion.div 
-          initial={{ scale: 0 }} 
-          animate={{ scale: 1 }}
-          className="inline-block p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4 text-blue-600 dark:text-blue-400"
-        >
+        <div className="inline-block p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4 text-blue-600 dark:text-blue-400">
           <Refrigerator size={48} />
-        </motion.div>
+        </div>
         
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">O Que Tenho no Frigorífico?</h1>
         <p className="text-gray-500 dark:text-gray-400 mb-8">
@@ -91,22 +87,17 @@ const Frigorifico = () => {
 
         {/* Lista de Tags */}
         <div className="flex flex-wrap gap-2 justify-center mb-8 min-h-[40px]">
-          <AnimatePresence>
-            {ingredientes.map(ing => (
-              <motion.span
-                key={ing}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full font-medium flex items-center gap-2 border border-blue-100 dark:border-blue-800"
-              >
-                {ing}
-                <button onClick={() => removerIngrediente(ing)} className="hover:text-red-500">
-                  <X size={16} />
-                </button>
-              </motion.span>
-            ))}
-          </AnimatePresence>
+          {ingredientes.map(ing => (
+            <span
+              key={ing}
+              className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full font-medium flex items-center gap-2 border border-blue-100 dark:border-blue-800"
+            >
+              {ing}
+              <button onClick={() => removerIngrediente(ing)} className="hover:text-red-500">
+                <X size={16} />
+              </button>
+            </span>
+          ))}
         </div>
 
         <button
@@ -121,15 +112,11 @@ const Frigorifico = () => {
       {/* Resultados */}
       <div className="min-h-[200px]">
         {receitas.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {receitas.map((receita) => (
               <CartaoReceita key={receita.idMeal} receita={receita} />
             ))}
-          </motion.div>
+          </div>
         )}
         
         {pesquisou && receitas.length === 0 && !carregando && (
