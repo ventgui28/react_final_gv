@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Importar Fonte Inter */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 html {
@@ -11,125 +10,68 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
 }
 
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-  width: 8px;
+@layer components {
+  /* Botões Primários (Laranja) */
+  .btn-primary {
+    @apply bg-orange-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-md 
+           hover:bg-orange-700 hover:shadow-lg active:scale-95 transition-all duration-200 
+           flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Botões Secundários (Cinza/Outline) */
+  .btn-secondary {
+    @apply bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium py-2.5 px-6 rounded-xl border border-gray-200 dark:border-gray-700
+           hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 transition-all duration-200
+           flex items-center justify-center gap-2 active:scale-95;
+  }
+
+  /* Cartões (Vidro/Sombra) */
+  .card-glass {
+    @apply bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 
+           hover:shadow-md transition-all duration-300;
+  }
+  
+  /* Inputs de Texto */
+  .input-modern {
+    @apply w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 
+           rounded-xl focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 
+           focus:border-orange-500 dark:focus:border-orange-500 outline-none transition-all 
+           text-gray-800 dark:text-white placeholder-gray-400;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-.dark ::-webkit-scrollbar-track {
-  background: #1f2937;
-}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-::-webkit-scrollbar-thumb {
-  background: #ea580c; /* Orange-600 */
-  border-radius: 4px;
-}
+/* Neve */
+.snowflakes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+.snowflake { position: fixed; top: -10%; color: #fff; text-shadow: 0 0 5px #000; font-size: 1.5em; animation: snowflakes-fall 10s linear infinite, snowflakes-shake 3s ease-in-out infinite; opacity: 0.7; }
+.dark .snowflake { text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+@keyframes snowflakes-fall { 0% { top: -10%; } 100% { top: 100%; } }
+@keyframes snowflakes-shake { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(80px); } }
+.snowflake:nth-of-type(1) { left: 1%; animation-delay: 0s, 0s; } .snowflake:nth-of-type(2) { left: 10%; animation-delay: 1s, 1s; } .snowflake:nth-of-type(3) { left: 20%; animation-delay: 6s, .5s; } .snowflake:nth-of-type(4) { left: 30%; animation-delay: 4s, 2s; } .snowflake:nth-of-type(5) { left: 40%; animation-delay: 2s, 2s; } .snowflake:nth-of-type(6) { left: 50%; animation-delay: 8s, 3s; } .snowflake:nth-of-type(7) { left: 60%; animation-delay: 6s, 2s; } .snowflake:nth-of-type(8) { left: 70%; animation-delay: 2.5s, 1s; } .snowflake:nth-of-type(9) { left: 80%; animation-delay: 1s, 0s; } .snowflake:nth-of-type(10) { left: 90%; animation-delay: 3s, 1.5s; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #c2410c; /* Orange-700 */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* --------------------------------------------------------
-   🎄 EFEITO DE NEVE NATALÍCIO 🎄
-   -------------------------------------------------------- */
-.snowflakes {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Não bloquear cliques */
-  z-index: 9999;
-}
-
-.snowflake {
-  position: fixed;
-  top: -10%;
-  color: #fff; /* Neve branca */
-  text-shadow: 0 0 5px #000; /* Sombra para ver em fundo branco */
-  font-size: 1.5em;
-  animation-name: snowflakes-fall, snowflakes-shake;
-  animation-duration: 10s, 3s;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: infinite, infinite;
-  animation-play-state: running, running;
-  opacity: 0.7;
-}
-
-/* Ajuste para modo escuro: neve sem sombra preta forte */
-.dark .snowflake {
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-}
-
-@keyframes snowflakes-fall {
-  0% { top: -10%; }
-  100% { top: 100%; }
-}
-
-@keyframes snowflakes-shake {
-  0% { transform: translateX(0px); }
-  50% { transform: translateX(80px); }
-  100% { transform: translateX(0px); }
-}
-
-/* Posições aleatórias para os flocos */
-.snowflake:nth-of-type(1) { left: 1%; animation-delay: 0s, 0s; }
-.snowflake:nth-of-type(2) { left: 10%; animation-delay: 1s, 1s; }
-.snowflake:nth-of-type(3) { left: 20%; animation-delay: 6s, .5s; }
-.snowflake:nth-of-type(4) { left: 30%; animation-delay: 4s, 2s; }
-.snowflake:nth-of-type(5) { left: 40%; animation-delay: 2s, 2s; }
-.snowflake:nth-of-type(6) { left: 50%; animation-delay: 8s, 3s; }
-.snowflake:nth-of-type(7) { left: 60%; animation-delay: 6s, 2s; }
-.snowflake:nth-of-type(8) { left: 70%; animation-delay: 2.5s, 1s; }
-.snowflake:nth-of-type(9) { left: 80%; animation-delay: 1s, 0s; }
-.snowflake:nth-of-type(10) { left: 90%; animation-delay: 3s, 1.5s; }
-
-/* Esconder neve na impressão */
+/* Print Styles (Optimized) */
 @media print {
-  .snowflakes { display: none; }
-  
-  /* ... (Resto do CSS de impressão anterior) ... */
-  body > #root > div > nav,
-  body > #root > div > footer,
-  .print\:hidden,
-  button,
-  a[href^="http"],
-  iframe {
-    display: none !important;
-  }
-
-  @page { margin: 2cm; size: auto; }
-  body { background-color: white; color: black; font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.5; }
-  main { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: none !important; }
-  
-  .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm,
-  .border, .rounded-3xl, .rounded-2xl, .rounded-xl,
-  .bg-white, .dark:bg-gray-800, .bg-gray-50, .dark:bg-gray-700\/30 {
-    box-shadow: none !important; border: none !important; border-radius: 0 !important; background-color: transparent !important; padding: 0 !important;
-  }
-
-  h1 { font-size: 28pt !important; font-weight: bold !important; color: #ea580c !important; margin-bottom: 10px !important; text-align: center; }
-  h1 + div p { font-size: 14pt !important; text-align: center; color: #666 !important; margin-bottom: 20px !important; }
-  #conteudo-receita-para-impressao img { width: 100% !important; max-height: 300px !important; object-fit: cover !important; border-radius: 10px !important; margin-bottom: 30px; border: 1px solid #ddd !important; }
-  h2 { font-size: 18pt !important; border-bottom: 2px solid #ea580c; padding-bottom: 5px; margin-top: 20px !important; margin-bottom: 15px !important; color: black !important; }
-  ul { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-  li { list-style: none; border-bottom: 1px dotted #ccc; padding-bottom: 4px; font-size: 11pt; }
-  .prose { font-size: 12pt !important; text-align: justify; white-space: pre-wrap !important; }
-  #conteudo-receita-para-impressao::after { content: "CookBook - O Teu Gestor de Receitas Pessoais"; display: block; text-align: center; margin-top: 50px; padding-top: 10px; border-top: 1px solid #eee; font-size: 9pt; color: #999; font-style: italic; }
+  body > #root > div > nav, body > #root > div > footer, .print\:hidden, button, a[href^="http"], iframe, .snowflakes, .fixed { display: none !important; }
+  @page { margin: 1.5cm; size: auto; }
+  body { background: white; color: black; font-family: serif; }
+  main { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+  .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm, .border, .rounded-3xl, .rounded-2xl, .rounded-xl, .bg-white, .dark:bg-gray-800, .bg-gray-50, .dark:bg-gray-700\/30 { box-shadow: none !important; border: none !important; background: transparent !important; padding: 0 !important; }
+  h1 { font-size: 24pt !important; color: #000 !important; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+  img { max-height: 300px !important; object-fit: contain !important; margin: 0 auto 20px auto; display: block; border: 1px solid #ccc !important; }
+  h2 { font-size: 16pt !important; border-bottom: 1px solid #ccc; margin-top: 20px !important; color: #000 !important; }
+  ul { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11pt; }
+  li { border-bottom: 1px dotted #eee; }
+  .prose { font-size: 12pt !important; text-align: justify; }
 }

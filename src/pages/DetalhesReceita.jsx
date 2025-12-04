@@ -15,7 +15,7 @@ const DetalhesReceita = () => {
   const [idFavorito, setIdFavorito] = useState(null);
   const [classificacao, setClassificacao] = useState(0);
   const [processando, setProcessando] = useState(false);
-  const [passosConcluidos, setPassosConcluidos] = useState([]); // Novo estado para checkboxes
+  const [passosConcluidos, setPassosConcluidos] = useState([]); 
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -29,8 +29,6 @@ const DetalhesReceita = () => {
           try {
             const historicoAtual = localStorage.getItem('historicoReceitas');
             let historico = historicoAtual ? JSON.parse(historicoAtual) : [];
-            
-            // Garantir que é um array
             if (!Array.isArray(historico)) historico = [];
 
             const novoItem = { 
@@ -39,10 +37,7 @@ const DetalhesReceita = () => {
               imagem: dados.strMealThumb 
             };
             
-            // Remover se já existir (comparar IDs como strings para segurança)
             const historicoFiltrado = historico.filter(item => String(item.id) !== String(dados.idMeal));
-            
-            // Adicionar ao início
             const novoHistorico = [novoItem, ...historicoFiltrado].slice(0, 6);
             
             localStorage.setItem('historicoReceitas', JSON.stringify(novoHistorico));
@@ -159,7 +154,6 @@ const DetalhesReceita = () => {
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  // Calcular Dificuldade
   const calcularDificuldade = (numIngredientes) => {
     if (numIngredientes <= 8) return { texto: 'Fácil', cor: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' };
     if (numIngredientes <= 12) return { texto: 'Médio', cor: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' };
@@ -194,7 +188,6 @@ const DetalhesReceita = () => {
 
   const dificuldade = calcularDificuldade(ingredientes.length);
 
-  // Processar instruções (dividir por quebras de linha e remover vazios)
   const instrucoes = receita.strInstructions
     .split(/\r\n|\n/)
     .filter(step => step.trim().length > 0);
@@ -204,58 +197,57 @@ const DetalhesReceita = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-4xl mx-auto"
+      className="max-w-5xl mx-auto space-y-8"
     >
       <button 
         onClick={() => navegar(-1)} 
-        className="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 mb-6 transition-colors font-medium print:hidden"
+        className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium print:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
       >
-        <ArrowLeft size={20} className="mr-1" />
+        <ArrowLeft size={20} className="mr-2" />
         Voltar
       </button>
 
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-colors">
+      <div className="card-glass overflow-hidden">
         {/* Header Image */}
-        <div className="relative h-80 md:h-[400px]">
+        <div className="relative h-96 md:h-[450px]">
           <img 
             src={receita.strMealThumb} 
             alt={receita.strMeal} 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8 md:p-10">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end p-8 md:p-12">
             <div className="text-white w-full">
               <motion.h1 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-4xl md:text-5xl font-bold mb-3 drop-shadow-lg"
+                className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg leading-tight"
               >
                 {receita.strMeal}
               </motion.h1>
-              <div className="flex flex-wrap justify-between items-end gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-orange-600 px-3 py-1 rounded-full text-sm font-medium">{receita.strCategory}</span>
-                  <span className="text-white/80">•</span>
-                  <span className="text-lg">{receita.strArea}</span>
-                  <span className="text-white/80">•</span>
-                  {/* Badge de Dificuldade */}
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide ${dificuldade.cor}`}>
+              <div className="flex flex-wrap justify-between items-end gap-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="bg-orange-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide">{receita.strCategory}</span>
+                  <span className="text-white/60 text-2xl">•</span>
+                  <span className="text-xl font-medium">{receita.strArea}</span>
+                  <span className="text-white/60 text-2xl">•</span>
+                  <span className={`px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wide ${dificuldade.cor} backdrop-blur-md border border-white/10`}>
                     {dificuldade.texto}
                   </span>
                 </div>
                 
                 {/* Rating System */}
                 {eFavorito && (
-                  <div className="flex bg-black/30 backdrop-blur-sm p-2 rounded-lg print:hidden">
+                  <div className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden">
                     {[1, 2, 3, 4, 5].map((estrela) => (
                       <button
                         key={estrela}
                         onClick={() => atualizarClassificacao(estrela)}
-                        className="focus:outline-none transform hover:scale-110 transition-transform"
+                        className="focus:outline-none transform hover:scale-125 transition-transform mx-0.5"
                       >
                         <Star 
-                          size={24} 
-                          className={`${estrela <= classificacao ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} transition-colors`}
+                          size={28} 
+                          className={`${estrela <= classificacao ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400/50'} transition-colors`}
                         />
                       </button>
                     ))}
@@ -266,22 +258,22 @@ const DetalhesReceita = () => {
           </div>
         </div>
 
-        <div className="p-8 md:p-10" id="conteudo-receita-para-impressao">
+        <div className="p-8 md:p-12" id="conteudo-receita-para-impressao">
           {/* Actions Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-8 border-b border-gray-100 dark:border-gray-700 gap-4 print:hidden">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 pb-8 border-b border-gray-100 dark:border-gray-700 gap-4 print:hidden">
             <div className="flex gap-3 w-full md:w-auto">
               <button
                 onClick={partilharReceita}
-                className="flex-1 md:flex-none flex items-center justify-center px-5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                className="btn-secondary flex-1 md:flex-none"
               >
-                <Share2 size={20} className="mr-2" />
+                <Share2 size={20} />
                 Partilhar
               </button>
               <button
                 onClick={imprimirReceita}
-                className="flex-1 md:flex-none flex items-center justify-center px-5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                className="btn-secondary flex-1 md:flex-none"
               >
-                <Printer size={20} className="mr-2" />
+                <Printer size={20} />
                 Imprimir
               </button>
             </div>
@@ -289,24 +281,24 @@ const DetalhesReceita = () => {
             <button
               onClick={lidarComFavorito}
               disabled={processando}
-              className={`w-full md:w-auto flex items-center justify-center px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md transform active:scale-95 ${eFavorito 
-                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900' 
+              className={`w-full md:w-auto font-bold py-3 px-8 rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 ${eFavorito 
+                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900 hover:bg-red-100 dark:hover:bg-red-900/30' 
                   : 'bg-orange-600 text-white hover:bg-orange-700'
               }`}
             >
-              <Heart size={20} className={`mr-2 ${eFavorito ? 'fill-current' : ''}`} />
-              {eFavorito ? 'Guardado' : 'Guardar Receita'}
+              <Heart size={22} className={`mr-1 ${eFavorito ? 'fill-current' : ''}`} />
+              {eFavorito ? 'Guardado nos Favoritos' : 'Adicionar aos Favoritos'}
             </button>
           </div>
 
           {/* Video Section */}
           {videoId && (
-            <div className="mb-10 print:hidden">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-                <PlayCircle className="mr-2 text-red-600" />
+            <div className="mb-12 print:hidden">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                <PlayCircle className="mr-3 text-red-600" size={28} />
                 Preparação em Vídeo
               </h2>
-              <div className="aspect-video rounded-2xl overflow-hidden shadow-lg bg-black">
+              <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl bg-black border-4 border-white dark:border-gray-700">
                 <iframe
                   width="100%"
                   height="100%"
@@ -320,56 +312,61 @@ const DetalhesReceita = () => {
             </div>
           )}
 
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="grid md:grid-cols-3 gap-12">
             {/* Ingredients */}
             <div className="md:col-span-1">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg mr-3">
-                  <List size={20} />
-                </div>
-                Ingredientes
-              </h2>
-              <ul className="space-y-3">
-                {ingredientes.map((item, idx) => (
-                  <li key={idx} className="group flex justify-between items-center text-gray-700 dark:text-gray-300 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
-                    <div>
-                      <span className="font-semibold block">{item.ingrediente}</span>
-                      <span className="text-orange-600 dark:text-orange-400 text-sm font-medium">{item.medida}</span>
-                    </div>
-                    <button 
-                      onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida)}
-                      className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-full transition-colors opacity-0 group-hover:opacity-100 print:hidden"
-                      title="Adicionar à Lista de Compras"
-                    >
-                      <Plus size={18} />
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <div className="sticky top-24">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                  <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-xl mr-3">
+                    <List size={24} />
+                  </div>
+                  Ingredientes
+                </h2>
+                <ul className="space-y-3">
+                  {ingredientes.map((item, idx) => (
+                    <li key={idx} className="group flex justify-between items-center text-gray-700 dark:text-gray-300 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-transparent hover:border-orange-200 dark:hover:border-orange-800 transition-all hover:shadow-sm">
+                      <div>
+                        <span className="font-semibold block text-gray-900 dark:text-white">{item.ingrediente}</span>
+                        <span className="text-orange-600 dark:text-orange-400 text-sm font-medium">{item.medida}</span>
+                      </div>
+                      <button 
+                        onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida)}
+                        className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-full transition-colors opacity-0 group-hover:opacity-100 print:hidden"
+                        title="Adicionar à Lista de Compras"
+                      >
+                        <Plus size={20} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             {/* Instructions Interativas */}
             <div className="md:col-span-2">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg mr-3">
-                  <FileText size={20} />
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-xl mr-3">
+                  <FileText size={24} />
                 </div>
                 Instruções
               </h2>
               
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {instrucoes.map((step, index) => (
                   <div 
                     key={index}
                     onClick={() => alternarPasso(index)}
-                    className={`p-4 rounded-xl border transition-all cursor-pointer group ${passosConcluidos.includes(index)
-                        ? 'bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/30' 
-                        : 'bg-gray-50 dark:bg-gray-700/30 border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800'
+                    className={`p-6 rounded-2xl border-2 transition-all cursor-pointer group relative ${passosConcluidos.includes(index)
+                        ? 'bg-green-50/50 dark:bg-green-900/10 border-green-100 dark:border-green-900/30 opacity-70' 
+                        : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800 hover:shadow-md'
                     }`}
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`mt-1 ${passosConcluidos.includes(index) ? 'text-green-600' : 'text-gray-400 group-hover:text-orange-500'}`}>
-                        {passosConcluidos.includes(index) ? <CheckCircle size={24} /> : <Circle size={24} />}
+                    <div className="absolute top-6 left-4 font-bold text-gray-200 dark:text-gray-700 text-xl select-none">
+                      {index + 1}
+                    </div>
+                    <div className="flex items-start gap-5 pl-8">
+                      <div className={`mt-1 flex-shrink-0 transition-colors ${passosConcluidos.includes(index) ? 'text-green-600' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
+                        {passosConcluidos.includes(index) ? <CheckCircle size={28} /> : <Circle size={28} />}
                       </div>
                       <p className={`text-lg leading-relaxed ${passosConcluidos.includes(index) 
                           ? 'text-gray-500 dark:text-gray-500 line-through' 

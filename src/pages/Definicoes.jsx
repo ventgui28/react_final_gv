@@ -86,9 +86,6 @@ const Definicoes = () => {
         <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Desenvolvido com ❤️ e React.</p>
         
         <div className="flex justify-center gap-4">
-          <a href="https://github.com/ventgui28" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-orange-600 transition-colors">
-            <Github size={18} /> GitHub
-          </a>
           <a href="#" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-orange-600 transition-colors">
             <Globe size={18} /> Website
           </a>
