@@ -1,80 +1,88 @@
-# CookBook - Gestor de Receitas Pessoais
+# 🍳 CookBook - O Teu Assistente de Cozinha Digital
 
-Projeto final desenvolvido no âmbito da Unidade Curricular de **Programação Web II**.
+![CookBook Banner](https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&w=1200&q=80)
 
-## 📋 Descrição do Tema e Objetivos
+Bem-vindo ao **CookBook**, uma aplicação web moderna e interativa desenvolvida em React para gerir, descobrir e organizar as tuas receitas favoritas.
 
-Este projeto consiste numa aplicação web desenvolvida em **React** que permite aos utilizadores pesquisar receitas de culinária de todo o mundo e criar a sua própria coleção de favoritos personalizada.
+> Projeto final desenvolvido no âmbito da Unidade Curricular de **Programação Web II**.
 
-### Objetivos Principais:
-- Desenvolver uma aplicação SPA (Single Page Application) moderna e responsiva.
-- Consumir uma API externa real para obter dados de receitas dinâmicos.
-- Implementar um sistema de persistência local (CRUD) para gerir receitas favoritas.
-- Garantir a sincronização entre o estado da aplicação React e a base de dados local.
-- Criar uma interface limpa e intuitiva utilizando **TailwindCSS**.
+---
 
-## 🌐 APIs Utilizadas
+## ✨ Funcionalidades Principais
 
-### 1. TheMealDB (API Externa)
-API pública utilizada para pesquisar e obter detalhes das receitas.
-- **Método de consumo:** `Axios` (Cliente HTTP)
-- **Documentação:** [https://www.themealdb.com/api.php](https://www.themealdb.com/api.php)
-- **Endpoints usados:**
-  - Pesquisa: `https://www.themealdb.com/api/json/v1/1/search.php?s={termo}`
-  - Detalhes: `https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}`
-  - Aleatório: `https://www.themealdb.com/api/json/v1/1/random.php`
+*   **🔍 Pesquisa Poderosa:** Encontra receitas por nome, categoria ou origem geográfica.
+*   **🏷️ Filtros Inteligentes:** Filtra os resultados por nível de dificuldade (Fácil, Médio, Pro) com base no número de ingredientes.
+*   **❤️ Gestão de Favoritos:** Guarda as tuas receitas preferidas, adiciona notas pessoais e classifica-as com estrelas (1-5).
+*   **📊 Dashboard Pessoal:** Estatísticas visuais sobre os teus gostos culinários (Gráficos de categorias e origens).
+*   **🌙 Modo Escuro (Dark Mode):** Interface totalmente adaptável para cozinhar à noite sem cansar a vista.
 
-### 2. JSON Server (API Local)
-API simulada utilizada para a persistência dos dados dos favoritos.
-- **Método de consumo:** `Axios`
-- **Porto:** `3001`
-- **Recurso:** `/favorites`
+## 🚀 Funcionalidades "Extra" (Destaques)
 
-## 📦 Instruções para Correr o Projeto
+*   **🧊 O Que Tenho no Frigorífico?:** Uma ferramenta inteligente que sugere receitas baseadas num ingrediente que tenhas em casa.
+*   **🎄 Modo Natal:** Um tema festivo especial com neve animada e sugestões para a Consoada (ativado automaticamente).
+*   **🖨️ Exportar para PDF:** Um modo de impressão limpo e otimizado ("Printer-friendly") para levares a receita para a bancada.
+*   **📝 Passo-a-Passo Interativo:** Clica nas instruções para as riscar à medida que avanças na receita.
+*   **🛒 Lista de Compras:** Adiciona ingredientes diretamente das receitas para uma lista de compras digital.
 
-O projeto necessita que dois processos estejam a correr simultaneamente em terminais diferentes.
+## 🛠️ Stack Tecnológica
 
-### Passo 1: Instalar Dependências
+Este projeto foi construído com as melhores práticas e ferramentas modernas:
+
+*   **Core:** [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+*   **Estilos:** [TailwindCSS](https://tailwindcss.com/) (com suporte a Dark Mode)
+*   **Animações:** [Framer Motion](https://www.framer.com/motion/) (Transições de página e micro-interações)
+*   **Dados:** [Axios](https://axios-http.com/) (Consumo de API) + [JSON Server](https://github.com/typicode/json-server) (Persistência local)
+*   **Gráficos:** [Recharts](https://recharts.org/)
+*   **Ícones:** [Lucide React](https://lucide.dev/)
+*   **Notificações:** [React Hot Toast](https://react-hot-toast.com/)
+
+## 📦 Como Correr o Projeto
+
+Para executar este projeto localmente, necessitas de ter o [Node.js](https://nodejs.org/) instalado.
+
+### 1. Clonar o Repositório
+```bash
+git clone https://github.com/ventgui28/react_final_gv.git
+cd react_final_gv
+```
+
+### 2. Instalar Dependências
 ```bash
 npm install
 ```
 
-### Passo 2: Iniciar o Servidor Local (JSON Server)
-Este comando inicia a API local no porto 3001, utilizando o ficheiro `db.json` que se encontra na raiz do projeto.
+### 3. Iniciar a Base de Dados Local (JSON Server)
+Num terminal, executa o servidor de persistência (mantém este terminal aberto):
 ```bash
 npx json-server --watch db.json --port 3001
 ```
 
-### Passo 3: Iniciar a Aplicação React (Vite)
-Num novo terminal, inicie o servidor de desenvolvimento.
+### 4. Iniciar a Aplicação (Frontend)
+Num **segundo terminal**, inicia o servidor de desenvolvimento:
 ```bash
 npm run dev
 ```
-A aplicação ficará disponível em `http://localhost:5173`.
 
-## 🛠️ Funcionalidades Implementadas
+Acede a `http://localhost:5173` no teu navegador.
 
-1.  **Início (Dashboard):**
-    *   Apresenta uma sugestão de receita aleatória ("Sugestão do Dia").
-    *   Mostra estatísticas rápidas sobre o número de receitas guardadas.
-    *   Ponto de entrada para a pesquisa.
+## 📂 Estrutura do Projeto
 
-2.  **Pesquisa de Receitas:**
-    *   Permite ao utilizador pesquisar receitas por nome (ex: "Chicken", "Pasta").
-    *   Os resultados são obtidos em tempo real da API **TheMealDB**.
-    *   Interface com feedback de carregamento e tratamento de erros.
+```
+src/
+├── 📂 components/    # Componentes reutilizáveis (BarraNavegacao, CartaoReceita...)
+├── 📂 context/       # Gestão de estado global (ThemeContext)
+├── 📂 pages/         # Vistas principais (Inicio, Pesquisa, Detalhes...)
+├── 📂 services/      # Lógica de API (api.js, apiLocal.js)
+└── 📜 App.jsx        # Configuração de rotas e layout
+```
 
-3.  **Detalhes da Receita:**
-    *   Visualização completa de uma receita: imagem, categoria, origem, ingredientes e instruções.
-    *   Opção de abrir o vídeo de preparação no YouTube.
-    *   **Botão de Favoritos:** Permite adicionar ou remover a receita da lista pessoal, persistindo a alteração no `db.json`.
+## 🌐 APIs Utilizadas
 
-4.  **Gestão de Favoritos (CRUD):**
-    *   **Listar (GET):** Visualiza todas as receitas guardadas pelo utilizador.
-    *   **Adicionar (POST):** Feito através da página de detalhes.
-    *   **Remover (DELETE):** Remove uma receita da lista de favoritos.
-    *   **Atualizar (PATCH):** Permite adicionar e editar **notas pessoais** em cada receita favorita (ex: "Adicionar menos sal").
+1.  **TheMealDB:** Fonte de todas as receitas e imagens.
+    *   *Endpoints:* `search.php`, `lookup.php`, `filter.php`, `random.php`
+2.  **JSON Server:** API local para persistência de favoritos e lista de compras.
+    *   *Recursos:* `/favorites`, `/shoppingList`
 
 ---
+
 **Desenvolvido por:** Guilherme Ventura
-**Tecnologias:** React, Vite, TailwindCSS, Axios, JSON Server.
