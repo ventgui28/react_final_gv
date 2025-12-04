@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useShoppingList } from '../context/ShoppingListContext';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use'; // Normalmente react-confetti usa isto, mas vamos simplificar
 
 const ListaCompras = () => {
   const [lista, setLista] = useState([]);
