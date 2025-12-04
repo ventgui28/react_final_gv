@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
 import { Search, Loader2, XCircle, ArrowRight, Filter } from 'lucide-react';
-import { motion } from 'framer-motion';
+// Removido framer-motion das partes críticas para garantir estabilidade
 import { useLocation } from 'react-router-dom';
 
 const Pesquisa = () => {
@@ -10,7 +10,6 @@ const Pesquisa = () => {
   
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
-  // REMOVIDO: const [receitasFiltradas, setReceitasFiltradas] = useState([]); 
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
   const [jaPesquisou, setJaPesquisou] = useState(false);
@@ -113,13 +112,11 @@ const Pesquisa = () => {
     let numIngredientes = 0;
     for (let i = 1; i <= 20; i++) {
       const ingrediente = receita[`strIngredient${i}`];
-      // Verificação robusta: existe, é string e não está vazio
       if (ingrediente && typeof ingrediente === 'string' && ingrediente.trim() !== '') {
         numIngredientes++;
       }
     }
 
-    // Se não tiver dados de ingredientes (ex: lista simplificada da API), mostrar tudo
     const temDadosIngredientes = receita.strIngredient1 !== undefined;
     if (!temDadosIngredientes) return true;
 
@@ -128,17 +125,6 @@ const Pesquisa = () => {
     if (dificuldadeSelecionada === 'Pro') return numIngredientes > 12;
     return true;
   });
-
-  // Variantes de animação
-  const container = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
 
   // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
@@ -248,20 +234,12 @@ const Pesquisa = () => {
             <h3 className="text-xl font-bold mb-2">Ups! Algo correu mal.</h3>
             <p>{erro}</p>
           </div>
-        ) : receitasFiltradas.length > 0 ? (
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10"
-            // Manter a key para forçar a renderização correta (solução do problema anterior)
-            key={dificuldadeSelecionada} 
-            // Nota: Removemos as variants do container para evitar o problema de "invisibilidade" nos items filtrados
-            // Mas podemos ter animação simples nos items se não dependerem do stagger do pai
-          >
-            {receitasFiltradas.map((receita) => (
-              <div key={receita.idMeal}>
-                <CartaoReceita receita={receita} />
-              </div>
+        ) : receitasParaMostrar.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
+            {receitasParaMostrar.map((receita) => (
+              <CartaoReceita key={receita.idMeal} receita={receita} />
             ))}
-          </motion.div>
+          </div>
         ) : jaPesquisou ? (
           <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700 mt-10 transition-colors max-w-3xl mx-auto">
             <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-full inline-block mb-6 shadow-inner">
@@ -274,7 +252,7 @@ const Pesquisa = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-32 text-gray-400 dark:text-gray-600 opacity-60 transition-colors">
-            <ChefHat size={80} className="mb-6 text-gray-300 dark:text-gray-700" strokeWidth={1.5} />
+            <Search size={80} className="mb-6 text-gray-300 dark:text-gray-700" strokeWidth={1.5} />
             <p className="text-xl font-medium">As tuas descobertas aparecerão aqui</p>
           </div>
         )}
