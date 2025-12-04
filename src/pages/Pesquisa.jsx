@@ -10,7 +10,7 @@ const Pesquisa = () => {
   
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
-  const [receitasFiltradas, setReceitasFiltradas] = useState([]); // Novo estado para filtro local
+  // REMOVIDO: const [receitasFiltradas, setReceitasFiltradas] = useState([]); 
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
   const [jaPesquisou, setJaPesquisou] = useState(false);
@@ -20,7 +20,7 @@ const Pesquisa = () => {
   const [areas, setAreas] = useState([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
   const [areaSelecionada, setAreaSelecionada] = useState('');
-  const [dificuldadeSelecionada, setDificuldadeSelecionada] = useState(''); // Novo estado
+  const [dificuldadeSelecionada, setDificuldadeSelecionada] = useState('');
 
   useEffect(() => {
     const carregarFiltros = async () => {
@@ -46,35 +46,6 @@ const Pesquisa = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // Efeito para aplicar o filtro de dificuldade localmente
-  useEffect(() => {
-    if (!dificuldadeSelecionada) {
-      setReceitasFiltradas(receitas);
-      return;
-    }
-
-    // Importante: Filtrar sempre a partir da lista ORIGINAL 'receitas', não da filtrada
-    const filtrados = receitas.filter(receita => {
-      // Contar ingredientes para calcular dificuldade
-      let numIngredientes = 0;
-      for (let i = 1; i <= 20; i++) {
-        if (receita[`strIngredient${i}`] && receita[`strIngredient${i}`].trim()) {
-          numIngredientes++;
-        }
-      }
-
-      // Se não tiver ingredientes (ex: veio de filtro por categoria), não conseguimos filtrar
-      if (numIngredientes === 0) return true; 
-
-      if (dificuldadeSelecionada === 'Fácil') return numIngredientes <= 8;
-      if (dificuldadeSelecionada === 'Médio') return numIngredientes > 8 && numIngredientes <= 12;
-      if (dificuldadeSelecionada === 'Pro') return numIngredientes > 12;
-      return true;
-    });
-
-    setReceitasFiltradas(filtrados);
-  }, [dificuldadeSelecionada, receitas]);
-
   const lidarComPesquisa = async (e) => {
     if (e) e.preventDefault();
     if (!termo.trim()) return;
@@ -90,7 +61,6 @@ const Pesquisa = () => {
     try {
       const dados = await pesquisarReceitas(termo);
       setReceitas(dados);
-      setReceitasFiltradas(dados);
     } catch (err) {
       setErro('Erro ao pesquisar receitas. Tente novamente.');
     } finally {
@@ -110,7 +80,6 @@ const Pesquisa = () => {
     try {
       const dados = await filtrarPorCategoria(cat);
       setReceitas(dados);
-      setReceitasFiltradas(dados);
     } catch (err) {
       setErro('Erro ao filtrar por categoria.');
     } finally {
@@ -130,13 +99,33 @@ const Pesquisa = () => {
     try {
       const dados = await filtrarPorArea(area);
       setReceitas(dados);
-      setReceitasFiltradas(dados);
     } catch (err) {
       setErro('Erro ao filtrar por área.');
     } finally {
       setCarregando(false);
     }
   };
+
+  // Lógica de Filtragem (Calculada em tempo real)
+  const receitasParaMostrar = receitas.filter(receita => {
+    if (!dificuldadeSelecionada) return true;
+
+    let numIngredientes = 0;
+    for (let i = 1; i <= 20; i++) {
+      if (receita[`strIngredient${i}`] && receita[`strIngredient${i}`].trim()) {
+        numIngredientes++;
+      }
+    }
+
+    // Se não tiver dados de ingredientes, mostrar tudo (ou ocultar, dependendo da preferência)
+    // Aqui opto por mostrar tudo se não houver dados para não "esconder" receitas erradamente
+    if (numIngredientes === 0) return true;
+
+    if (dificuldadeSelecionada === 'Fácil') return numIngredientes <= 8;
+    if (dificuldadeSelecionada === 'Médio') return numIngredientes > 8 && numIngredientes <= 12;
+    if (dificuldadeSelecionada === 'Pro') return numIngredientes > 12;
+    return true;
+  });
 
   // Variantes de animação
   const container = {
@@ -149,7 +138,7 @@ const Pesquisa = () => {
     visible: { opacity: 1, y: 0 }
   };
 
-  // Verificar se podemos filtrar por dificuldade (se o primeiro item tem ingredientes)
+  // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
 
   return (
@@ -250,14 +239,14 @@ const Pesquisa = () => {
             <XCircle className="mx-auto mb-2" size={32} />
             {erro}
           </div>
-        ) : receitasFiltradas.length > 0 ? (
+        ) : receitasParaMostrar.length > 0 ? (
           <motion.div 
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8"
             variants={container}
             initial="hidden"
             animate="visible"
           >
-            {receitasFiltradas.map((receita) => (
+            {receitasParaMostrar.map((receita) => (
               <motion.div key={receita.idMeal} variants={item}>
                 <CartaoReceita receita={receita} />
               </motion.div>
@@ -270,7 +259,7 @@ const Pesquisa = () => {
             </div>
             <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Nenhuma receita encontrada</h3>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
-              {dificuldadeSelecionada ? "Tenta mudar o nível de dificuldade." : "Tenta pesquisar por outro termo."}
+              {dificuldadeSelecionada ? "Tenta mudar o nível de dificuldade ou limpar o filtro." : "Tenta pesquisar por outro termo."}
             </p>
           </div>
         ) : (
