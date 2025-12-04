@@ -46,8 +46,12 @@ const BarraNavegacao = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <NavLink to="/" className="flex items-center space-x-2 text-2xl font-bold tracking-tight group" onClick={() => setMenuAberto(false)}>
-            <div className="bg-orange-600 text-white p-1.5 rounded-lg transform group-hover:rotate-12 transition-transform">
-              <UtensilsCrossed size={24} />
+            <div className="relative">
+              <div className="bg-orange-600 text-white p-1.5 rounded-lg transform group-hover:rotate-12 transition-transform">
+                <UtensilsCrossed size={24} />
+              </div>
+              {/* Gorro de Natal */}
+              <span className="absolute -top-3 -right-2 text-xl filter drop-shadow-md animate-bounce" style={{ animationDuration: '2s' }}>🎅</span>
             </div>
             <span className="text-gray-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
               CookBook
@@ -127,7 +131,7 @@ const BarraNavegacao = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 overflow-hidden"
+            className="lg:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-500"
           >
             <div className="flex flex-col p-4 space-y-2">
               <NavLink to="/" className={mobileLinkClass} onClick={toggleMenu}>

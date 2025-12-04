@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { obterReceitaAleatoria } from '../services/api';
+import { obterReceitaAleatoria, obterReceitaPorId } from '../services/api';
 import { obterFavoritos } from '../services/apiLocal';
-import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils } from 'lucide-react';
+import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Inicio = () => {
@@ -11,6 +11,7 @@ const Inicio = () => {
   const [contagemFavoritos, setContagemFavoritos] = useState(0);
   const [carregando, setCarregando] = useState(true);
   const [historico, setHistorico] = useState([]);
+  const [receitasNatal, setReceitasNatal] = useState([]);
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -24,6 +25,14 @@ const Inicio = () => {
 
         const historicoGuardado = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
         setHistorico(historicoGuardado);
+
+        // Carregar 3 receitas de Natal específicas (Turkey, Pudding, Chocolate)
+        // IDs: 52934 (Turkey), 52807 (Christmas Pudding), 52787 (Hot Chocolate)
+        const idsNatal = ['52934', '52807', '52787'];
+        const promessasNatal = idsNatal.map(id => obterReceitaPorId(id));
+        const resultadosNatal = await Promise.all(promessasNatal);
+        setReceitasNatal(resultadosNatal.filter(r => r !== null));
+
       } catch (erro) {
         console.error("Erro ao carregar dados da página inicial:", erro);
       } finally {
@@ -43,7 +52,7 @@ const Inicio = () => {
     { 
       nome: 'Sobremesas', 
       valor: 'Dessert', 
-      imagem: 'https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=600' 
+      imagem: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Pound_layer_cake.jpg' 
     },
     { 
       nome: 'Vegetariano', 
@@ -78,35 +87,73 @@ const Inicio = () => {
       initial="hidden"
       animate="visible"
     >
-      {/* Hero Section */}
+      {/* Hero Section Natalício */}
       <motion.section 
         variants={itemVariants}
-        className="bg-gradient-to-br from-orange-100 to-white dark:from-gray-800 dark:to-gray-900 p-8 md:p-12 rounded-3xl shadow-sm text-center border border-orange-100 dark:border-gray-700"
+        className="bg-gradient-to-br from-red-600 to-red-800 p-8 md:p-12 rounded-3xl shadow-lg text-center border border-red-500 relative overflow-hidden"
       >
+        {/* Decoração de Fundo */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+             <path fill="#FFFFFF" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,81.6,-46.6C91.4,-34.1,98.1,-19.2,95.8,-5.2C93.5,8.9,82.2,22.1,71.6,33.6C61,45.1,51.1,54.9,39.5,63.4C27.9,71.9,14.6,79.1,0.6,78.1C-13.4,77.1,-28.1,67.9,-41.3,59C-54.5,50.1,-66.2,41.5,-74.5,29.9C-82.8,18.3,-87.7,3.7,-85.7,-10.1C-83.7,-23.9,-74.8,-36.9,-64.1,-47.2C-53.4,-57.5,-40.9,-65.1,-27.9,-72.9C-14.9,-80.7,-1.4,-88.7,12.3,-89.2C26,-89.7,30.5,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
+           </svg>
+        </div>
+
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative z-10"
         >
-          <h1 className="text-4xl md:text-6xl font-extrabold text-orange-900 dark:text-orange-100 mb-4 tracking-tight">
-            Cozinhar nunca foi <span className="text-orange-600 dark:text-orange-400">tão fácil</span>.
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight drop-shadow-md">
+            Boas Festas e <br/> <span className="text-yellow-300">Cozinhados Felizes!</span> 🎄
           </h1>
         </motion.div>
         
-        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-          O CookBook é o teu assistente pessoal. Descobre receitas de todo o mundo, guarda as tuas favoritas e cria momentos deliciosos.
+        <p className="relative z-10 text-lg md:text-xl text-red-100 mb-8 max-w-2xl mx-auto leading-relaxed">
+          Descobre as nossas sugestões especiais para a tua ceia de Natal e surpreende a família.
         </p>
         
         <Link 
           to="/pesquisa" 
-          className="relative z-10 inline-flex items-center px-8 py-4 bg-orange-600 text-white text-lg font-bold rounded-full hover:bg-orange-700 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+          className="relative z-10 inline-flex items-center px-8 py-4 bg-white text-red-700 text-lg font-bold rounded-full hover:bg-gray-100 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
         >
-          <Search className="mr-2" size={22} />
-          Começar a Explorar
+          <Gift className="mr-2" size={22} />
+          Ver Receitas de Natal
         </Link>
       </motion.section>
 
-      {/* Categorias Rápidas (Atualizado com Imagens) */}
+      {/* Secção Especial de Natal */}
+      {receitasNatal.length > 0 && (
+        <motion.section variants={itemVariants}>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+            <span className="text-2xl mr-2">🎅</span>
+            Ementa da Consoada
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {receitasNatal.map((receita) => (
+              <Link 
+                key={receita.idMeal}
+                to={`/receita/${receita.idMeal}`}
+                className="group relative h-64 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+              >
+                <img 
+                  src={receita.strMealThumb} 
+                  alt={receita.strMeal} 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 p-4">
+                  <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full mb-2 inline-block">Natal</span>
+                  <h3 className="text-white font-bold text-xl line-clamp-2">{receita.strMeal}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </motion.section>
+      )}
+
+      {/* Categorias Rápidas */}
       <motion.section variants={itemVariants}>
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
           <Utensils className="mr-2 text-orange-600" />
