@@ -82,7 +82,7 @@ const Inicio = () => {
 
   return (
     <motion.div 
-      className="space-y-12"
+      className="space-y-8"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
