@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
-import { Search, Loader2, XCircle, ArrowRight, Filter, ChefHat } from 'lucide-react';
+import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown, ChefHat } from 'lucide-react';
+// REMOVIDO TOTALMENTE O FRAMER MOTION DESTE FICHEIRO PARA GARANTIR ESTABILIDADE
 import { useLocation } from 'react-router-dom';
-import SelectPersonalizado from '../components/SelectPersonalizado'; // Novo componente
+import SelectPersonalizado from '../components/SelectPersonalizado';
 
 const Pesquisa = () => {
   const location = useLocation();
@@ -26,7 +27,6 @@ const Pesquisa = () => {
       try {
         const listaCategorias = await obterListaCategorias();
         const listaAreas = await obterListaAreas();
-        // Formatar para o SelectPersonalizado { value, label }
         setCategorias(listaCategorias.map(c => ({ value: c.strCategory, label: c.strCategory })) || []);
         setAreas(listaAreas.map(a => ({ value: a.strArea, label: a.strArea })) || []);
       } catch (err) {
@@ -46,26 +46,50 @@ const Pesquisa = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  const lidarComPesquisa = async (e) => {
-    if (e) e.preventDefault();
-    if (!termo.trim()) return;
+  // Função de pesquisa centralizada
+  const executarPesquisa = async (textoParaPesquisar) => {
+    if (!textoParaPesquisar || !textoParaPesquisar.trim()) {
+      setReceitas([]);
+      setJaPesquisou(false);
+      return;
+    }
 
     setCarregando(true);
     setErro(null);
     setJaPesquisou(true);
-    setReceitas([]);
+    // Não limpamos receitas imediatamente para evitar "piscar" se for atualização rápida
     setCategoriaSelecionada('');
     setAreaSelecionada('');
     setDificuldadeSelecionada('');
 
     try {
-      const dados = await pesquisarReceitas(termo);
+      const dados = await pesquisarReceitas(textoParaPesquisar);
       setReceitas(dados || []);
     } catch (err) {
-      setErro('Erro ao pesquisar receitas. Tente novamente.');
+      setErro('Erro ao pesquisar receitas.');
     } finally {
       setCarregando(false);
     }
+  };
+
+  // Debounce Effect para Pesquisa Automática
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (termo.trim().length >= 3) { // Só pesquisa automaticamente com 3 ou mais caracteres
+        executarPesquisa(termo);
+      } else if (termo.trim().length === 0 && jaPesquisou) {
+        setReceitas([]);
+        setJaPesquisou(false);
+      }
+    }, 600); // 600ms de atraso
+
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [termo]);
+
+  const lidarComPesquisaManual = (e) => {
+    e.preventDefault();
+    executarPesquisa(termo);
   };
 
   const lidarComFiltroCategoria = async (cat) => {
@@ -75,7 +99,7 @@ const Pesquisa = () => {
     setErro(null);
     setJaPesquisou(true);
     
-    if (!cat) { // Se limpar o filtro
+    if (!cat) {
         setReceitas([]);
         setJaPesquisou(false);
         return;
@@ -101,7 +125,7 @@ const Pesquisa = () => {
     setErro(null);
     setJaPesquisou(true);
 
-    if (!area) { // Se limpar o filtro
+    if (!area) {
         setReceitas([]);
         setJaPesquisou(false);
         return;
@@ -141,7 +165,6 @@ const Pesquisa = () => {
     return true;
   });
 
-  // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
 
   const opcoesDificuldade = [
@@ -161,7 +184,7 @@ const Pesquisa = () => {
         </p>
         
         {/* Barra de Pesquisa Texto */}
-        <form onSubmit={lidarComPesquisa} className="relative flex items-center max-w-2xl mx-auto mb-10">
+        <form onSubmit={lidarComPesquisaManual} className="relative flex items-center max-w-2xl mx-auto mb-10">
           <Search className="absolute left-5 text-gray-400" size={24} />
           <input
             type="text"

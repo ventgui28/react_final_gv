@@ -3,7 +3,8 @@ import BarraNavegacao from './BarraNavegacao';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '../context/ThemeContext';
 import Neve from './Neve';
-import ChatBot from './ChatBot'; // Importar ChatBot
+import ChatBot from './ChatBot';
+import ScrollToTop from './ScrollToTop'; // Importar ScrollToTop
 
 const LayoutPrincipal = () => {
   return (
@@ -56,7 +57,8 @@ const LayoutPrincipal = () => {
           </div>
         </footer>
 
-        {/* ChatBot Flutuante */}
+        {/* Componentes Flutuantes */}
+        <ScrollToTop />
         <ChatBot />
       </div>
     </ThemeProvider>
