@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Trash2, Edit2, Save, ExternalLink, BookOpen, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import Estatisticas from '../components/Estatisticas';
 
 const Favoritos = () => {
   const [favoritos, setFavoritos] = useState([]);
@@ -78,6 +79,9 @@ const Favoritos = () => {
           {favoritos.length} {favoritos.length === 1 ? 'Receita' : 'Receitas'}
         </div>
       </header>
+
+      {/* Estatísticas Visuais */}
+      <Estatisticas favoritos={favoritos} />
 
       {favoritos.length === 0 ? (
         <motion.div 
