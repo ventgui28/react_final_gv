@@ -103,16 +103,17 @@ const ListaCompras = () => {
                 className={`flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${item.comprado ? 'bg-gray-50/50 dark:bg-gray-800/50' : ''}`}
               >
                 <div className="flex items-center gap-4 flex-grow cursor-pointer" onClick={() => alternarComprado(item)}>
-                  <button className={`transition-colors ${item.comprado ? 'text-green-500' : 'text-gray-400 dark:text-gray-500'}`}>
-                    {item.comprado ? <CheckSquare size={24} /> : <Square size={24} />}
-                  </button>
-                  {item.imagem && (
+                  {item.imagem ? (
                     <img 
                       src={item.imagem} 
                       alt={item.ingrediente} 
-                      className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700" 
+                      className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700 flex-shrink-0" 
                       onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }} // Fallback
                     />
+                  ) : (
+                    <div className="w-12 h-12 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 text-xs flex-shrink-0">
+                      ?
+                    </div>
                   )}
                   <div>
                     <p className={`font-medium text-lg transition-all ${item.comprado ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-800 dark:text-gray-200'}`}>
