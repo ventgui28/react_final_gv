@@ -112,14 +112,18 @@ const Pesquisa = () => {
 
     let numIngredientes = 0;
     for (let i = 1; i <= 20; i++) {
-      if (receita[`strIngredient${i}`] && receita[`strIngredient${i}`].trim()) {
+      const ingrediente = receita[`strIngredient${i}`];
+      // Verificação robusta: existe, é string e não está vazio
+      if (ingrediente && typeof ingrediente === 'string' && ingrediente.trim() !== '') {
         numIngredientes++;
       }
     }
 
-    // Se não tiver dados de ingredientes, mostrar tudo (ou ocultar, dependendo da preferência)
-    // Aqui opto por mostrar tudo se não houver dados para não "esconder" receitas erradamente
-    if (numIngredientes === 0) return true;
+    // Se não tiver dados de ingredientes (ex: lista simplificada da API), mostrar tudo
+    // para não esconder resultados indevidamente.
+    // Nota: A pesquisa por texto retorna ingredientes, mas filtro por categoria não.
+    const temDadosIngredientes = receita.strIngredient1 !== undefined;
+    if (!temDadosIngredientes) return true;
 
     if (dificuldadeSelecionada === 'Fácil') return numIngredientes <= 8;
     if (dificuldadeSelecionada === 'Médio') return numIngredientes > 8 && numIngredientes <= 12;
