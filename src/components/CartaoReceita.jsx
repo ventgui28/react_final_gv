@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { Clock, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 const CartaoReceita = ({ receita }) => {
   return (
@@ -22,26 +21,29 @@ const CartaoReceita = ({ receita }) => {
       {/* Conteúdo */}
       <div className="p-5 flex flex-col flex-grow">
         {/* Categoria (Badge) */}
-        <div className="mb-3">
-          <span className="inline-block px-3 py-1 text-xs font-bold tracking-wide text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 rounded-full uppercase">
-            {receita.strCategory}
-          </span>
-        </div>
+        {(receita.strCategory || receita.strArea) && (
+          <div className="mb-3">
+            {receita.strCategory && (
+              <span className="inline-block px-3 py-1 text-xs font-bold tracking-wide text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 rounded-full uppercase mr-2">
+                {receita.strCategory}
+              </span>
+            )}
+            {receita.strArea && (
+              <span className="inline-block px-3 py-1 text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-full uppercase">
+                {receita.strArea}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Título */}
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
           {receita.strMeal}
         </h3>
 
-        {/* Origem (com ícone) */}
-        <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-4 mt-auto">
-          <MapPin size={16} className="mr-1" />
-          {receita.strArea}
-        </div>
-        
         {/* Rodapé do Cartão */}
-        <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-          <span className="text-sm font-medium text-gray-400 dark:text-gray-500 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+        <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center mt-auto">
+          <span className="text-sm font-medium text-orange-600 dark:text-orange-400 group-hover:underline transition-colors">
             Ver Receita &rarr;
           </span>
         </div>
