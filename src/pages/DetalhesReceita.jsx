@@ -202,7 +202,22 @@ const DetalhesReceita = () => {
 
   const instrucoes = receita.strInstructions
     .split(/\r\n|\n/)
-    .filter(step => step.trim().length > 0);
+    .map(step => step.trim())
+    .filter(step => {
+      // Filtra linhas vazias
+      if (step.length === 0) return false;
+      
+      // Filtra linhas que são apenas números ou números com ponto/parênteses (ex: "1", "1.", "1)", "Step 1")
+      if (/^(\d+)[.)]?$/.test(step) || /^Step\s+\d+:?$/i.test(step)) return false;
+      
+      // Filtra linhas muito curtas (menos de 4 caracteres, ex: "Add") - normalmente erro de formatação
+      if (step.length < 4) return false;
+
+      // Filtra cabeçalhos comuns (ex: "Instructions")
+      if (/^(instructions|directions|method):?$/i.test(step)) return false;
+
+      return true;
+    });
 
   return (
     <motion.div 
