@@ -79,7 +79,7 @@ const ListaCompras = () => {
           <p className="text-gray-500 dark:text-gray-400 mt-1">Organiza os ingredientes que precisas de comprar.</p>
         </div>
         <div className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full font-bold text-sm">
-          {lista.filter(i => !i.comprado).length} a comprar
+          {lista.filter(i => !i.comprado).reduce((sum, item) => sum + (item.quantidade || 1), 0)} a comprar
         </div>
       </header>
 
