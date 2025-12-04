@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
 import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown, ChefHat } from 'lucide-react';
-// REMOVIDO TOTALMENTE O FRAMER MOTION DESTE FICHEIRO PARA GARANTIR ESTABILIDADE
 import { useLocation } from 'react-router-dom';
 import SelectPersonalizado from '../components/SelectPersonalizado';
 
@@ -15,7 +14,6 @@ const Pesquisa = () => {
   const [erro, setErro] = useState(null);
   const [jaPesquisou, setJaPesquisou] = useState(false);
 
-  // Estados para Filtros
   const [categorias, setCategorias] = useState([]);
   const [areas, setAreas] = useState([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
@@ -36,60 +34,34 @@ const Pesquisa = () => {
     carregarFiltros();
   }, []);
 
-  // Efeito para detetar navegação com estado (categorias rápidas)
   useEffect(() => {
     if (location.state?.categoria) {
       const cat = location.state.categoria;
       setCategoriaSelecionada(cat);
       lidarComFiltroCategoria(cat);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // Função de pesquisa centralizada
-  const executarPesquisa = async (textoParaPesquisar) => {
-    if (!textoParaPesquisar || !textoParaPesquisar.trim()) {
-      setReceitas([]);
-      setJaPesquisou(false);
-      return;
-    }
+  const lidarComPesquisa = async (e) => {
+    if (e) e.preventDefault();
+    if (!termo.trim()) return;
 
     setCarregando(true);
     setErro(null);
     setJaPesquisou(true);
-    // Não limpamos receitas imediatamente para evitar "piscar" se for atualização rápida
+    setReceitas([]);
     setCategoriaSelecionada('');
     setAreaSelecionada('');
     setDificuldadeSelecionada('');
 
     try {
-      const dados = await pesquisarReceitas(textoParaPesquisar);
+      const dados = await pesquisarReceitas(termo);
       setReceitas(dados || []);
     } catch (err) {
-      setErro('Erro ao pesquisar receitas.');
+      setErro('Erro ao pesquisar receitas. Tente novamente.');
     } finally {
       setCarregando(false);
     }
-  };
-
-  // Debounce Effect para Pesquisa Automática
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (termo.trim().length >= 3) { // Só pesquisa automaticamente com 3 ou mais caracteres
-        executarPesquisa(termo);
-      } else if (termo.trim().length === 0 && jaPesquisou) {
-        setReceitas([]);
-        setJaPesquisou(false);
-      }
-    }, 600); // 600ms de atraso
-
-    return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [termo]);
-
-  const lidarComPesquisaManual = (e) => {
-    e.preventDefault();
-    executarPesquisa(termo);
   };
 
   const lidarComFiltroCategoria = async (cat) => {
@@ -144,7 +116,6 @@ const Pesquisa = () => {
     }
   };
 
-  // Lógica de Filtragem (Calculada em tempo real)
   const receitasParaMostrar = receitas.filter(receita => {
     if (!dificuldadeSelecionada) return true;
 
@@ -175,7 +146,8 @@ const Pesquisa = () => {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="card-glass p-10 text-center max-w-5xl mx-auto">
+      {/* Header de Pesquisa - Z-Index Alto para ficar acima dos resultados */}
+      <div className="card-glass p-10 text-center max-w-5xl mx-auto relative z-20">
         <h2 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-3 tracking-tight">
           O que vamos cozinhar hoje?
         </h2>
@@ -183,8 +155,7 @@ const Pesquisa = () => {
           Pesquisa por nome ou usa os filtros para explorar novos sabores.
         </p>
         
-        {/* Barra de Pesquisa Texto */}
-        <form onSubmit={lidarComPesquisaManual} className="relative flex items-center max-w-2xl mx-auto mb-10">
+        <form onSubmit={lidarComPesquisa} className="relative flex items-center max-w-2xl mx-auto mb-10 z-10">
           <Search className="absolute left-5 text-gray-400" size={24} />
           <input
             type="text"
@@ -202,15 +173,14 @@ const Pesquisa = () => {
           </button>
         </form>
 
-        {/* Filtros (Selects Personalizados) */}
-        <div className="flex flex-col md:flex-row gap-4 justify-center items-start pt-8 border-t border-gray-100 dark:border-gray-700/50">
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-start pt-8 border-t border-gray-100 dark:border-gray-700/50 relative z-20">
           <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wide text-sm mr-2 mt-3">
             <Filter size={16} />
             <span>Filtros Rápidos</span>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto flex-grow max-w-3xl">
-            {/* Categoria */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto flex-grow max-w-3xl relative">
+            {/* Categoria - Z-30 para ficar acima */}
             <div className="relative z-30">
               <SelectPersonalizado
                 placeholder="Categoria"
@@ -221,7 +191,7 @@ const Pesquisa = () => {
               />
             </div>
 
-            {/* Origem */}
+            {/* Origem - Z-20 */}
             <div className="relative z-20">
               <SelectPersonalizado
                 placeholder="Origem"
@@ -232,7 +202,7 @@ const Pesquisa = () => {
               />
             </div>
 
-            {/* Dificuldade */}
+            {/* Dificuldade - Z-10 */}
             <div className="relative z-10">
               <SelectPersonalizado
                 placeholder="Dificuldade"
@@ -246,14 +216,14 @@ const Pesquisa = () => {
         </div>
         
         {!podeFiltrarDificuldade && receitas.length > 0 && (
-          <p className="text-xs text-orange-500/80 mt-3 font-medium bg-orange-50 dark:bg-orange-900/10 inline-block px-3 py-1 rounded-lg">
+          <p className="text-xs text-orange-500/80 mt-3 font-medium bg-orange-50 dark:bg-orange-900/10 inline-block px-3 py-1 rounded-lg relative z-0">
             ⚠️ Filtro de dificuldade disponível apenas na pesquisa por texto.
           </p>
         )}
       </div>
 
-      {/* Resultados */}
-      <div className="min-h-[300px]">
+      {/* Resultados - Z-Index Baixo */}
+      <div className="min-h-[300px] relative z-0">
         {carregando ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
              {[...Array(8)].map((_, i) => (
