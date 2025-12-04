@@ -14,15 +14,19 @@ Bem-vindo ao **CookBook**, uma aplicação web moderna e interativa desenvolvida
 *   **🏷️ Filtros Inteligentes:** Filtra os resultados por nível de dificuldade (Fácil, Médio, Pro) com base no número de ingredientes.
 *   **❤️ Gestão de Favoritos:** Guarda as tuas receitas preferidas, adiciona notas pessoais e classifica-as com estrelas (1-5).
 *   **📊 Dashboard Pessoal:** Estatísticas visuais sobre os teus gostos culinários (Gráficos de categorias e origens).
+*   **🛒 Lista de Compras Avançada:** Adiciona ingredientes de receitas com quantidade, imagem e marca como comprado.
 *   **🌙 Modo Escuro (Dark Mode):** Interface totalmente adaptável para cozinhar à noite sem cansar a vista.
 
 ## 🚀 Funcionalidades "Extra" (Destaques)
 
 *   **🧊 O Que Tenho no Frigorífico?:** Uma ferramenta inteligente que sugere receitas baseadas num ingrediente que tenhas em casa.
-*   **🎄 Modo Natal:** Um tema festivo especial com neve animada e sugestões para a Consoada (ativado automaticamente).
+*   **🎄 Modo Natal:** Um tema festivo especial com neve animada e sugestões para a Consoada.
 *   **🖨️ Exportar para PDF:** Um modo de impressão limpo e otimizado ("Printer-friendly") para levares a receita para a bancada.
 *   **📝 Passo-a-Passo Interativo:** Clica nas instruções para as riscar à medida que avanças na receita.
-*   **🛒 Lista de Compras:** Adiciona ingredientes diretamente das receitas para uma lista de compras digital.
+*   **🤖 Chef Bot:** Um assistente virtual interativo para te ajudar a navegar e descobrir receitas.
+*   **⬆️ Scroll to Top:** Botão flutuante para facilitar a navegação em páginas longas.
+*   **🍞 Breadcrumbs (Migalhas de Pão):** Navegação hierárquica para saberes sempre onde estás.
+*   **📱 QR Code:** Partilha a receita para o telemóvel lendo um código QR.
 
 ## 🛠️ Stack Tecnológica
 
@@ -35,6 +39,7 @@ Este projeto foi construído com as melhores práticas e ferramentas modernas:
 *   **Gráficos:** [Recharts](https://recharts.org/)
 *   **Ícones:** [Lucide React](https://lucide.dev/)
 *   **Notificações:** [React Hot Toast](https://react-hot-toast.com/)
+*   **QR Code:** [React QR Code](https://www.npmjs.com/package/react-qr-code)
 
 ## 📦 Como Correr o Projeto
 
@@ -69,8 +74,8 @@ Acede a `http://localhost:5173` no teu navegador.
 
 ```
 src/
-├── 📂 components/    # Componentes reutilizáveis (BarraNavegacao, CartaoReceita...)
-├── 📂 context/       # Gestão de estado global (ThemeContext)
+├── 📂 components/    # Componentes reutilizáveis (BarraNavegacao, CartaoReceita, SelectPersonalizado...)
+├── 📂 context/       # Gestão de estado global (ThemeContext, ShoppingListContext)
 ├── 📂 pages/         # Vistas principais (Inicio, Pesquisa, Detalhes...)
 ├── 📂 services/      # Lógica de API (api.js, apiLocal.js)
 └── 📜 App.jsx        # Configuração de rotas e layout
