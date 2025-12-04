@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { obterListaCompras, removerItemLista, atualizarItemLista } from '../services/apiLocal';
-import { Trash2, CheckSquare, Square, ShoppingCart, Minus, Plus } from 'lucide-react';
+import { Trash2, CheckSquare, Square, ShoppingCart, Minus, Plus, PartyPopper } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useShoppingList } from '../context/ShoppingListContext';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use'; // Normalmente react-confetti usa isto, mas vamos simplificar
 
 const ListaCompras = () => {
   const [lista, setLista] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const { carregarItens } = useShoppingList();
+  const [mostrarConfetti, setMostrarConfetti] = useState(false);
 
   useEffect(() => {
     carregarLista();
@@ -28,12 +31,24 @@ const ListaCompras = () => {
     }
   };
 
+  // Verificar se completou tudo
+  useEffect(() => {
+    if (lista.length > 0 && lista.every(item => item.comprado)) {
+      setMostrarConfetti(true);
+      const timer = setTimeout(() => setMostrarConfetti(false), 5000); // Parar após 5s
+      return () => clearTimeout(timer);
+    } else {
+      setMostrarConfetti(false);
+    }
+  }, [lista]);
+
   const alternarComprado = async (item) => {
     try {
       const novoEstado = !item.comprado;
       await atualizarItemLista(item.id, { comprado: novoEstado });
       setLista(lista.map(i => i.id === item.id ? { ...i, comprado: novoEstado } : i));
       carregarItens();
+      if (novoEstado) toast.success("Item comprado!");
     } catch (erro) {
       toast.error("Erro ao atualizar item.");
     }
@@ -52,8 +67,8 @@ const ListaCompras = () => {
 
   const ajustarQuantidade = async (item, delta) => {
     const novaQuantidade = (item.quantidade || 1) + delta;
-    if (novaQuantidade < 1) { // Não permitir quantidade inferior a 1
-      removerItem(item.id); // Se for 0 ou menos, remove o item
+    if (novaQuantidade < 1) {
+      removerItem(item.id);
       return;
     }
 
@@ -69,7 +84,9 @@ const ListaCompras = () => {
   if (carregando) return <div className="text-center py-12 text-gray-500 dark:text-gray-400">A carregar lista...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-3xl mx-auto space-y-8 relative">
+      {mostrarConfetti && <Confetti numberOfPieces={200} recycle={false} />}
+      
       <header className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
@@ -82,6 +99,17 @@ const ListaCompras = () => {
           {lista.filter(i => !i.comprado).reduce((sum, item) => sum + (item.quantidade || 1), 0)} a comprar
         </div>
       </header>
+
+      {/* Mensagem de Sucesso Total */}
+      {mostrarConfetti && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }} 
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-green-100 text-green-800 p-4 rounded-xl text-center font-bold border border-green-200 flex items-center justify-center gap-2"
+        >
+          <PartyPopper /> Lista completa! Bom trabalho! 🎉
+        </motion.div>
+      )}
 
       {lista.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700">
@@ -100,23 +128,24 @@ const ListaCompras = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, height: 0 }}
-                className={`flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${item.comprado ? 'bg-gray-50/50 dark:bg-gray-800/50' : ''}`}
+                className={`flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${item.comprado ? 'bg-green-50/50 dark:bg-green-900/10' : ''}`}
               >
                 <div className="flex items-center gap-4 flex-grow cursor-pointer" onClick={() => alternarComprado(item)}>
+                  <button className={`transition-colors ${item.comprado ? 'text-green-500' : 'text-gray-400 dark:text-gray-500'}`}>
+                    {item.comprado ? <CheckSquare size={24} /> : <Square size={24} />}
+                  </button>
                   {item.imagem ? (
                     <img 
                       src={item.imagem} 
                       alt={item.ingrediente} 
-                      className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700 flex-shrink-0" 
-                      onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }} // Fallback
+                      className={`w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700 flex-shrink-0 transition-opacity ${item.comprado ? 'opacity-50 grayscale' : ''}`}
+                      onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }} 
                     />
                   ) : (
-                    <div className="w-12 h-12 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 text-xs flex-shrink-0">
-                      ?
-                    </div>
+                    <div className="w-12 h-12 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 text-xs flex-shrink-0">?</div>
                   )}
                   <div>
-                    <p className={`font-medium text-lg transition-all ${item.comprado ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-800 dark:text-gray-200'}`}>
+                    <p className={`font-medium text-lg transition-all ${item.comprado ? 'text-gray-400 dark:text-gray-500 line-through decoration-green-500' : 'text-gray-800 dark:text-gray-200'}`}>
                       {item.ingrediente}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">

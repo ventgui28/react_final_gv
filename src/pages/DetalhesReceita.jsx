@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obterReceitaPorId } from '../services/api';
 import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito, adicionarItemLista } from '../services/apiLocal';
 import { ArrowLeft, Heart, Loader2, List, FileText, Share2, Star, PlayCircle, ShoppingCart, Plus, Printer, CheckCircle, Circle, QrCode, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import QRCode from 'react-qr-code';
 import { useShoppingList } from '../context/ShoppingListContext';
 
@@ -20,6 +20,11 @@ const DetalhesReceita = () => {
   const [passosConcluidos, setPassosConcluidos] = useState([]);
   const [mostrarQR, setMostrarQR] = useState(false);
   const { carregarItens } = useShoppingList();
+
+  // Parallax Effect
+  const { scrollY } = useScroll();
+  const yRange = useTransform(scrollY, [0, 500], [0, 250]); // Move a imagem mais devagar que o scroll
+  const opacityRange = useTransform(scrollY, [0, 400], [1, 0]); // Desvanece o título/info
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -200,30 +205,29 @@ const DetalhesReceita = () => {
     .filter(step => step.trim().length > 0);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="max-w-5xl mx-auto space-y-8"
-    >
+    <div className="max-w-5xl mx-auto space-y-8 relative">
       <button 
         onClick={() => navegar(-1)} 
-        className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium print:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium print:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 relative z-20"
       >
         <ArrowLeft size={20} className="mr-2" />
         Voltar
       </button>
 
-      <div className="card-glass overflow-hidden">
-        {/* Header Image */}
-        <div className="relative h-96 md:h-[450px]">
-          <img 
+      <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800">
+        {/* Header Image com Parallax */}
+        <div className="relative h-96 md:h-[500px] overflow-hidden">
+          <motion.img 
             src={receita.strMealThumb} 
             alt={receita.strMeal} 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover absolute top-0 left-0"
+            style={{ y: yRange }} // Aplica o efeito Parallax
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end p-8 md:p-12">
-            <div className="text-white w-full">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end p-8 md:p-12 z-10 pointer-events-none">
+            <motion.div 
+              style={{ opacity: opacityRange }} // Desvanece com scroll
+              className="text-white w-full"
+            >
               <motion.h1 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -232,7 +236,7 @@ const DetalhesReceita = () => {
               >
                 {receita.strMeal}
               </motion.h1>
-              <div className="flex flex-wrap justify-between items-end gap-6">
+              <div className="flex flex-wrap justify-between items-end gap-6 pointer-events-auto">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="bg-orange-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide">{receita.strCategory}</span>
                   <span className="text-white/60 text-2xl">•</span>
@@ -245,7 +249,7 @@ const DetalhesReceita = () => {
                 
                 {/* Rating System */}
                 {eFavorito && (
-                  <div className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden">
+                  <div className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden pointer-events-auto">
                     {[1, 2, 3, 4, 5].map((estrela) => (
                       <button
                         key={estrela}
@@ -261,11 +265,11 @@ const DetalhesReceita = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
-        <div className="p-8 md:p-12" id="conteudo-receita-para-impressao">
+        <div className="p-8 md:p-12 relative z-20 bg-white dark:bg-gray-800" id="conteudo-receita-para-impressao">
           {/* Actions Bar */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 pb-8 border-b border-gray-100 dark:border-gray-700 gap-4 print:hidden">
             <div className="flex gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
@@ -425,7 +429,7 @@ const DetalhesReceita = () => {
           )}
         </AnimatePresence>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
