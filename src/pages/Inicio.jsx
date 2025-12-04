@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { obterReceitaAleatoria, obterReceitaPorId } from '../services/api';
 import { obterFavoritos } from '../services/apiLocal';
-import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, Gift } from 'lucide-react';
+import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, Gift, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Inicio = () => {
@@ -12,6 +12,9 @@ const Inicio = () => {
   const [carregando, setCarregando] = useState(true);
   const [historico, setHistorico] = useState([]);
   const [receitasNatal, setReceitasNatal] = useState([]);
+  
+  // Referência para o container de scroll
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -26,7 +29,6 @@ const Inicio = () => {
         const historicoGuardado = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
         setHistorico(historicoGuardado);
 
-        // Carregar 3 receitas de Natal específicas (Turkey, Pudding, Chocolate)
         const idsNatal = ['52934', '52807', '52787'];
         const promessasNatal = idsNatal.map(id => obterReceitaPorId(id));
         const resultadosNatal = await Promise.all(promessasNatal);
@@ -41,6 +43,19 @@ const Inicio = () => {
 
     carregarDados();
   }, []);
+
+  // Funções de Scroll
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const { current } = scrollContainerRef;
+      const scrollAmount = 300; // Quantidade a scrollar
+      if (direction === 'left') {
+        current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+  };
 
   const categoriasPopulares = [
     { 
@@ -267,36 +282,52 @@ const Inicio = () => {
         </motion.div>
       </div>
 
-      {/* Visto Recentemente */}
+      {/* Visto Recentemente (Carrossel Controlável) */}
       {historico.length > 0 && (
-        <section className="pb-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
-            <Clock className="mr-3 text-orange-600" size={28} /> Visto Recentemente
-          </h2>
-          {/* Ajuste no padding-right para corrigir corte do último item */}
-          <div className="flex gap-6 overflow-x-auto pb-6 pr-4 scrollbar-hide snap-x snap-mandatory">
+        <section className="pb-8 relative group/slider">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+              <Clock className="mr-3 text-orange-600" size={28} /> Visto Recentemente
+            </h2>
+            {historico.length > 3 && (
+              <div className="flex gap-2">
+                <button onClick={() => scroll('left')} className="p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-700">
+                  <ChevronLeft size={20} />
+                </button>
+                <button onClick={() => scroll('right')} className="p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-700">
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-6 overflow-x-auto pb-6 pr-4 scrollbar-hide snap-x snap-mandatory scroll-smooth"
+          >
             {historico.map((item) => (
               <Link 
                 key={item.id} 
                 to={`/receita/${item.id}`} 
-                className="snap-center min-w-[200px] w-52 card-glass overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all"
+                className="snap-start min-w-[220px] w-56 card-glass overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all"
               >
-                <div className="h-36 overflow-hidden">
+                <div className="h-40 overflow-hidden relative">
                   <img 
                     src={item.imagem} 
                     alt={item.nome} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 leading-tight mb-2">
+                <div className="p-5">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 leading-tight mb-3 h-10">
                     {item.nome}
                   </h3>
-                  <span className="text-sm text-gray-400 group-hover:text-orange-500 transition-colors">Ver novamente</span>
+                  <span className="text-sm text-orange-600 dark:text-orange-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300 inline-block">Ver receita</span>
                 </div>
               </Link>
             ))}
-            {/* Elemento espaçador final para garantir que o último item não fica colado à margem */}
+            {/* Elemento espaçador final */}
             <div className="min-w-[1px] h-full"></div>
           </div>
         </section>
