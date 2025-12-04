@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Search, Heart, UtensilsCrossed, Menu, X, ShoppingCart, Sun, Moon, Refrigerator } from 'lucide-react';
+import { Home, Search, Heart, UtensilsCrossed, Menu, X, ShoppingCart, Sun, Moon, Refrigerator, Settings } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
@@ -50,7 +50,7 @@ const BarraNavegacao = () => {
               <div className="bg-orange-600 text-white p-1.5 rounded-lg transform group-hover:rotate-12 transition-transform">
                 <UtensilsCrossed size={24} />
               </div>
-              {/* Gorro de Natal */}
+              {/* Gorro de Natal (Opcional: remover após o Natal) */}
               <span className="absolute -top-3 -right-2 text-xl filter drop-shadow-md animate-bounce" style={{ animationDuration: '2s' }}>🎅</span>
             </div>
             <span className="text-gray-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
@@ -86,6 +86,11 @@ const BarraNavegacao = () => {
             </NavLink>
 
             <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-2"></div>
+
+            {/* Definições */}
+            <NavLink to="/definicoes" className={linkClass} title="Definições">
+              <Settings size={18} />
+            </NavLink>
 
             {/* Dark Mode Toggle */}
             <button 
@@ -153,6 +158,11 @@ const BarraNavegacao = () => {
               <NavLink to="/lista-compras" className={mobileLinkClass} onClick={toggleMenu}>
                 <ShoppingCart size={20} />
                 <span>Lista de Compras</span>
+              </NavLink>
+              <div className="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
+              <NavLink to="/definicoes" className={mobileLinkClass} onClick={toggleMenu}>
+                <Settings size={20} />
+                <span>Definições</span>
               </NavLink>
             </div>
           </motion.div>

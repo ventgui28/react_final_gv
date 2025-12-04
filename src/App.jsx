@@ -7,6 +7,7 @@ import Favoritos from './pages/Favoritos';
 import DetalhesReceita from './pages/DetalhesReceita';
 import ListaCompras from './pages/ListaCompras';
 import Frigorifico from './pages/Frigorifico';
+import Definicoes from './pages/Definicoes';
 import NaoEncontrado from './pages/NaoEncontrado';
 
 // Componente para gerir as animações de rota
@@ -62,6 +63,14 @@ const AnimatedRoutes = () => {
             element={
               <PageTransition>
                 <ListaCompras />
+              </PageTransition>
+            } 
+          />
+          <Route 
+            path="definicoes" 
+            element={
+              <PageTransition>
+                <Definicoes />
               </PageTransition>
             } 
           />

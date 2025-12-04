@@ -97,55 +97,5 @@
       "rating": 4
     }
   ],
-  "shoppingList": [
-    {
-      "id": "92fe",
-      "ingrediente": "Linguine Pasta",
-      "medida": "280g",
-      "receitaOrigem": "Chilli prawn linguine",
-      "comprado": true
-    },
-    {
-      "id": "201d",
-      "ingrediente": "Sugar Snap Peas",
-      "medida": "200g",
-      "receitaOrigem": "Chilli prawn linguine",
-      "comprado": false
-    },
-    {
-      "id": "e175",
-      "ingrediente": "Olive Oil",
-      "medida": "2 tblsp ",
-      "receitaOrigem": "Chilli prawn linguine",
-      "comprado": true
-    },
-    {
-      "id": "a58a",
-      "ingrediente": "Green Pepper",
-      "medida": "3",
-      "receitaOrigem": "Algerian Flafla (Bell Pepper Salad)",
-      "comprado": true
-    },
-    {
-      "id": "43fc",
-      "ingrediente": "Olive Oil",
-      "medida": "1 tablespoon",
-      "receitaOrigem": "Algerian Flafla (Bell Pepper Salad)",
-      "comprado": true
-    },
-    {
-      "id": "a031",
-      "ingrediente": "Red Onions",
-      "medida": "1 tablespoon chopped",
-      "receitaOrigem": "Algerian Flafla (Bell Pepper Salad)",
-      "comprado": false
-    },
-    {
-      "id": "d5b2",
-      "ingrediente": "Chicken",
-      "medida": "1.5kg",
-      "receitaOrigem": "Chicken Basquaise",
-      "comprado": false
-    }
-  ]
+  "shoppingList": []
 }
