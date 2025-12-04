@@ -129,6 +129,9 @@ const Pesquisa = () => {
   // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
 
+  // Estilos inline para garantir override
+  const selectClasses = "appearance-none w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors font-medium py-3 pl-4 pr-10";
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <div className="card-glass p-10 text-center max-w-5xl mx-auto">
@@ -171,7 +174,7 @@ const Pesquisa = () => {
               <select 
                 value={categoriaSelecionada}
                 onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-                className="select-modern pl-4 pr-10 w-full"
+                className={selectClasses}
                 disabled={carregando}
               >
                 <option value="" disabled>Categoria</option>
@@ -187,7 +190,7 @@ const Pesquisa = () => {
               <select 
                 value={areaSelecionada}
                 onChange={(e) => lidarComFiltroArea(e.target.value)}
-                className="select-modern pl-4 pr-10 w-full"
+                className={selectClasses}
                 disabled={carregando}
               >
                 <option value="" disabled>Origem</option>
@@ -203,7 +206,7 @@ const Pesquisa = () => {
               <select 
                 value={dificuldadeSelecionada}
                 onChange={(e) => setDificuldadeSelecionada(e.target.value)}
-                className="select-modern pl-4 pr-10 w-full disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
+                className={`${selectClasses} disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900`}
                 disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
                 title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista" : "Filtrar por Dificuldade"}
               >
@@ -249,7 +252,9 @@ const Pesquisa = () => {
         ) : receitasParaMostrar.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
             {receitasParaMostrar.map((receita) => (
-              <CartaoReceita key={receita.idMeal} receita={receita} />
+              <div key={receita.idMeal}>
+                <CartaoReceita receita={receita} />
+              </div>
             ))}
           </div>
         ) : jaPesquisou ? (
