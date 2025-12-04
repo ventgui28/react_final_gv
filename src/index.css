@@ -2,24 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilos para impressão */
+/* Importar Fonte Inter (Moderna e Limpa) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Estilos Base */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ea580c; /* Orange-600 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c2410c; /* Orange-700 */
+}
+
+/* Utilitário para esconder scrollbar horizontal mas manter funcionalidade */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* --------------------------------------------------------
+   Estilos de Impressão (Mantidos da versão anterior)
+   -------------------------------------------------------- */
 @media print {
-  /* --------------------------------------------------------
-     1. Limpeza e Ocultação de Elementos
-     -------------------------------------------------------- */
-  /* Esconder navegação, rodapé e botões de interface */
   body > #root > div > nav,
   body > #root > div > footer,
   .print\:hidden,
-  button, /* Esconder TODOS os botões por defeito */
-  a[href^="http"], /* Esconder links externos se não forem relevantes */
-  iframe { /* Esconder vídeos */
+  button,
+  a[href^="http"],
+  iframe {
     display: none !important;
   }
 
-  /* --------------------------------------------------------
-     2. Configuração da Página
-     -------------------------------------------------------- */
   @page {
     margin: 2cm;
     size: auto;
@@ -28,11 +68,10 @@
   body {
     background-color: white;
     color: black;
-    font-family: 'Georgia', 'Times New Roman', serif; /* Fonte serifada para leitura clássica */
+    font-family: 'Georgia', 'Times New Roman', serif;
     line-height: 1.5;
   }
 
-  /* Ajustar o container principal */
   main {
     margin: 0 !important;
     padding: 0 !important;
@@ -40,7 +79,6 @@
     max-width: none !important;
   }
 
-  /* Remover estilos de "card" para parecer uma folha limpa */
   .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm,
   .border, .rounded-3xl, .rounded-2xl, .rounded-xl,
   .bg-white, .dark:bg-gray-800, .bg-gray-50, .dark:bg-gray-700\/30 {
@@ -51,19 +89,14 @@
     padding: 0 !important;
   }
 
-  /* --------------------------------------------------------
-     3. Cabeçalho da Receita (Título e Metadados)
-     -------------------------------------------------------- */
-  /* Título da Receita */
   h1 {
     font-size: 28pt !important;
     font-weight: bold !important;
-    color: #ea580c !important; /* Manter um toque de laranja (safe for print) */
+    color: #ea580c !important;
     margin-bottom: 10px !important;
     text-align: center;
   }
 
-  /* Categoria e Área */
   h1 + div p {
     font-size: 14pt !important;
     text-align: center;
@@ -71,7 +104,6 @@
     margin-bottom: 20px !important;
   }
 
-  /* Imagem Principal */
   #conteudo-receita-para-impressao img {
     width: 100% !important;
     max-height: 300px !important;
@@ -81,10 +113,6 @@
     border: 1px solid #ddd !important;
   }
 
-  /* --------------------------------------------------------
-     4. Layout de Ingredientes e Instruções
-     -------------------------------------------------------- */
-  /* Títulos das Secções (Ingredientes, Instruções) */
   h2 {
     font-size: 18pt !important;
     border-bottom: 2px solid #ea580c;
@@ -94,10 +122,9 @@
     color: black !important;
   }
 
-  /* Lista de Ingredientes */
   ul {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Duas colunas para poupar espaço */
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 20px;
   }
@@ -109,18 +136,14 @@
     font-size: 11pt;
   }
 
-  /* Instruções */
   .prose {
     font-size: 12pt !important;
     text-align: justify;
-    white-space: pre-wrap !important; /* Manter quebras de linha */
+    white-space: pre-wrap !important;
   }
 
-  /* --------------------------------------------------------
-     5. Rodapé da Impressão (Branding)
-     -------------------------------------------------------- */
   #conteudo-receita-para-impressao::after {
-    content: "CookBook - O Teu Gestor de Receitas Pessoais • Gerado em " attr(data-date);
+    content: "CookBook - O Teu Gestor de Receitas Pessoais";
     display: block;
     text-align: center;
     margin-top: 50px;
