@@ -119,17 +119,18 @@ const DetalhesReceita = () => {
     }
   };
 
-  const adicionarIngredienteLista = async (ingrediente, medida) => {
+  const adicionarIngredienteLista = async (ingrediente, medida, imagem) => { // Adicionar 'imagem'
     try {
       await adicionarItemLista({
         ingrediente,
         medida,
         receitaOrigem: receita.strMeal,
         comprado: false,
-        quantidade: 1 // Adicionar quantidade padrão
+        quantidade: 1,
+        imagem // Guardar imagem do ingrediente
       });
       toast.success("Adicionado à lista de compras!");
-      carregarItens(); // Refrescar contador na barra de navegação
+      carregarItens();
     } catch (erro) {
       toast.error("Erro ao adicionar à lista.");
     }
@@ -337,7 +338,7 @@ const DetalhesReceita = () => {
                         <span className="text-orange-600 dark:text-orange-400 text-sm font-medium">{item.medida}</span>
                       </div>
                       <button 
-                        onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida)}
+                        onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida, item.imagem)}
                         className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-full transition-colors opacity-0 group-hover:opacity-100 print:hidden"
                         title="Adicionar à Lista de Compras"
                       >

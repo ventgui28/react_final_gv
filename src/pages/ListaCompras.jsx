@@ -106,6 +106,14 @@ const ListaCompras = () => {
                   <button className={`transition-colors ${item.comprado ? 'text-green-500' : 'text-gray-400 dark:text-gray-500'}`}>
                     {item.comprado ? <CheckSquare size={24} /> : <Square size={24} />}
                   </button>
+                  {item.imagem && (
+                    <img 
+                      src={item.imagem} 
+                      alt={item.ingrediente} 
+                      className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700" 
+                      onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }} // Fallback
+                    />
+                  )}
                   <div>
                     <p className={`font-medium text-lg transition-all ${item.comprado ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-800 dark:text-gray-200'}`}>
                       {item.ingrediente}
