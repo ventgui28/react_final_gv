@@ -3,11 +3,13 @@ import { Home, Search, Heart, UtensilsCrossed, Menu, X, ShoppingCart, Sun, Moon,
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import { useShoppingList } from '../context/ShoppingListContext';
 
 const BarraNavegacao = () => {
   const [menuAberto, setMenuAberto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { temaEscuro, alternarTema } = useTheme();
+  const { itensCount } } = useShoppingList(); // Usar total de quantidades
 
   const toggleMenu = () => setMenuAberto(!menuAberto);
 
@@ -80,9 +82,14 @@ const BarraNavegacao = () => {
               <span>Favoritos</span>
             </NavLink>
 
-            <NavLink to="/lista-compras" className={linkClass}>
+            <NavLink to="/lista-compras" className={`${linkClass} relative`}>
               <ShoppingCart size={18} />
               <span>Compras</span>
+              {itensCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center animate-ping-once">
+                  {itensCount}
+                </span>
+              )}
             </NavLink>
 
             <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-2"></div>
@@ -155,9 +162,14 @@ const BarraNavegacao = () => {
                 <Heart size={20} />
                 <span>Favoritos</span>
               </NavLink>
-              <NavLink to="/lista-compras" className={mobileLinkClass} onClick={toggleMenu}>
+              <NavLink to="/lista-compras" className={`${mobileLinkClass} relative`}>
                 <ShoppingCart size={20} />
-                <span>Lista de Compras</span>
+                <span>Compras</span>
+                {itensCount > 0 && (
+                  <span className="absolute top-1 right-3 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-ping-once">
+                    {itensCount}
+                  </span>
+                )}
               </NavLink>
               <div className="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
               <NavLink to="/definicoes" className={mobileLinkClass} onClick={toggleMenu}>

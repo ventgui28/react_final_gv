@@ -5,7 +5,8 @@ import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito, 
 import { ArrowLeft, Heart, Loader2, List, FileText, Share2, Star, PlayCircle, ShoppingCart, Plus, Printer, CheckCircle, Circle, QrCode, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import QRCode from 'react-qr-code'; // Importar biblioteca
+import QRCode from 'react-qr-code';
+import { useShoppingList } from '../context/ShoppingListContext';
 
 const DetalhesReceita = () => {
   const { id } = useParams();
@@ -17,7 +18,8 @@ const DetalhesReceita = () => {
   const [classificacao, setClassificacao] = useState(0);
   const [processando, setProcessando] = useState(false);
   const [passosConcluidos, setPassosConcluidos] = useState([]);
-  const [mostrarQR, setMostrarQR] = useState(false); // Estado para o Modal QR
+  const [mostrarQR, setMostrarQR] = useState(false);
+  const { carregarItens } = useShoppingList();
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -27,7 +29,6 @@ const DetalhesReceita = () => {
         setReceita(dados);
 
         if (dados) {
-          // Guardar no Histórico (localStorage) - Lógica reforçada
           try {
             const historicoAtual = localStorage.getItem('historicoReceitas');
             let historico = historicoAtual ? JSON.parse(historicoAtual) : [];
@@ -124,9 +125,11 @@ const DetalhesReceita = () => {
         ingrediente,
         medida,
         receitaOrigem: receita.strMeal,
-        comprado: false
+        comprado: false,
+        quantidade: 1 // Adicionar quantidade padrão
       });
       toast.success("Adicionado à lista de compras!");
+      carregarItens(); // Refrescar contador na barra de navegação
     } catch (erro) {
       toast.error("Erro ao adicionar à lista.");
     }
@@ -156,7 +159,6 @@ const DetalhesReceita = () => {
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  // Calcular Dificuldade
   const calcularDificuldade = (numIngredientes) => {
     if (numIngredientes <= 8) return { texto: 'Fácil', cor: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' };
     if (numIngredientes <= 12) return { texto: 'Médio', cor: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' };
@@ -173,7 +175,7 @@ const DetalhesReceita = () => {
     <div className="text-center py-20 text-gray-500 dark:text-gray-400">
       Receita não encontrada.
       <br />
-      <button onClick={() => navegar(-1)} className="text-orange-600 font-bold hover:underline mt-4">Voltar</button>
+      <button onClick={() => navegar(-1)} className="btn-primary mt-4">Voltar</button>
     </div>
   );
 
@@ -185,7 +187,6 @@ const DetalhesReceita = () => {
       ingredientes.push({
         ingrediente: receita[`strIngredient${i}`],
         medida: receita[`strMeasure${i}`],
-        // Adicionar imagem do ingrediente, se disponível
         imagem: `https://www.themealdb.com/images/ingredients/${receita[`strIngredient${i}`]}.png`
       });
     }
@@ -322,14 +323,14 @@ const DetalhesReceita = () => {
                   </div>
                   Ingredientes
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3"> {/* Grelha de ingredientes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                   {ingredientes.map((item, idx) => (
                     <div key={idx} className="card-glass p-3 flex items-center gap-3 group">
                       <img 
                         src={item.imagem} 
                         alt={item.ingrediente} 
                         className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700" 
-                        onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }} // Fallback
+                        onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }}
                       />
                       <div className="flex-grow">
                         <span className="font-semibold block text-gray-900 dark:text-white">{item.ingrediente}</span>

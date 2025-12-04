@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { obterListaCompras, removerItemLista, atualizarItemLista } from '../services/apiLocal';
-import { Trash2, CheckSquare, Square, ShoppingCart } from 'lucide-react';
+import { Trash2, CheckSquare, Square, ShoppingCart, Minus, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useShoppingList } from '../context/ShoppingListContext';
 
 const ListaCompras = () => {
   const [lista, setLista] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const { carregarItens } = useShoppingList();
 
   useEffect(() => {
     carregarLista();
@@ -31,6 +33,7 @@ const ListaCompras = () => {
       const novoEstado = !item.comprado;
       await atualizarItemLista(item.id, { comprado: novoEstado });
       setLista(lista.map(i => i.id === item.id ? { ...i, comprado: novoEstado } : i));
+      carregarItens();
     } catch (erro) {
       toast.error("Erro ao atualizar item.");
     }
@@ -41,8 +44,25 @@ const ListaCompras = () => {
       await removerItemLista(id);
       setLista(lista.filter(i => i.id !== id));
       toast.success("Item removido!");
+      carregarItens();
     } catch (erro) {
       toast.error("Erro ao remover item.");
+    }
+  };
+
+  const ajustarQuantidade = async (item, delta) => {
+    const novaQuantidade = (item.quantidade || 1) + delta;
+    if (novaQuantidade < 1) { // Não permitir quantidade inferior a 1
+      removerItem(item.id); // Se for 0 ou menos, remove o item
+      return;
+    }
+
+    try {
+      await atualizarItemLista(item.id, { quantidade: novaQuantidade });
+      setLista(lista.map(i => i.id === item.id ? { ...i, quantidade: novaQuantidade } : i));
+      carregarItens();
+    } catch (erro) {
+      toast.error("Erro ao ajustar quantidade.");
     }
   };
 
@@ -71,7 +91,7 @@ const ListaCompras = () => {
           </Link>
         </div>
       ) : (
-        <motion.div layout className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <motion.div layout className="card-glass overflow-hidden">
           <AnimatePresence>
             {lista.map((item) => (
               <motion.div 
@@ -95,6 +115,20 @@ const ListaCompras = () => {
                     </p>
                   </div>
                 </div>
+                
+                {/* Controlo de Quantidade */}
+                <div className="flex items-center gap-2 print:hidden">
+                  <button onClick={() => ajustarQuantidade(item, -1)} className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
+                    <Minus size={20} />
+                  </button>
+                  <span className="font-bold text-lg text-gray-800 dark:text-white w-8 text-center">
+                    {item.quantidade || 1}
+                  </span>
+                  <button onClick={() => ajustarQuantidade(item, 1)} className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
+                    <Plus size={20} />
+                  </button>
+                </div>
+
                 <button 
                   onClick={() => removerItem(item.id)}
                   className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"
