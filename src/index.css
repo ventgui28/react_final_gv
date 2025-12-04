@@ -44,9 +44,10 @@ body {
 
   /* Dropdown (Select) Moderno */
   .select-modern {
-    @apply appearance-none w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 
-           rounded-xl shadow-sm focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none 
-           text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors font-medium;
+    @apply appearance-none w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 
+           rounded-xl shadow-sm focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 
+           focus:border-orange-500 dark:focus:border-orange-500 outline-none transition-all 
+           text-gray-800 dark:text-white placeholder-gray-400 font-medium cursor-pointer;
     background-image: none; /* Remover seta nativa do browser */
   }
 }

@@ -171,7 +171,7 @@ const Pesquisa = () => {
               <select 
                 value={categoriaSelecionada}
                 onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-                className="select-modern pr-10 w-full"
+                className="select-modern pl-4 pr-10 w-full"
                 disabled={carregando}
               >
                 <option value="" disabled>Categoria</option>
@@ -187,7 +187,7 @@ const Pesquisa = () => {
               <select 
                 value={areaSelecionada}
                 onChange={(e) => lidarComFiltroArea(e.target.value)}
-                className="select-modern pr-10 w-full"
+                className="select-modern pl-4 pr-10 w-full"
                 disabled={carregando}
               >
                 <option value="" disabled>Origem</option>
@@ -203,7 +203,7 @@ const Pesquisa = () => {
               <select 
                 value={dificuldadeSelecionada}
                 onChange={(e) => setDificuldadeSelecionada(e.target.value)}
-                className="select-modern pr-10 w-full disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
+                className="select-modern pl-4 pr-10 w-full disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
                 disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
                 title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista" : "Filtrar por Dificuldade"}
               >
@@ -249,9 +249,7 @@ const Pesquisa = () => {
         ) : receitasParaMostrar.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
             {receitasParaMostrar.map((receita) => (
-              <div key={receita.idMeal}>
-                <CartaoReceita receita={receita} />
-              </div>
+              <CartaoReceita key={receita.idMeal} receita={receita} />
             ))}
           </div>
         ) : jaPesquisou ? (
