@@ -97,5 +97,27 @@
       "rating": 4
     }
   ],
-  "shoppingList": []
+  "shoppingList": [
+    {
+      "id": "d486",
+      "ingrediente": "Beef",
+      "medida": "1/2 lb",
+      "receitaOrigem": "Beef Lo Mein",
+      "comprado": false
+    },
+    {
+      "id": "25cb",
+      "ingrediente": "Salt",
+      "medida": "pinch",
+      "receitaOrigem": "Beef Lo Mein",
+      "comprado": false
+    },
+    {
+      "id": "54ad",
+      "ingrediente": "Pepper",
+      "medida": "pinch",
+      "receitaOrigem": "Beef Lo Mein",
+      "comprado": false
+    }
+  ]
 }

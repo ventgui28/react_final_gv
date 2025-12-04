@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
-import { Search, Loader2, XCircle, ArrowRight, Filter } from 'lucide-react';
-// Removido framer-motion das partes críticas para garantir estabilidade
+import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown } from 'lucide-react';
+import { motion } from 'framer-motion'; 
 import { useLocation } from 'react-router-dom';
 
 const Pesquisa = () => {
@@ -126,6 +126,17 @@ const Pesquisa = () => {
     return true;
   });
 
+  // Variantes de animação (Ainda aqui, mas não usadas diretamente no map)
+  const container = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
 
@@ -147,7 +158,7 @@ const Pesquisa = () => {
             placeholder="Ex: Frango, Bolo, Massa..."
             value={termo}
             onChange={(e) => setTermo(e.target.value)}
-            className="w-full pl-14 pr-16 py-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 focus:border-orange-500 dark:focus:border-orange-500 outline-none transition-all text-xl dark:text-white placeholder-gray-400 shadow-sm"
+            className="input-modern pl-14 pr-16 text-xl shadow-sm"
           />
           <button 
             type="submit"
@@ -166,42 +177,54 @@ const Pesquisa = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto">
-            <select 
-              value={categoriaSelecionada}
-              onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-              className="px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors w-full shadow-sm font-medium"
-              disabled={carregando}
-            >
-              <option value="" disabled>Categoria</option>
-              {categorias.map((cat) => (
-                <option key={cat.strCategory} value={cat.strCategory}>{cat.strCategory}</option>
-              ))}
-            </select>
+            {/* Categoria */}
+            <div className="relative">
+              <select 
+                value={categoriaSelecionada}
+                onChange={(e) => lidarComFiltroCategoria(e.target.value)}
+                className="select-modern pr-10" // Adicionar pr-10 para o ícone
+                disabled={carregando}
+              >
+                <option value="" disabled>Categoria</option>
+                {categorias.map((cat) => (
+                  <option key={cat.strCategory} value={cat.strCategory}>{cat.strCategory}</option>
+                ))}
+              </select>
+              <ChevronDown size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
 
-            <select 
-              value={areaSelecionada}
-              onChange={(e) => lidarComFiltroArea(e.target.value)}
-              className="px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors w-full shadow-sm font-medium"
-              disabled={carregando}
-            >
-              <option value="" disabled>Origem</option>
-              {areas.map((area) => (
-                <option key={area.strArea} value={area.strArea}>{area.strArea}</option>
-              ))}
-            </select>
+            {/* Origem */}
+            <div className="relative">
+              <select 
+                value={areaSelecionada}
+                onChange={(e) => lidarComFiltroArea(e.target.value)}
+                className="select-modern pr-10"
+                disabled={carregando}
+              >
+                <option value="" disabled>Origem</option>
+                {areas.map((area) => (
+                  <option key={area.strArea} value={area.strArea}>{area.strArea}</option>
+                ))}
+              </select>
+              <ChevronDown size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
 
-            <select 
-              value={dificuldadeSelecionada}
-              onChange={(e) => setDificuldadeSelecionada(e.target.value)}
-              className="px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors w-full shadow-sm font-medium disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
-              disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
-              title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista" : "Filtrar por Dificuldade"}
-            >
-              <option value="">Dificuldade (Todas)</option>
-              <option value="Fácil">Fácil (&lt; 8 ingr.)</option>
-              <option value="Médio">Médio (8-12 ingr.)</option>
-              <option value="Pro">Pro (&gt; 12 ingr.)</option>
-            </select>
+            {/* Dificuldade */}
+            <div className="relative">
+              <select 
+                value={dificuldadeSelecionada}
+                onChange={(e) => setDificuldadeSelecionada(e.target.value)}
+                className="select-modern pr-10 disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
+                disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
+                title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista" : "Filtrar por Dificuldade"}
+              >
+                <option value="">Dificuldade (Todas)</option>
+                <option value="Fácil">Fácil (&lt; 8 ingr.)</option>
+                <option value="Médio">Médio (8-12 ingr.)</option>
+                <option value="Pro">Pro (&gt; 12 ingr.)</option>
+              </select>
+              <ChevronDown size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
           </div>
         </div>
         
@@ -217,7 +240,7 @@ const Pesquisa = () => {
         {carregando ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
              {[...Array(8)].map((_, i) => (
-               <div key={i} className="bg-white dark:bg-gray-800 h-80 rounded-2xl animate-pulse shadow-sm border dark:border-gray-700">
+               <div key={i} className="card-glass h-80 animate-pulse">
                  <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-2xl"></div>
                  <div className="p-5 space-y-3">
                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
@@ -241,7 +264,7 @@ const Pesquisa = () => {
             ))}
           </div>
         ) : jaPesquisou ? (
-          <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700 mt-10 transition-colors max-w-3xl mx-auto">
+          <div className="text-center py-20 card-glass border-dashed border-gray-300 dark:border-gray-700 mt-10 max-w-3xl mx-auto">
             <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-full inline-block mb-6 shadow-inner">
               <Search size={48} className="text-gray-400" />
             </div>
@@ -252,7 +275,7 @@ const Pesquisa = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-32 text-gray-400 dark:text-gray-600 opacity-60 transition-colors">
-            <Search size={80} className="mb-6 text-gray-300 dark:text-gray-700" strokeWidth={1.5} />
+            <ChefHat size={80} className="mb-6 text-gray-300 dark:text-gray-700" strokeWidth={1.5} />
             <p className="text-xl font-medium">As tuas descobertas aparecerão aqui</p>
           </div>
         )}
