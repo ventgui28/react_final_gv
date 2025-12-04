@@ -111,15 +111,21 @@ const ListaCompras = () => {
         </div>
       </header>
 
-      {mostrarConfetti && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }} 
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-green-100 text-green-800 p-4 rounded-xl text-center font-bold border border-green-200 flex items-center justify-center gap-2"
-        >
-          <PartyPopper /> Lista completa! Bom trabalho! 🎉
-        </motion.div>
-      )}
+      {/* Mensagem de Sucesso Total com Animação Suave de Saída */}
+      <AnimatePresence>
+        {mostrarConfetti && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, scale: 0.9 }} 
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ duration: 0.5 }}
+            className="bg-green-100 text-green-800 p-4 rounded-xl text-center font-bold border border-green-200 flex items-center justify-center gap-2 shadow-md"
+          >
+            <PartyPopper className="text-green-600" /> 
+            <span>Lista completa! Bom trabalho! 🎉</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {lista.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700">
