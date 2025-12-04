@@ -14,19 +14,19 @@ const LayoutPrincipal = () => {
       <ShoppingListProvider>
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans transition-colors duration-500 ease-in-out relative overflow-x-hidden">
           
-          {/* Fundo Decorativo (Background Pattern & Gradients) */}
-          <div className="fixed inset-0 z-0 pointer-events-none">
-            {/* Gradiente Laranja Suave (Topo Direito) */}
-            <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-orange-300/30 dark:bg-orange-900/20 rounded-full blur-[100px] opacity-50 dark:opacity-30 animate-pulse-slow"></div>
+          {/* Fundo Decorativo Reforçado */}
+          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            {/* Gradiente Laranja (Mais forte e visível) */}
+            <div className="absolute -top-[10%] -right-[10%] w-[600px] h-[600px] bg-orange-400/20 dark:bg-orange-600/10 rounded-full blur-[120px] animate-pulse-slow"></div>
             
-            {/* Gradiente Amarelo Suave (Baixo Esquerdo) */}
-            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-yellow-200/30 dark:bg-yellow-900/10 rounded-full blur-[120px] opacity-40 dark:opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+            {/* Gradiente Amarelo (Mais forte e visível) */}
+            <div className="absolute -bottom-[10%] -left-[10%] w-[700px] h-[700px] bg-yellow-300/20 dark:bg-yellow-600/10 rounded-full blur-[140px] animate-pulse-slow" style={{ animationDelay: '4s' }}></div>
             
-            {/* Padrão de Pontos (Dot Pattern) */}
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 dark:opacity-10"></div>
+            {/* Padrão de Grelha (Grid Pattern) */}
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.6] dark:opacity-[0.4]"></div>
           </div>
 
-          {/* Neve cai sobre tudo (opcional, para Natal) */}
+          {/* Neve (Opcional) */}
           <Neve />
           
           <Toaster 
@@ -62,7 +62,7 @@ const LayoutPrincipal = () => {
             }}
           />
           
-          {/* Conteúdo Principal (com z-10 para ficar acima do fundo) */}
+          {/* Conteúdo Principal */}
           <div className="relative z-10 flex flex-col min-h-screen">
             <BarraNavegacao />
             <main className="flex-grow container mx-auto px-4 py-8 transition-all duration-500">
