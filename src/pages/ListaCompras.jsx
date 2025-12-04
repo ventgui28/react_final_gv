@@ -13,6 +13,19 @@ const ListaCompras = () => {
   const { carregarItens } = useShoppingList();
   const [mostrarConfetti, setMostrarConfetti] = useState(false);
 
+  // Obter largura e altura da janela
+  const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     carregarLista();
   }, []);
@@ -30,11 +43,10 @@ const ListaCompras = () => {
     }
   };
 
-  // Verificar se completou tudo
   useEffect(() => {
     if (lista.length > 0 && lista.every(item => item.comprado)) {
       setMostrarConfetti(true);
-      const timer = setTimeout(() => setMostrarConfetti(false), 5000); // Parar após 5s
+      const timer = setTimeout(() => setMostrarConfetti(false), 5000);
       return () => clearTimeout(timer);
     } else {
       setMostrarConfetti(false);
@@ -84,7 +96,7 @@ const ListaCompras = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 relative">
-      {mostrarConfetti && <Confetti numberOfPieces={200} recycle={false} />}
+      {mostrarConfetti && <Confetti width={width} height={height} numberOfPieces={200} recycle={false} />}
       
       <header className="flex items-center justify-between mb-8">
         <div>
@@ -99,7 +111,6 @@ const ListaCompras = () => {
         </div>
       </header>
 
-      {/* Mensagem de Sucesso Total */}
       {mostrarConfetti && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }} 
