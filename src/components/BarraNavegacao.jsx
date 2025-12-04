@@ -9,7 +9,7 @@ const BarraNavegacao = () => {
   const [menuAberto, setMenuAberto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { temaEscuro, alternarTema } = useTheme();
-  const { itensCount } } = useShoppingList(); // Usar total de quantidades
+  const { itensCount } } = useShoppingList();
 
   const toggleMenu = () => setMenuAberto(!menuAberto);
 
@@ -23,7 +23,7 @@ const BarraNavegacao = () => {
   }, []);
 
   const linkClass = ({ isActive }) => 
-    `flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${
+    `flex items-center px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${
       isActive 
         ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400' 
         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-orange-600 dark:hover:text-orange-400'
@@ -82,11 +82,13 @@ const BarraNavegacao = () => {
               <span>Favoritos</span>
             </NavLink>
 
-            <NavLink to="/lista-compras" className={`${linkClass} relative`}>
-              <ShoppingCart size={18} />
-              <span>Compras</span>
+            <NavLink to="/lista-compras" className={`${linkClass} relative pr-6`}> {/* Adicionado pr-6 */}
+              <div className="flex items-center space-x-2"> {/* Agrupar ícone e texto */}
+                <ShoppingCart size={18} />
+                <span>Compras</span>
+              </div>
               {itensCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center animate-ping-once">
+                <span className="absolute -top-1 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center animate-ping-once">
                   {itensCount}
                 </span>
               )}
@@ -162,11 +164,13 @@ const BarraNavegacao = () => {
                 <Heart size={20} />
                 <span>Favoritos</span>
               </NavLink>
-              <NavLink to="/lista-compras" className={`${mobileLinkClass} relative`}>
-                <ShoppingCart size={20} />
-                <span>Compras</span>
+              <NavLink to="/lista-compras" className={`${mobileLinkClass} relative pr-8`}> {/* Adicionado pr-8 */}
+                <div className="flex items-center space-x-3"> {/* Agrupar ícone e texto */}
+                  <ShoppingCart size={20} />
+                  <span>Compras</span>
+                </div>
                 {itensCount > 0 && (
-                  <span className="absolute top-1 right-3 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-ping-once">
+                  <span className="absolute top-1 right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-ping-once">
                     {itensCount}
                   </span>
                 )}
