@@ -273,18 +273,19 @@ const Inicio = () => {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
             <Clock className="mr-3 text-orange-600" size={28} /> Visto Recentemente
           </h2>
-          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+          {/* Ajuste no padding-right para corrigir corte do último item */}
+          <div className="flex gap-6 overflow-x-auto pb-6 pr-4 scrollbar-hide snap-x snap-mandatory">
             {historico.map((item) => (
               <Link 
                 key={item.id} 
                 to={`/receita/${item.id}`} 
-                className="snap-center min-w-[200px] w-52 card-glass overflow-hidden group flex-shrink-0"
+                className="snap-center min-w-[200px] w-52 card-glass overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all"
               >
                 <div className="h-36 overflow-hidden">
                   <img 
                     src={item.imagem} 
                     alt={item.nome} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 <div className="p-4">
@@ -295,6 +296,8 @@ const Inicio = () => {
                 </div>
               </Link>
             ))}
+            {/* Elemento espaçador final para garantir que o último item não fica colado à margem */}
+            <div className="min-w-[1px] h-full"></div>
           </div>
         </section>
       )}
