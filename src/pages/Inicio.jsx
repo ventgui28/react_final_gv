@@ -124,32 +124,41 @@ const Inicio = () => {
       </motion.section>
 
       {/* Secção Especial de Natal */}
-      {receitasNatal.length > 0 && (
+      {(carregando || receitasNatal.length > 0) && (
         <motion.section variants={itemVariants}>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
             <span className="text-2xl mr-2">🎅</span>
             Ementa da Consoada
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {receitasNatal.map((receita) => (
-              <Link 
-                key={receita.idMeal}
-                to={`/receita/${receita.idMeal}`}
-                className="group relative h-64 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
-              >
-                <img 
-                  src={receita.strMealThumb} 
-                  alt={receita.strMeal} 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-4">
-                  <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full mb-2 inline-block">Natal</span>
-                  <h3 className="text-white font-bold text-xl line-clamp-2">{receita.strMeal}</h3>
-                </div>
-              </Link>
-            ))}
-          </div>
+          
+          {carregando ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-64 bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {receitasNatal.map((receita) => (
+                <Link 
+                  key={receita.idMeal}
+                  to={`/receita/${receita.idMeal}`}
+                  className="group relative h-64 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+                >
+                  <img 
+                    src={receita.strMealThumb} 
+                    alt={receita.strMeal} 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-4">
+                    <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full mb-2 inline-block">Natal</span>
+                    <h3 className="text-white font-bold text-xl line-clamp-2">{receita.strMeal}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </motion.section>
       )}
 
