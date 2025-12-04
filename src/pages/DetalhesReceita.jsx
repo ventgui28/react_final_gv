@@ -27,6 +27,7 @@ const DetalhesReceita = () => {
         setReceita(dados);
 
         if (dados) {
+          // Guardar no Histórico (localStorage) - Lógica reforçada
           try {
             const historicoAtual = localStorage.getItem('historicoReceitas');
             let historico = historicoAtual ? JSON.parse(historicoAtual) : [];
@@ -155,6 +156,7 @@ const DetalhesReceita = () => {
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
+  // Calcular Dificuldade
   const calcularDificuldade = (numIngredientes) => {
     if (numIngredientes <= 8) return { texto: 'Fácil', cor: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' };
     if (numIngredientes <= 12) return { texto: 'Médio', cor: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' };
@@ -182,7 +184,9 @@ const DetalhesReceita = () => {
     if (receita[`strIngredient${i}`] && receita[`strIngredient${i}`].trim()) {
       ingredientes.push({
         ingrediente: receita[`strIngredient${i}`],
-        medida: receita[`strMeasure${i}`]
+        medida: receita[`strMeasure${i}`],
+        // Adicionar imagem do ingrediente, se disponível
+        imagem: `https://www.themealdb.com/images/ingredients/${receita[`strIngredient${i}`]}.png`
       });
     }
   }
@@ -318,10 +322,16 @@ const DetalhesReceita = () => {
                   </div>
                   Ingredientes
                 </h2>
-                <ul className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3"> {/* Grelha de ingredientes */}
                   {ingredientes.map((item, idx) => (
-                    <li key={idx} className="group flex justify-between items-center text-gray-700 dark:text-gray-300 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-transparent hover:border-orange-200 dark:hover:border-orange-800 transition-all hover:shadow-sm">
-                      <div>
+                    <div key={idx} className="card-glass p-3 flex items-center gap-3 group">
+                      <img 
+                        src={item.imagem} 
+                        alt={item.ingrediente} 
+                        className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700" 
+                        onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }} // Fallback
+                      />
+                      <div className="flex-grow">
                         <span className="font-semibold block text-gray-900 dark:text-white">{item.ingrediente}</span>
                         <span className="text-orange-600 dark:text-orange-400 text-sm font-medium">{item.medida}</span>
                       </div>
@@ -332,9 +342,9 @@ const DetalhesReceita = () => {
                       >
                         <Plus size={20} />
                       </button>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
 
