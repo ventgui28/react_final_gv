@@ -139,6 +139,13 @@
       "medida": "1 tablespoon chopped",
       "receitaOrigem": "Algerian Flafla (Bell Pepper Salad)",
       "comprado": false
+    },
+    {
+      "id": "d5b2",
+      "ingrediente": "Chicken",
+      "medida": "1.5kg",
+      "receitaOrigem": "Chicken Basquaise",
+      "comprado": false
     }
   ]
 }

@@ -2,7 +2,8 @@ import { Outlet } from 'react-router-dom';
 import BarraNavegacao from './BarraNavegacao';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '../context/ThemeContext';
-import Neve from './Neve'; // Importar Neve
+import Neve from './Neve';
+import ChatBot from './ChatBot'; // Importar ChatBot
 
 const LayoutPrincipal = () => {
   return (
@@ -54,6 +55,9 @@ const LayoutPrincipal = () => {
             <p className="text-sm mt-2">Desenvolvido por Guilherme Ventura - Projeto Final React</p>
           </div>
         </footer>
+
+        {/* ChatBot Flutuante */}
+        <ChatBot />
       </div>
     </ThemeProvider>
   );
