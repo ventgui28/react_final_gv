@@ -4,40 +4,130 @@
 
 /* Estilos para impressão */
 @media print {
-  /* Esconder elementos que não queremos imprimir */
-  body > #root > div > nav, /* Barra de Navegação */
-  body > #root > div > footer, /* Rodapé */
-  .print\:hidden, /* Qualquer elemento com esta classe */
-  .go-back-button, /* Botão de voltar */
-  .action-buttons { /* Botões de ação como partilhar, imprimir, favoritos */
+  /* --------------------------------------------------------
+     1. Limpeza e Ocultação de Elementos
+     -------------------------------------------------------- */
+  /* Esconder navegação, rodapé e botões de interface */
+  body > #root > div > nav,
+  body > #root > div > footer,
+  .print\:hidden,
+  button, /* Esconder TODOS os botões por defeito */
+  a[href^="http"], /* Esconder links externos se não forem relevantes */
+  iframe { /* Esconder vídeos */
     display: none !important;
   }
 
-  /* Ajustar o layout principal */
+  /* --------------------------------------------------------
+     2. Configuração da Página
+     -------------------------------------------------------- */
+  @page {
+    margin: 2cm;
+    size: auto;
+  }
+
+  body {
+    background-color: white;
+    color: black;
+    font-family: 'Georgia', 'Times New Roman', serif; /* Fonte serifada para leitura clássica */
+    line-height: 1.5;
+  }
+
+  /* Ajustar o container principal */
   main {
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
   }
 
-  /* Remover sombras, bordas e fundos para economizar tinta */
+  /* Remover estilos de "card" para parecer uma folha limpa */
   .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm,
-  .border,
+  .border, .rounded-3xl, .rounded-2xl, .rounded-xl,
   .bg-white, .dark:bg-gray-800, .bg-gray-50, .dark:bg-gray-700\/30 {
     box-shadow: none !important;
     border: none !important;
+    border-radius: 0 !important;
     background-color: transparent !important;
+    padding: 0 !important;
   }
 
-  /* Forçar cores de texto para preto para melhor contraste */
-  h1, h2, h3, p, span, li, a {
+  /* --------------------------------------------------------
+     3. Cabeçalho da Receita (Título e Metadados)
+     -------------------------------------------------------- */
+  /* Título da Receita */
+  h1 {
+    font-size: 28pt !important;
+    font-weight: bold !important;
+    color: #ea580c !important; /* Manter um toque de laranja (safe for print) */
+    margin-bottom: 10px !important;
+    text-align: center;
+  }
+
+  /* Categoria e Área */
+  h1 + div p {
+    font-size: 14pt !important;
+    text-align: center;
+    color: #666 !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Imagem Principal */
+  #conteudo-receita-para-impressao img {
+    width: 100% !important;
+    max-height: 300px !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    margin-bottom: 30px;
+    border: 1px solid #ddd !important;
+  }
+
+  /* --------------------------------------------------------
+     4. Layout de Ingredientes e Instruções
+     -------------------------------------------------------- */
+  /* Títulos das Secções (Ingredientes, Instruções) */
+  h2 {
+    font-size: 18pt !important;
+    border-bottom: 2px solid #ea580c;
+    padding-bottom: 5px;
+    margin-top: 20px !important;
+    margin-bottom: 15px !important;
     color: black !important;
   }
 
-  /* Imagem da receita a 100% de largura */
-  #conteudo-receita-para-impressao img {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important; /* Para garantir que a imagem não seja cortada */
+  /* Lista de Ingredientes */
+  ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas para poupar espaço */
+    gap: 10px;
     margin-bottom: 20px;
+  }
+
+  li {
+    list-style: none;
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 4px;
+    font-size: 11pt;
+  }
+
+  /* Instruções */
+  .prose {
+    font-size: 12pt !important;
+    text-align: justify;
+    white-space: pre-wrap !important; /* Manter quebras de linha */
+  }
+
+  /* --------------------------------------------------------
+     5. Rodapé da Impressão (Branding)
+     -------------------------------------------------------- */
+  #conteudo-receita-para-impressao::after {
+    content: "CookBook - O Teu Gestor de Receitas Pessoais • Gerado em " attr(data-date);
+    display: block;
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 9pt;
+    color: #999;
+    font-style: italic;
   }
 }
