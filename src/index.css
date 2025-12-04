@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Estilos para impressão */
+@media print {
+  /* Esconder elementos que não queremos imprimir */
+  body > #root > div > nav, /* Barra de Navegação */
+  body > #root > div > footer, /* Rodapé */
+  .print\:hidden, /* Qualquer elemento com esta classe */
+  .go-back-button, /* Botão de voltar */
+  .action-buttons { /* Botões de ação como partilhar, imprimir, favoritos */
+    display: none !important;
+  }
+
+  /* Ajustar o layout principal */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Remover sombras, bordas e fundos para economizar tinta */
+  .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm,
+  .border,
+  .bg-white, .dark:bg-gray-800, .bg-gray-50, .dark:bg-gray-700\/30 {
+    box-shadow: none !important;
+    border: none !important;
+    background-color: transparent !important;
+  }
+
+  /* Forçar cores de texto para preto para melhor contraste */
+  h1, h2, h3, p, span, li, a {
+    color: black !important;
+  }
+
+  /* Imagem da receita a 100% de largura */
+  #conteudo-receita-para-impressao img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important; /* Para garantir que a imagem não seja cortada */
+    margin-bottom: 20px;
+  }
+}
