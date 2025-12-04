@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
 import { Search, Loader2, XCircle, ArrowRight, Filter } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // Manter a importação para outras animações
 import { useLocation } from 'react-router-dom';
 
 const Pesquisa = () => {
@@ -10,7 +10,6 @@ const Pesquisa = () => {
   
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
-  // REMOVIDO: const [receitasFiltradas, setReceitasFiltradas] = useState([]); 
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
   const [jaPesquisou, setJaPesquisou] = useState(false);
@@ -120,8 +119,6 @@ const Pesquisa = () => {
     }
 
     // Se não tiver dados de ingredientes (ex: lista simplificada da API), mostrar tudo
-    // para não esconder resultados indevidamente.
-    // Nota: A pesquisa por texto retorna ingredientes, mas filtro por categoria não.
     const temDadosIngredientes = receita.strIngredient1 !== undefined;
     if (!temDadosIngredientes) return true;
 
@@ -131,7 +128,7 @@ const Pesquisa = () => {
     return true;
   });
 
-  // Variantes de animação
+  // Variantes de animação (Ainda aqui, mas não usadas diretamente no map)
   const container = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
@@ -246,9 +243,11 @@ const Pesquisa = () => {
         ) : receitasParaMostrar.length > 0 ? (
           <motion.div 
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8"
-            variants={container}
+            // Reintroduzir as animações com AnimatePresence e motion.div
+            key={dificuldadeSelecionada} // Chave para forçar remount na mudança de filtro
             initial="hidden"
             animate="visible"
+            variants={container}
           >
             {receitasParaMostrar.map((receita) => (
               <motion.div key={receita.idMeal} variants={item}>
