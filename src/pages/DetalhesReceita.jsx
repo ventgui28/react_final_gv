@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obterReceitaPorId } from '../services/api';
 import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito, adicionarItemLista } from '../services/apiLocal';
-import { ArrowLeft, Heart, Loader2, List, FileText, Share2, Star, PlayCircle, ShoppingCart, Plus, Printer, CheckCircle, Circle } from 'lucide-react';
+import { ArrowLeft, Heart, Loader2, List, FileText, Share2, Star, PlayCircle, ShoppingCart, Plus, Printer, CheckCircle, Circle, QrCode, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import QRCode from 'react-qr-code'; // Importar biblioteca
 
 const DetalhesReceita = () => {
   const { id } = useParams();
@@ -15,7 +16,8 @@ const DetalhesReceita = () => {
   const [idFavorito, setIdFavorito] = useState(null);
   const [classificacao, setClassificacao] = useState(0);
   const [processando, setProcessando] = useState(false);
-  const [passosConcluidos, setPassosConcluidos] = useState([]); 
+  const [passosConcluidos, setPassosConcluidos] = useState([]);
+  const [mostrarQR, setMostrarQR] = useState(false); // Estado para o Modal QR
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -25,7 +27,6 @@ const DetalhesReceita = () => {
         setReceita(dados);
 
         if (dados) {
-          // Guardar no Histórico (localStorage) - Lógica reforçada
           try {
             const historicoAtual = localStorage.getItem('historicoReceitas');
             let historico = historicoAtual ? JSON.parse(historicoAtual) : [];
@@ -261,20 +262,15 @@ const DetalhesReceita = () => {
         <div className="p-8 md:p-12" id="conteudo-receita-para-impressao">
           {/* Actions Bar */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 pb-8 border-b border-gray-100 dark:border-gray-700 gap-4 print:hidden">
-            <div className="flex gap-3 w-full md:w-auto">
-              <button
-                onClick={partilharReceita}
-                className="btn-secondary flex-1 md:flex-none"
-              >
-                <Share2 size={20} />
-                Partilhar
+            <div className="flex gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+              <button onClick={partilharReceita} className="btn-secondary flex-1 md:flex-none whitespace-nowrap">
+                <Share2 size={20} /> Partilhar
               </button>
-              <button
-                onClick={imprimirReceita}
-                className="btn-secondary flex-1 md:flex-none"
-              >
-                <Printer size={20} />
-                Imprimir
+              <button onClick={imprimirReceita} className="btn-secondary flex-1 md:flex-none whitespace-nowrap">
+                <Printer size={20} /> Imprimir
+              </button>
+              <button onClick={() => setMostrarQR(true)} className="btn-secondary flex-1 md:flex-none whitespace-nowrap">
+                <QrCode size={20} /> No Telemóvel
               </button>
             </div>
 
@@ -287,7 +283,7 @@ const DetalhesReceita = () => {
               }`}
             >
               <Heart size={22} className={`mr-1 ${eFavorito ? 'fill-current' : ''}`} />
-              {eFavorito ? 'Guardado nos Favoritos' : 'Adicionar aos Favoritos'}
+              {eFavorito ? 'Guardado' : 'Adicionar'}
             </button>
           </div>
 
@@ -381,6 +377,41 @@ const DetalhesReceita = () => {
             </div>
           </div>
         </div>
+
+        {/* Modal QR Code */}
+        <AnimatePresence>
+          {mostrarQR && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm print:hidden">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative"
+              >
+                <button 
+                  onClick={() => setMostrarQR(false)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                >
+                  <X size={24} />
+                </button>
+                
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Ler no Telemóvel</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">Aponta a câmara para abrir esta receita.</p>
+                
+                <div className="bg-white p-4 rounded-xl inline-block mx-auto shadow-inner border border-gray-100">
+                  <QRCode value={window.location.href} size={200} />
+                </div>
+                
+                <button 
+                  onClick={() => setMostrarQR(false)}
+                  className="mt-8 w-full btn-primary"
+                >
+                  Fechar
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
