@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { filtrarPorIngrediente } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
-import { Loader2, Plus, X, Search, Refrigerator } from 'lucide-react';
+import { Loader2, Plus, X, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Frigorifico = () => {
@@ -40,7 +40,6 @@ const Frigorifico = () => {
     setReceitas([]);
 
     try {
-      // A API gratuita só suporta filtro por 1 ingrediente principal
       const dados = await filtrarPorIngrediente(ingredientes[0]);
       setReceitas(dados);
       if (!dados || dados.length === 0) {
@@ -57,16 +56,13 @@ const Frigorifico = () => {
   return (
     <div className="space-y-8">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-lg border border-blue-100 dark:border-gray-700 text-center max-w-3xl mx-auto transition-colors">
-        <div className="inline-block p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4 text-blue-600 dark:text-blue-400">
-          <Refrigerator size={48} />
-        </div>
         
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">O Que Tenho no Frigorífico?</h1>
         <p className="text-gray-500 dark:text-gray-400 mb-8">
           Diz-me qual é o ingrediente principal que queres usar (ex: "Chicken", "Salmon", "Rice") e eu sugiro receitas!
         </p>
 
-        {/* Input de Ingredientes */}
+        {/* Input de Ingredientes Simplificado */}
         <form onSubmit={adicionarIngrediente} className="flex gap-2 max-w-md mx-auto mb-6">
           <input
             type="text"
