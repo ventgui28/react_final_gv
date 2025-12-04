@@ -53,6 +53,7 @@ const Pesquisa = () => {
       return;
     }
 
+    // Importante: Filtrar sempre a partir da lista ORIGINAL 'receitas', não da filtrada
     const filtrados = receitas.filter(receita => {
       // Contar ingredientes para calcular dificuldade
       let numIngredientes = 0;
