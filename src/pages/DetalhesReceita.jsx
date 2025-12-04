@@ -25,12 +25,30 @@ const DetalhesReceita = () => {
         setReceita(dados);
 
         if (dados) {
-          // Guardar no Histórico
-          const historico = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
-          const novoItem = { id: dados.idMeal, nome: dados.strMeal, imagem: dados.strMealThumb };
-          const historicoFiltrado = historico.filter(item => item.id !== dados.idMeal);
-          const novoHistorico = [novoItem, ...historicoFiltrado].slice(0, 6);
-          localStorage.setItem('historicoReceitas', JSON.stringify(novoHistorico));
+          // Guardar no Histórico (localStorage) - Lógica reforçada
+          try {
+            const historicoAtual = localStorage.getItem('historicoReceitas');
+            let historico = historicoAtual ? JSON.parse(historicoAtual) : [];
+            
+            // Garantir que é um array
+            if (!Array.isArray(historico)) historico = [];
+
+            const novoItem = { 
+              id: dados.idMeal, 
+              nome: dados.strMeal, 
+              imagem: dados.strMealThumb 
+            };
+            
+            // Remover se já existir (comparar IDs como strings para segurança)
+            const historicoFiltrado = historico.filter(item => String(item.id) !== String(dados.idMeal));
+            
+            // Adicionar ao início
+            const novoHistorico = [novoItem, ...historicoFiltrado].slice(0, 6);
+            
+            localStorage.setItem('historicoReceitas', JSON.stringify(novoHistorico));
+          } catch (e) {
+            console.error("Erro ao guardar histórico:", e);
+          }
         }
 
         const favoritos = await obterFavoritos();
