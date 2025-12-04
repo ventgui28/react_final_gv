@@ -10,6 +10,7 @@ const Pesquisa = () => {
   
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
+  const [receitasFiltradas, setReceitasFiltradas] = useState([]); // Novo estado para filtro local
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
   const [jaPesquisou, setJaPesquisou] = useState(false);
@@ -19,6 +20,7 @@ const Pesquisa = () => {
   const [areas, setAreas] = useState([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
   const [areaSelecionada, setAreaSelecionada] = useState('');
+  const [dificuldadeSelecionada, setDificuldadeSelecionada] = useState(''); // Novo estado
 
   useEffect(() => {
     const carregarFiltros = async () => {
@@ -39,11 +41,38 @@ const Pesquisa = () => {
     if (location.state?.categoria) {
       const cat = location.state.categoria;
       setCategoriaSelecionada(cat);
-      // Pequeno timeout para garantir que o estado atualiza antes de chamar a API
       lidarComFiltroCategoria(cat);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
+
+  // Efeito para aplicar o filtro de dificuldade localmente
+  useEffect(() => {
+    if (!dificuldadeSelecionada) {
+      setReceitasFiltradas(receitas);
+      return;
+    }
+
+    const filtrados = receitas.filter(receita => {
+      // Contar ingredientes para calcular dificuldade
+      let numIngredientes = 0;
+      for (let i = 1; i <= 20; i++) {
+        if (receita[`strIngredient${i}`] && receita[`strIngredient${i}`].trim()) {
+          numIngredientes++;
+        }
+      }
+
+      // Se não tiver ingredientes (ex: veio de filtro por categoria), não conseguimos filtrar
+      if (numIngredientes === 0) return true; 
+
+      if (dificuldadeSelecionada === 'Fácil') return numIngredientes <= 8;
+      if (dificuldadeSelecionada === 'Médio') return numIngredientes > 8 && numIngredientes <= 12;
+      if (dificuldadeSelecionada === 'Pro') return numIngredientes > 12;
+      return true;
+    });
+
+    setReceitasFiltradas(filtrados);
+  }, [dificuldadeSelecionada, receitas]);
 
   const lidarComPesquisa = async (e) => {
     if (e) e.preventDefault();
@@ -55,10 +84,12 @@ const Pesquisa = () => {
     setReceitas([]);
     setCategoriaSelecionada('');
     setAreaSelecionada('');
+    setDificuldadeSelecionada('');
 
     try {
       const dados = await pesquisarReceitas(termo);
       setReceitas(dados);
+      setReceitasFiltradas(dados);
     } catch (err) {
       setErro('Erro ao pesquisar receitas. Tente novamente.');
     } finally {
@@ -73,10 +104,12 @@ const Pesquisa = () => {
     setErro(null);
     setJaPesquisou(true);
     setCarregando(true);
+    setDificuldadeSelecionada('');
 
     try {
       const dados = await filtrarPorCategoria(cat);
       setReceitas(dados);
+      setReceitasFiltradas(dados);
     } catch (err) {
       setErro('Erro ao filtrar por categoria.');
     } finally {
@@ -91,10 +124,12 @@ const Pesquisa = () => {
     setErro(null);
     setJaPesquisou(true);
     setCarregando(true);
+    setDificuldadeSelecionada('');
 
     try {
       const dados = await filtrarPorArea(area);
       setReceitas(dados);
+      setReceitasFiltradas(dados);
     } catch (err) {
       setErro('Erro ao filtrar por área.');
     } finally {
@@ -113,9 +148,12 @@ const Pesquisa = () => {
     visible: { opacity: 1, y: 0 }
   };
 
+  // Verificar se podemos filtrar por dificuldade (se o primeiro item tem ingredientes)
+  const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
+
   return (
     <div className="space-y-8">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-orange-100 dark:border-gray-700 text-center max-w-4xl mx-auto transition-colors">
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-orange-100 dark:border-gray-700 text-center max-w-5xl mx-auto transition-colors">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">O que vamos cozinhar hoje?</h2>
         <p className="text-gray-500 dark:text-gray-400 mb-8">Pesquisa por nome ou usa os filtros para explorar novos sabores.</p>
         
@@ -139,36 +177,57 @@ const Pesquisa = () => {
         </form>
 
         {/* Filtros (Dropdowns) */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center pt-6 border-t border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium">
             <Filter size={18} />
             <span>Filtrar por:</span>
           </div>
           
-          <select 
-            value={categoriaSelecionada}
-            onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-            className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            disabled={carregando}
-          >
-            <option value="" disabled>Selecionar Categoria</option>
-            {categorias.map((cat) => (
-              <option key={cat.strCategory} value={cat.strCategory}>{cat.strCategory}</option>
-            ))}
-          </select>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto">
+            <select 
+              value={categoriaSelecionada}
+              onChange={(e) => lidarComFiltroCategoria(e.target.value)}
+              className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full"
+              disabled={carregando}
+            >
+              <option value="" disabled>Categoria</option>
+              {categorias.map((cat) => (
+                <option key={cat.strCategory} value={cat.strCategory}>{cat.strCategory}</option>
+              ))}
+            </select>
 
-          <select 
-            value={areaSelecionada}
-            onChange={(e) => lidarComFiltroArea(e.target.value)}
-            className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            disabled={carregando}
-          >
-            <option value="" disabled>Selecionar Área</option>
-            {areas.map((area) => (
-              <option key={area.strArea} value={area.strArea}>{area.strArea}</option>
-            ))}
-          </select>
+            <select 
+              value={areaSelecionada}
+              onChange={(e) => lidarComFiltroArea(e.target.value)}
+              className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full"
+              disabled={carregando}
+            >
+              <option value="" disabled>Origem</option>
+              {areas.map((area) => (
+                <option key={area.strArea} value={area.strArea}>{area.strArea}</option>
+              ))}
+            </select>
+
+            <select 
+              value={dificuldadeSelecionada}
+              onChange={(e) => setDificuldadeSelecionada(e.target.value)}
+              className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
+              title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista (sem dados de ingredientes)" : "Filtrar por Dificuldade"}
+            >
+              <option value="">Dificuldade (Todas)</option>
+              <option value="Fácil">Fácil (&lt; 8 ingr.)</option>
+              <option value="Médio">Médio (8-12 ingr.)</option>
+              <option value="Pro">Pro (&gt; 12 ingr.)</option>
+            </select>
+          </div>
         </div>
+        
+        {!podeFiltrarDificuldade && receitas.length > 0 && (
+          <p className="text-xs text-gray-400 mt-2 italic">
+            * Filtro de dificuldade disponível apenas na pesquisa por nome.
+          </p>
+        )}
       </div>
 
       {/* Resultados */}
@@ -190,14 +249,14 @@ const Pesquisa = () => {
             <XCircle className="mx-auto mb-2" size={32} />
             {erro}
           </div>
-        ) : receitas.length > 0 ? (
+        ) : receitasFiltradas.length > 0 ? (
           <motion.div 
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8"
             variants={container}
             initial="hidden"
             animate="visible"
           >
-            {receitas.map((receita) => (
+            {receitasFiltradas.map((receita) => (
               <motion.div key={receita.idMeal} variants={item}>
                 <CartaoReceita receita={receita} />
               </motion.div>
@@ -209,7 +268,9 @@ const Pesquisa = () => {
               <Search size={32} className="text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Nenhuma receita encontrada</h3>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Tenta pesquisar por outro termo ou filtro.</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
+              {dificuldadeSelecionada ? "Tenta mudar o nível de dificuldade." : "Tenta pesquisar por outro termo."}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-600 opacity-50 transition-colors">
