@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obterReceitaPorId } from '../services/api';
 import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito, adicionarItemLista } from '../services/apiLocal';
-import { ArrowLeft, Heart, Loader2, List, FileText, Share2, Star, PlayCircle, ShoppingCart, Plus, Printer } from 'lucide-react';
+import { ArrowLeft, Heart, Loader2, List, FileText, Share2, Star, PlayCircle, ShoppingCart, Plus, Printer, CheckCircle, Circle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
@@ -15,6 +15,7 @@ const DetalhesReceita = () => {
   const [idFavorito, setIdFavorito] = useState(null);
   const [classificacao, setClassificacao] = useState(0);
   const [processando, setProcessando] = useState(false);
+  const [passosConcluidos, setPassosConcluidos] = useState([]); // Novo estado para checkboxes
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -24,14 +25,10 @@ const DetalhesReceita = () => {
         setReceita(dados);
 
         if (dados) {
-          // Guardar no Histórico (localStorage)
+          // Guardar no Histórico
           const historico = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
           const novoItem = { id: dados.idMeal, nome: dados.strMeal, imagem: dados.strMealThumb };
-          
-          // Remover se já existir (para mover para o topo)
           const historicoFiltrado = historico.filter(item => item.id !== dados.idMeal);
-          
-          // Adicionar ao início e limitar a 6 itens
           const novoHistorico = [novoItem, ...historicoFiltrado].slice(0, 6);
           localStorage.setItem('historicoReceitas', JSON.stringify(novoHistorico));
         }
@@ -120,6 +117,14 @@ const DetalhesReceita = () => {
     }
   };
 
+  const alternarPasso = (index) => {
+    if (passosConcluidos.includes(index)) {
+      setPassosConcluidos(passosConcluidos.filter(i => i !== index));
+    } else {
+      setPassosConcluidos([...passosConcluidos, index]);
+    }
+  };
+
   const partilharReceita = () => {
     navigator.clipboard.writeText(window.location.href);
     toast.success("Link copiado para a área de transferência!");
@@ -134,6 +139,13 @@ const DetalhesReceita = () => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  // Calcular Dificuldade
+  const calcularDificuldade = (numIngredientes) => {
+    if (numIngredientes <= 8) return { texto: 'Fácil', cor: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' };
+    if (numIngredientes <= 12) return { texto: 'Médio', cor: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' };
+    return { texto: 'Pro', cor: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' };
   };
 
   if (carregando) return (
@@ -154,13 +166,20 @@ const DetalhesReceita = () => {
 
   const ingredientes = [];
   for (let i = 1; i <= 20; i++) {
-    if (receita[`strIngredient${i}`]) {
+    if (receita[`strIngredient${i}`] && receita[`strIngredient${i}`].trim()) {
       ingredientes.push({
         ingrediente: receita[`strIngredient${i}`],
         medida: receita[`strMeasure${i}`]
       });
     }
   }
+
+  const dificuldade = calcularDificuldade(ingredientes.length);
+
+  // Processar instruções (dividir por quebras de linha e remover vazios)
+  const instrucoes = receita.strInstructions
+    .split(/\r\n|\n/)
+    .filter(step => step.trim().length > 0);
 
   return (
     <motion.div 
@@ -195,16 +214,21 @@ const DetalhesReceita = () => {
               >
                 {receita.strMeal}
               </motion.h1>
-              <div className="flex justify-between items-end">
-                <p className="text-lg md:text-xl opacity-90 font-medium flex items-center gap-2">
-                  <span className="bg-orange-600 px-3 py-1 rounded-full text-sm">{receita.strCategory}</span>
-                  <span>•</span>
-                  <span>{receita.strArea}</span>
-                </p>
+              <div className="flex flex-wrap justify-between items-end gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="bg-orange-600 px-3 py-1 rounded-full text-sm font-medium">{receita.strCategory}</span>
+                  <span className="text-white/80">•</span>
+                  <span className="text-lg">{receita.strArea}</span>
+                  <span className="text-white/80">•</span>
+                  {/* Badge de Dificuldade */}
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide ${dificuldade.cor}`}>
+                    {dificuldade.texto}
+                  </span>
+                </div>
                 
                 {/* Rating System */}
                 {eFavorito && (
-                  <div className="flex bg-black/30 backdrop-blur-sm p-2 rounded-lg">
+                  <div className="flex bg-black/30 backdrop-blur-sm p-2 rounded-lg print:hidden">
                     {[1, 2, 3, 4, 5].map((estrela) => (
                       <button
                         key={estrela}
@@ -247,8 +271,7 @@ const DetalhesReceita = () => {
             <button
               onClick={lidarComFavorito}
               disabled={processando}
-              className={`w-full md:w-auto flex items-center justify-center px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md transform active:scale-95 ${
-                eFavorito 
+              className={`w-full md:w-auto flex items-center justify-center px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md transform active:scale-95 ${eFavorito 
                   ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900' 
                   : 'bg-orange-600 text-white hover:bg-orange-700'
               }`}
@@ -307,7 +330,7 @@ const DetalhesReceita = () => {
               </ul>
             </div>
 
-            {/* Instructions */}
+            {/* Instructions Interativas */}
             <div className="md:col-span-2">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                 <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg mr-3">
@@ -315,8 +338,30 @@ const DetalhesReceita = () => {
                 </div>
                 Instruções
               </h2>
-              <div className="prose prose-orange dark:prose-invert text-gray-700 dark:text-gray-300 max-w-none whitespace-pre-line leading-relaxed p-6 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700">
-                {receita.strInstructions}
+              
+              <div className="space-y-4">
+                {instrucoes.map((step, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => alternarPasso(index)}
+                    className={`p-4 rounded-xl border transition-all cursor-pointer group ${passosConcluidos.includes(index)
+                        ? 'bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/30' 
+                        : 'bg-gray-50 dark:bg-gray-700/30 border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800'
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`mt-1 ${passosConcluidos.includes(index) ? 'text-green-600' : 'text-gray-400 group-hover:text-orange-500'}`}>
+                        {passosConcluidos.includes(index) ? <CheckCircle size={24} /> : <Circle size={24} />}
+                      </div>
+                      <p className={`text-lg leading-relaxed ${passosConcluidos.includes(index) 
+                          ? 'text-gray-500 dark:text-gray-500 line-through' 
+                          : 'text-gray-800 dark:text-gray-200'
+                      }`}>
+                        {step}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
