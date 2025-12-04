@@ -9,7 +9,7 @@ const BarraNavegacao = () => {
   const [menuAberto, setMenuAberto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { temaEscuro, alternarTema } = useTheme();
-  const { itensCount } } = useShoppingList();
+  const { itensCount } = useShoppingList(); // Corrigido: remover } extra
 
   const toggleMenu = () => setMenuAberto(!menuAberto);
 
