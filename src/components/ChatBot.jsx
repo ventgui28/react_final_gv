@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, ChefHat, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { obterReceitaAleatoria } from '../services/api'; // Importar API
 
 const ChatBot = () => {
   const [aberto, setAberto] = useState(false);
@@ -25,38 +26,49 @@ const ChatBot = () => {
     { id: 'surpresa', texto: 'Surpreende-me! 🎉' },
   ];
 
-  const lidarComOpcao = (opcao) => {
+  const lidarComOpcao = async (opcao) => {
     // Adicionar mensagem do utilizador
     const novaMsgUser = { id: Date.now(), tipo: 'user', texto: opcao.texto };
     setMensagens(prev => [...prev, novaMsgUser]);
 
-    // Simular "a escrever..."
-    setTimeout(() => {
-      let respostaBot = '';
-      
-      switch (opcao.id) {
-        case 'funcionalidades':
-          respostaBot = 'Podes pesquisar milhares de receitas, guardar os teus favoritos, criar listas de compras e até usar o que tens no frigorífico para cozinhar!';
-          break;
-        case 'sugestao':
-          respostaBot = 'Que tal uma massa rápida? Vou levar-te para a pesquisa de Massas!';
-          setTimeout(() => navigate('/pesquisa', { state: { categoria: 'Pasta' } }), 2000);
-          break;
-        case 'frigorifico':
-          respostaBot = 'É simples! Vai à página "Frigorífico", escreve o ingrediente principal que tens em casa (ex: Frango) e eu mostro-te receitas compatíveis.';
-          break;
-        case 'surpresa':
-          respostaBot = 'A abrir uma receita surpresa só para ti... Bom apetite!';
-          // Simular clique no aleatório seria complexo aqui, mas podemos redirecionar para a home
-          setTimeout(() => navigate('/'), 1500);
-          break;
-        default:
-          respostaBot = 'Desculpa, fiquei com os circuitos trocados. Tenta outra vez!';
-      }
+    // Simular "a escrever..." (pequeno delay inicial)
+    await new Promise(r => setTimeout(r, 600));
 
-      const novaMsgBot = { id: Date.now() + 1, tipo: 'bot', texto: respostaBot };
-      setMensagens(prev => [...prev, novaMsgBot]);
-    }, 600);
+    let respostaBot = '';
+      
+    switch (opcao.id) {
+      case 'funcionalidades':
+        respostaBot = 'Podes pesquisar milhares de receitas, guardar os teus favoritos, criar listas de compras e até usar o que tens no frigorífico para cozinhar!';
+        break;
+      case 'sugestao':
+        respostaBot = 'Que tal uma massa rápida? Vou levar-te para a pesquisa de Massas!';
+        setTimeout(() => navigate('/pesquisa', { state: { categoria: 'Pasta' } }), 1500);
+        break;
+      case 'frigorifico':
+        respostaBot = 'É simples! Vai à página "Frigorífico", escreve o ingrediente principal que tens em casa (ex: Frango) e eu mostro-te receitas compatíveis.';
+        break;
+      case 'surpresa':
+        respostaBot = 'A procurar a melhor receita para ti... 🎲';
+        try {
+          const receita = await obterReceitaAleatoria();
+          if (receita) {
+            setTimeout(() => {
+              navigate(`/receita/${receita.idMeal}`);
+              setAberto(false); // Fechar o chat ao navegar
+            }, 1500);
+          } else {
+            respostaBot = 'Ops, não consegui encontrar uma receita agora. Tenta de novo!';
+          }
+        } catch (error) {
+          respostaBot = 'Tive um pequeno erro na cozinha. Tenta outra vez!';
+        }
+        break;
+      default:
+        respostaBot = 'Desculpa, fiquei com os circuitos trocados. Tenta outra vez!';
+    }
+
+    const novaMsgBot = { id: Date.now() + 1, tipo: 'bot', texto: respostaBot };
+    setMensagens(prev => [...prev, novaMsgBot]);
   };
 
   return (
