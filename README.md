@@ -15,7 +15,7 @@
 
 Bem-vindo ao **CookBook**, uma aplicação web moderna, responsiva e interativa desenvolvida para gerir, descobrir e organizar as tuas receitas favoritas. Este projeto foi desenhado com foco na experiência de utilizador (UX), performance e estética.
 
-> 🎓 **Contexto Académico:** Projeto final desenvolvido no âmbito da Unidade Curricular de **Programação Web II** (Licenciatura em Engenharia Informática).
+> 🎓 **Contexto Académico:** Projeto final desenvolvido no âmbito da Unidade Curricular de **Programação Web II** (CTeSP em Tecnologias e Programação de Sistemas de Informação).
 
 ---
 
