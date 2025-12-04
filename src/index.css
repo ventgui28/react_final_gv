@@ -13,6 +13,23 @@ body {
   @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
 }
 
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.2;
+      transform: scale(1.1);
+    }
+  }
+}
+
 @layer components {
   /* Botões Primários (Laranja) */
   .btn-primary {
@@ -42,17 +59,12 @@ body {
            text-gray-800 dark:text-white placeholder-gray-400;
   }
 
-  /* Dropdown (Select) Moderno - Reforçado */
+  /* Dropdown (Select) Moderno */
   .select-modern {
-    @apply appearance-none w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 
+    @apply appearance-none w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 
            rounded-xl shadow-sm focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none 
            text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors font-medium;
-    /* Estilos manuais para garantir override */
-    padding: 0.625rem 1rem; /* py-2.5 px-4 */
-    padding-right: 2.5rem; /* Espaço para a seta */
-    background-image: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+    background-image: none; /* Remover seta nativa do browser */
   }
 }
 
