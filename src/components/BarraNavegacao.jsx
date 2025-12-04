@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Search, Heart, UtensilsCrossed, Menu, X, ShoppingCart, Sun, Moon } from 'lucide-react';
+import { Home, Search, Heart, UtensilsCrossed, Menu, X, ShoppingCart, Sun, Moon, Refrigerator } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
@@ -46,6 +46,11 @@ const BarraNavegacao = () => {
             <NavLink to="/pesquisa" className={linkClass}>
               <Search size={18} />
               <span>Pesquisar</span>
+            </NavLink>
+
+            <NavLink to="/frigorifico" className={linkClass}>
+              <Refrigerator size={18} />
+              <span>Frigorífico</span>
             </NavLink>
             
             <NavLink to="/favoritos" className={linkClass}>
@@ -119,6 +124,10 @@ const BarraNavegacao = () => {
               <NavLink to="/pesquisa" className={mobileLinkClass} onClick={toggleMenu}>
                 <Search size={20} />
                 <span>Pesquisar</span>
+              </NavLink>
+              <NavLink to="/frigorifico" className={mobileLinkClass} onClick={toggleMenu}>
+                <Refrigerator size={20} />
+                <span>Frigorífico</span>
               </NavLink>
               <NavLink to="/favoritos" className={mobileLinkClass} onClick={toggleMenu}>
                 <Heart size={20} />

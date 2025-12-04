@@ -1,5 +1,102 @@
 {
-  "favorites": [],
+  "favorites": [
+    {
+      "id": "21e5",
+      "idMeal": "52965",
+      "strMeal": "Breakfast Potatoes",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/1550441882.jpg",
+      "strCategory": "Breakfast",
+      "strArea": "Canadian",
+      "strInstructions": "Before you do anything, freeze your bacon slices that way when you're ready to prep, it'll be so much easier to chop!\r\nWash the potatoes and cut medium dice into square pieces. To prevent any browning, place the already cut potatoes in a bowl filled with water.\r\nIn the meantime, heat 1-2 tablespoons of oil in a large skillet over medium-high heat. Tilt the skillet so the oil spreads evenly.\r\nOnce the oil is hot, drain the potatoes and add to the skillet. Season with salt, pepper, and Old Bay as needed.\r\nCook for 10 minutes, stirring the potatoes often, until brown. If needed, add a tablespoon more of oil.\r\nChop up the bacon and add to the potatoes. The bacon will start to render and the fat will begin to further cook the potatoes. Toss it up a bit! The bacon will take 5-6 minutes to crisp.\r\nOnce the bacon is cooked, reduce the heat to medium-low, add the minced garlic and toss. Season once more. Add dried or fresh parsley. Control heat as needed.\r\nLet the garlic cook until fragrant, about one minute.\r\nJust before serving, drizzle over the maple syrup and toss. Let that cook another minute, giving the potatoes a caramelized effect.\r\nServe in a warm bowl with a sunny side up egg!",
+      "strYoutube": "https://www.youtube.com/watch?v=BoD0TIO9nE4",
+      "userNotes": "",
+      "rating": 3
+    },
+    {
+      "id": "ebb0",
+      "idMeal": "52895",
+      "strMeal": "English Breakfast",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/utxryw1511721587.jpg",
+      "strCategory": "Breakfast",
+      "strArea": "British",
+      "strInstructions": "Heat the flat grill plate over a low heat, on top of 2 rings/flames if it fits, and brush sparingly with light olive oil.\r\nCook the sausages first. Add the sausages to the hot grill plate/the coolest part if there is one and allow to cook slowly for about 15-20 minutes, turning occasionally, until golden. After the first 10 minutes, increase the heat to medium before beginning to cook the other ingredients. If you are struggling for space, completely cook the sausages and keep hot on a plate in the oven.\r\nSnip a few small cuts into the fatty edge of the bacon. Place the bacon straight on to the grill plate and fry for 2-4 minutes each side or until your preferred crispiness is reached. Like the sausages, the cooked bacon can be kept hot on a plate in the oven.\r\nFor the mushrooms, brush away any dirt using a pastry brush and trim the stalk level with the mushroom top. Season with salt and pepper and drizzle over a little olive oil. Place stalk-side up on the grill plate and cook for 1-2 minutes before turning and cooking for a further 3-4 minutes. Avoid moving the mushrooms too much while cooking, as this releases the natural juices, making them soggy.\r\nFor the tomatoes, cut the tomatoes across the centre/or in half lengthways if using plum tomatoes , and with a small, sharp knife remove the green 'eye'. Season with salt and pepper and drizzle with a little olive oil. Place cut-side down on the grill plate and cook without moving for 2 minutes. Gently turn over and season again. Cook for a further 2-3 minutes until tender but still holding their shape.\r\nFor the black pudding, cut the black pudding into 3-4 slices and remove the skin. Place on the grill plate and cook for 1½-2 minutes each side until slightly crispy.\r\nFor 'proper' fried bread it's best to cook it in a separate pan. Ideally, use bread that is a couple of days old. Heat a frying pan to a medium heat and cover the base with oil. Add the bread and cook for 2-3 minutes each side until crispy and golden. If the pan becomes too dry, add a little more oil. For a richer flavour, add a knob of butter after you turn the slice.\r\nFor the fried eggs, break the egg straight into the pan with the fried bread and leave for 30 seconds. Add a good knob of butter and lightly splash/baste the egg with the butter when melted. Cook to your preferred stage, season and gently remove with a fish slice.\r\nOnce all the ingredients are cooked, serve on warm plates and enjoy straight away with a good squeeze of tomato ketchup or brown sauce.",
+      "strYoutube": "https://www.youtube.com/watch?v=FXjYU2Ensck",
+      "userNotes": "",
+      "rating": 3
+    },
+    {
+      "id": "40f4",
+      "idMeal": "52957",
+      "strMeal": "Fruit and Cream Cheese Breakfast Pastries",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/1543774956.jpg",
+      "strCategory": "Breakfast",
+      "strArea": "American",
+      "strInstructions": "Preheat oven to 400ºF (200ºC), and prepare two cookie sheets with parchment paper. In a bowl, mix cream cheese, sugar, and vanilla until fully combined. Lightly flour the surface and roll out puff pastry on top to flatten. Cut each sheet of puff pastry into 9 equal squares. On the top right and bottom left of the pastry, cut an L shape approximately ½ inch (1 cm) from the edge.\r\nNOTE: This L shape should reach all the way down and across the square, however both L shapes should not meet at the ends. Your pastry should look like a picture frame with two corners still intact.\r\nTake the upper right corner and fold down towards the inner bottom corner. You will now have a diamond shape.\r\nPlace 1 to 2 teaspoons of the cream cheese filling in the middle, then place berries on top.\r\nRepeat with the remaining pastry squares and place them onto the parchment covered baking sheet.\r\nBake for 15-20 minutes or until pastry is golden brown and puffed.\r\nEnjoy!\r\n",
+      "strYoutube": "",
+      "userNotes": "",
+      "rating": 5
+    },
+    {
+      "id": "0fb9",
+      "idMeal": "53278",
+      "strMeal": "Aubergine & hummus grills",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/zub3s91764110535.jpg",
+      "strCategory": "Vegetarian",
+      "strArea": "Turkish",
+      "strInstructions": "step 1\r\nLay the aubergine out in one layer on a large baking sheet. Brush sparingly with vegetable oil, then season generously. Grill for 15 mins, turning twice and brushing with oil until the slices are softened and cooked through. Meanwhile, whizz the bread into crumbs. Add 2 tsp oil and whizz briefly again, to coat.\r\n\r\nstep 2\r\nSpread a couple of tsps of hummus on top of each slice of aubergine. Tip the breadcrumbs onto a large plate, then press the hummus side of the aubergines into the crumbs to coat. Grill again, crumb-side up, for about 3 mins until golden.\r\n\r\nstep 3\r\nToss the walnuts, parsley and cherry tomatoes in a bowl, season, then add the lemon juice and olive oil and toss again. Serve the grills with the salad, a dollop more hummus and some pitta bread.",
+      "strYoutube": "https://www.youtube.com/watch?v=P5LD03XptB8",
+      "userNotes": "",
+      "rating": 2
+    },
+    {
+      "id": "e385",
+      "idMeal": "53282",
+      "strMeal": "Algerian Carrots",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/o2cd4r1764113576.jpg",
+      "strCategory": "Side",
+      "strArea": "Algerian",
+      "strInstructions": "Place a steamer insert into a saucepan, and fill with 1 1/2 cups of water, or just below the bottom of the steamer. Cover, and bring the water to a boil over high heat. Add the sliced carrots, reduce the heat to medium, and cover the pan again. Steam until tender but not mushy, 4 to 6 minutes depending on the thickness of the slices. Reserve 1/2 cup of the cooking liquid.\r\n\r\nHeat the olive oil in a skillet over medium heat. Reduce the heat to low and stir in the salt, pepper, cinnamon, cumin, garlic, and thyme. Cook the spices and garlic, stirring frequently, until fragrant, about 10 minutes. Add the 1/2 cup reserved cooking liquid and the bay leaf, cover, and simmer for 20 minutes.\r\n\r\nStir in the carrots, tossing well to coat with the spice mixture, and cook until heated through, about 2 to 3 minutes. Sprinkle with lemon juice and remove the bay leaf before serving.",
+      "strYoutube": "https://www.youtube.com/watch?v=mF2ND56szUQ",
+      "userNotes": "",
+      "rating": 3
+    },
+    {
+      "id": "8b68",
+      "idMeal": "53288",
+      "strMeal": "Algerian Flafla (Bell Pepper Salad)",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/tbj1bs1764118062.jpg",
+      "strCategory": "Vegetarian",
+      "strArea": "Algerian",
+      "strInstructions": "Preheat an oven to 450 degrees F (230 degrees C). Place the whole peppers on aluminum foil. Bake until the skin is spotted black and the peppers are soft, 30 to 45 minutes, turning the peppers once if necessary.\r\n\r\nRemove peppers from the oven and set aside to cool for 10 minutes. Peel off the skin and remove the stem and seeds. Chop the roasted peppers into half-inch pieces.\r\n\r\nHeat the olive oil in a skillet over medium heat. Stir in the onion and cook, stirring frequently, until the onion has softened and turned translucent, about 5 minutes. Add the garlic, salt, and pepper; stir in the chopped peppers and tomato. Cook over medium heat, stirring occasionally, until the tomato is soft and the mixture is well incorporated, about 5 minutes.",
+      "strYoutube": "https://www.youtube.com/watch?v=JXrS1doDnNg",
+      "userNotes": "",
+      "rating": 5
+    },
+    {
+      "id": "b8e6",
+      "idMeal": "52956",
+      "strMeal": "Chicken Congee",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/1529446352.jpg",
+      "strCategory": "Chicken",
+      "strArea": "Chinese",
+      "strInstructions": "STEP 1 - MARINATING THE CHICKEN\r\nIn a bowl, add chicken, salt, white pepper, ginger juice and then mix it together well.\r\nSet the chicken aside.\r\nSTEP 2 - RINSE THE WHITE RICE\r\nRinse the rice in a metal bowl or pot a couple times and then drain the water.\r\nSTEP 2 - BOILING THE WHITE RICE\r\nNext add 8 cups of water and then set the stove on high heat until it is boiling. Once rice porridge starts to boil, set the stove on low heat and then stir it once every 8-10 minutes for around 20-25 minutes.\r\nAfter 25 minutes, this is optional but you can add a little bit more water to make rice porridge to make it less thick or to your preference.\r\nNext add the marinated chicken to the rice porridge and leave the stove on low heat for another 10 minutes.\r\nAfter an additional 10 minutes add the green onions, sliced ginger, 1 pinch of salt, 1 pinch of white pepper and stir for 10 seconds.\r\nServe the rice porridge in a bowl\r\nOptional: add Coriander on top of the rice porridge.",
+      "strYoutube": "https://www.youtube.com/watch?v=kqEfk801E94",
+      "userNotes": "",
+      "rating": 1
+    },
+    {
+      "id": "7d7b",
+      "idMeal": "52951",
+      "strMeal": "General Tsos Chicken",
+      "strMealThumb": "https://www.themealdb.com/images/media/meals/1529444113.jpg",
+      "strCategory": "Chicken",
+      "strArea": "Chinese",
+      "strInstructions": "DIRECTIONS:\r\nSTEP 1 - SAUCE\r\nIn a bowl, add 2 Cups of water, 2 Tablespoon soy sauce, 2 Tablespoon white vinegar, sherry cooking wine, 1/4 Teaspoon white pepper, minced ginger, minced garlic, hot pepper, ketchup, hoisin sauce, and sugar.\r\nMix together well and set aside.\r\nSTEP 2 - MARINATING THE CHICKEN\r\nIn a bowl, add the chicken, 1 pinch of salt, 1 pinch of white pepper, 2 egg whites, and 3 Tablespoon of corn starch\r\nSTEP 3 - DEEP FRY THE CHICKEN\r\nDeep fry the chicken at 350 degrees for 3-4 minutes or until it is golden brown and loosen up the chicken so that they don't stick together.\r\nSet the chicken aside.\r\nSTEP 4 - STIR FRY\r\nAdd the sauce to the wok and then the broccoli and wait until it is boiling.\r\nTo thicken the sauce, whisk together 2 Tablespoon of cornstarch and 4 Tablespoon of water in a bowl and slowly add to your stir-fry until it's the right thickness.\r\nNext add in the chicken and stir-fry for a minute and serve on a plate",
+      "strYoutube": "https://www.youtube.com/watch?v=wWGwz0iBmvU",
+      "userNotes": "",
+      "rating": 4
+    }
+  ],
   "shoppingList": [
     {
       "id": "92fe",

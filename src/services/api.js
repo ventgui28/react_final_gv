@@ -78,4 +78,18 @@ export const filtrarPorArea = async (area) => {
   }
 };
 
+// --- Frigorífico ---
+
+export const filtrarPorIngrediente = async (ingrediente) => {
+  try {
+    // Substituir espaços por underscores para a API (ex: "chicken breast" -> "chicken_breast")
+    const ingredienteFormatado = ingrediente.trim().toLowerCase().replace(/ /g, '_');
+    const response = await api.get(`filter.php?i=${ingredienteFormatado}`);
+    return response.data.meals || [];
+  } catch (error) {
+    console.error('Erro ao filtrar por ingrediente:', error);
+    throw error;
+  }
+};
+
 export default api;
