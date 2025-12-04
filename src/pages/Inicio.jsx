@@ -276,7 +276,7 @@ const Inicio = () => {
 
       {/* Visto Recentemente */}
       {historico.length > 0 && (
-        <motion.section variants={itemVariants}>
+        <section className="animate-fade-in">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
             <Clock className="mr-2 text-orange-600" />
             Visto Recentemente
@@ -303,7 +303,7 @@ const Inicio = () => {
               </Link>
             ))}
           </div>
-        </motion.section>
+        </section>
       )}
     </motion.div>
   );
