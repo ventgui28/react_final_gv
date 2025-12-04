@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
-import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown } from 'lucide-react';
-import { motion } from 'framer-motion'; 
+import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown, ChefHat } from 'lucide-react';
+// REMOVIDO TOTALMENTE O FRAMER MOTION DESTE FICHEIRO PARA GARANTIR ESTABILIDADE
 import { useLocation } from 'react-router-dom';
 
 const Pesquisa = () => {
@@ -26,8 +26,8 @@ const Pesquisa = () => {
       try {
         const listaCategorias = await obterListaCategorias();
         const listaAreas = await obterListaAreas();
-        setCategorias(listaCategorias);
-        setAreas(listaAreas);
+        setCategorias(listaCategorias || []);
+        setAreas(listaAreas || []);
       } catch (err) {
         console.error("Erro ao carregar filtros:", err);
       }
@@ -59,7 +59,7 @@ const Pesquisa = () => {
 
     try {
       const dados = await pesquisarReceitas(termo);
-      setReceitas(dados);
+      setReceitas(dados || []);
     } catch (err) {
       setErro('Erro ao pesquisar receitas. Tente novamente.');
     } finally {
@@ -78,7 +78,7 @@ const Pesquisa = () => {
 
     try {
       const dados = await filtrarPorCategoria(cat);
-      setReceitas(dados);
+      setReceitas(dados || []);
     } catch (err) {
       setErro('Erro ao filtrar por categoria.');
     } finally {
@@ -97,7 +97,7 @@ const Pesquisa = () => {
 
     try {
       const dados = await filtrarPorArea(area);
-      setReceitas(dados);
+      setReceitas(dados || []);
     } catch (err) {
       setErro('Erro ao filtrar por área.');
     } finally {
@@ -125,17 +125,6 @@ const Pesquisa = () => {
     if (dificuldadeSelecionada === 'Pro') return numIngredientes > 12;
     return true;
   });
-
-  // Variantes de animação (Ainda aqui, mas não usadas diretamente no map)
-  const container = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
 
   // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
@@ -178,11 +167,11 @@ const Pesquisa = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto">
             {/* Categoria */}
-            <div className="relative">
+            <div className="relative w-full">
               <select 
                 value={categoriaSelecionada}
                 onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-                className="select-modern pr-10" // Adicionar pr-10 para o ícone
+                className="select-modern pr-10 w-full"
                 disabled={carregando}
               >
                 <option value="" disabled>Categoria</option>
@@ -194,11 +183,11 @@ const Pesquisa = () => {
             </div>
 
             {/* Origem */}
-            <div className="relative">
+            <div className="relative w-full">
               <select 
                 value={areaSelecionada}
                 onChange={(e) => lidarComFiltroArea(e.target.value)}
-                className="select-modern pr-10"
+                className="select-modern pr-10 w-full"
                 disabled={carregando}
               >
                 <option value="" disabled>Origem</option>
@@ -210,11 +199,11 @@ const Pesquisa = () => {
             </div>
 
             {/* Dificuldade */}
-            <div className="relative">
+            <div className="relative w-full">
               <select 
                 value={dificuldadeSelecionada}
                 onChange={(e) => setDificuldadeSelecionada(e.target.value)}
-                className="select-modern pr-10 disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
+                className="select-modern pr-10 w-full disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900"
                 disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
                 title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista" : "Filtrar por Dificuldade"}
               >
@@ -260,7 +249,9 @@ const Pesquisa = () => {
         ) : receitasParaMostrar.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
             {receitasParaMostrar.map((receita) => (
-              <CartaoReceita key={receita.idMeal} receita={receita} />
+              <div key={receita.idMeal}>
+                <CartaoReceita receita={receita} />
+              </div>
             ))}
           </div>
         ) : jaPesquisou ? (
