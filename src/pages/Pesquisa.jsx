@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
-import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown, ChefHat } from 'lucide-react';
-// REMOVIDO TOTALMENTE O FRAMER MOTION DESTE FICHEIRO PARA GARANTIR ESTABILIDADE
+import { Search, Loader2, XCircle, ArrowRight, Filter, ChefHat } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import SelectPersonalizado from '../components/SelectPersonalizado'; // Novo componente
 
 const Pesquisa = () => {
   const location = useLocation();
@@ -26,8 +26,9 @@ const Pesquisa = () => {
       try {
         const listaCategorias = await obterListaCategorias();
         const listaAreas = await obterListaAreas();
-        setCategorias(listaCategorias || []);
-        setAreas(listaAreas || []);
+        // Formatar para o SelectPersonalizado { value, label }
+        setCategorias(listaCategorias.map(c => ({ value: c.strCategory, label: c.strCategory })) || []);
+        setAreas(listaAreas.map(a => ({ value: a.strArea, label: a.strArea })) || []);
       } catch (err) {
         console.error("Erro ao carregar filtros:", err);
       }
@@ -73,6 +74,13 @@ const Pesquisa = () => {
     setTermo('');
     setErro(null);
     setJaPesquisou(true);
+    
+    if (!cat) { // Se limpar o filtro
+        setReceitas([]);
+        setJaPesquisou(false);
+        return;
+    }
+
     setCarregando(true);
     setDificuldadeSelecionada('');
 
@@ -92,6 +100,13 @@ const Pesquisa = () => {
     setTermo('');
     setErro(null);
     setJaPesquisou(true);
+
+    if (!area) { // Se limpar o filtro
+        setReceitas([]);
+        setJaPesquisou(false);
+        return;
+    }
+
     setCarregando(true);
     setDificuldadeSelecionada('');
 
@@ -129,8 +144,11 @@ const Pesquisa = () => {
   // Verificar se podemos filtrar por dificuldade
   const podeFiltrarDificuldade = receitas.length > 0 && receitas[0]['strIngredient1'] !== undefined;
 
-  // Estilos inline para garantir override
-  const selectClasses = "appearance-none w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 outline-none text-gray-700 dark:text-gray-200 cursor-pointer hover:border-orange-300 transition-colors font-medium py-3 pl-4 pr-10";
+  const opcoesDificuldade = [
+    { value: 'Fácil', label: 'Fácil (< 8 ingr.)' },
+    { value: 'Médio', label: 'Médio (8-12 ingr.)' },
+    { value: 'Pro', label: 'Pro (> 12 ingr.)' }
+  ];
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -161,61 +179,45 @@ const Pesquisa = () => {
           </button>
         </form>
 
-        {/* Filtros (Dropdowns) */}
-        <div className="flex flex-col md:flex-row gap-4 justify-center items-center pt-8 border-t border-gray-100 dark:border-gray-700/50">
-          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wide text-sm mr-2">
+        {/* Filtros (Selects Personalizados) */}
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-start pt-8 border-t border-gray-100 dark:border-gray-700/50">
+          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wide text-sm mr-2 mt-3">
             <Filter size={16} />
             <span>Filtros Rápidos</span>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto flex-grow max-w-3xl">
             {/* Categoria */}
-            <div className="relative w-full">
-              <select 
+            <div className="relative z-30">
+              <SelectPersonalizado
+                placeholder="Categoria"
+                options={categorias}
                 value={categoriaSelecionada}
-                onChange={(e) => lidarComFiltroCategoria(e.target.value)}
-                className={selectClasses}
+                onChange={lidarComFiltroCategoria}
                 disabled={carregando}
-              >
-                <option value="" disabled>Categoria</option>
-                {categorias.map((cat) => (
-                  <option key={cat.strCategory} value={cat.strCategory}>{cat.strCategory}</option>
-                ))}
-              </select>
-              <ChevronDown size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              />
             </div>
 
             {/* Origem */}
-            <div className="relative w-full">
-              <select 
+            <div className="relative z-20">
+              <SelectPersonalizado
+                placeholder="Origem"
+                options={areas}
                 value={areaSelecionada}
-                onChange={(e) => lidarComFiltroArea(e.target.value)}
-                className={selectClasses}
+                onChange={lidarComFiltroArea}
                 disabled={carregando}
-              >
-                <option value="" disabled>Origem</option>
-                {areas.map((area) => (
-                  <option key={area.strArea} value={area.strArea}>{area.strArea}</option>
-                ))}
-              </select>
-              <ChevronDown size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              />
             </div>
 
             {/* Dificuldade */}
-            <div className="relative w-full">
-              <select 
+            <div className="relative z-10">
+              <SelectPersonalizado
+                placeholder="Dificuldade"
+                options={opcoesDificuldade}
                 value={dificuldadeSelecionada}
-                onChange={(e) => setDificuldadeSelecionada(e.target.value)}
-                className={`${selectClasses} disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-900`}
+                onChange={setDificuldadeSelecionada}
                 disabled={carregando || receitas.length === 0 || !podeFiltrarDificuldade}
-                title={!podeFiltrarDificuldade && receitas.length > 0 ? "Filtro indisponível para esta lista" : "Filtrar por Dificuldade"}
-              >
-                <option value="">Dificuldade (Todas)</option>
-                <option value="Fácil">Fácil (&lt; 8 ingr.)</option>
-                <option value="Médio">Médio (8-12 ingr.)</option>
-                <option value="Pro">Pro (&gt; 12 ingr.)</option>
-              </select>
-              <ChevronDown size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              />
             </div>
           </div>
         </div>
