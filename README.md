@@ -1,6 +1,6 @@
 # 🍳 CookBook - O Teu Assistente de Cozinha Digital
 
-![CookBook Banner](https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&w=1200&q=80)
+![CookBook Banner](https://images.pexels.com/photos/103124/pexels-photo-103124.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)
 
 Bem-vindo ao **CookBook**, uma aplicação web moderna e interativa desenvolvida em React para gerir, descobrir e organizar as tuas receitas favoritas.
 
