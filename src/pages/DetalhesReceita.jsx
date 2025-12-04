@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { obterReceitaPorId } from '../services/api';
 import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito, adicionarItemLista } from '../services/apiLocal';
@@ -23,8 +23,8 @@ const DetalhesReceita = () => {
 
   // Parallax Effect
   const { scrollY } = useScroll();
-  const yRange = useTransform(scrollY, [0, 500], [0, 250]); // Move a imagem mais devagar que o scroll
-  const opacityRange = useTransform(scrollY, [0, 400], [1, 0]); // Desvanece o título/info
+  const yRange = useTransform(scrollY, [0, 500], [0, 250]);
+  const opacityRange = useTransform(scrollY, [0, 400], [1, 0]);
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -124,7 +124,7 @@ const DetalhesReceita = () => {
     }
   };
 
-  const adicionarIngredienteLista = async (ingrediente, medida, imagem) => { // Adicionar 'imagem'
+  const adicionarIngredienteLista = async (ingrediente, medida, imagem) => { 
     try {
       await adicionarItemLista({
         ingrediente,
@@ -132,7 +132,7 @@ const DetalhesReceita = () => {
         receitaOrigem: receita.strMeal,
         comprado: false,
         quantidade: 1,
-        imagem // Guardar imagem do ingrediente
+        imagem 
       });
       toast.success("Adicionado à lista de compras!");
       carregarItens();
@@ -151,7 +151,7 @@ const DetalhesReceita = () => {
 
   const partilharReceita = () => {
     navigator.clipboard.writeText(window.location.href);
-    toast.success("Link copiado para a área de transferência!");
+    toast.success("Link copiado!");
   };
 
   const imprimirReceita = () => {
@@ -181,7 +181,7 @@ const DetalhesReceita = () => {
     <div className="text-center py-20 text-gray-500 dark:text-gray-400">
       Receita não encontrada.
       <br />
-      <button onClick={() => navegar(-1)} className="btn-primary mt-4">Voltar</button>
+      <button onClick={() => navegar(-1)} className="btn-primary mt-4 mx-auto">Voltar</button>
     </div>
   );
 
@@ -205,10 +205,15 @@ const DetalhesReceita = () => {
     .filter(step => step.trim().length > 0);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 relative">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="max-w-7xl mx-auto space-y-8"
+    >
       <button 
         onClick={() => navegar(-1)} 
-        className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium print:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 relative z-20"
+        className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-bold print:hidden px-4 py-2 rounded-lg hover:bg-white dark:hover:bg-gray-800 shadow-sm relative z-20"
       >
         <ArrowLeft size={20} className="mr-2" />
         Voltar
@@ -216,45 +221,45 @@ const DetalhesReceita = () => {
 
       <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800">
         {/* Header Image com Parallax */}
-        <div className="relative h-96 md:h-[500px] overflow-hidden">
+        <div className="relative h-[500px] lg:h-[600px] overflow-hidden">
           <motion.img 
             src={receita.strMealThumb} 
             alt={receita.strMeal} 
             className="w-full h-full object-cover absolute top-0 left-0"
-            style={{ y: yRange }} // Aplica o efeito Parallax
+            style={{ y: yRange }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end p-8 md:p-12 z-10 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-8 md:p-16 z-10 pointer-events-none">
             <motion.div 
-              style={{ opacity: opacityRange }} // Desvanece com scroll
+              style={{ opacity: opacityRange }}
               className="text-white w-full"
             >
               <motion.h1 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg leading-tight"
+                className="text-5xl md:text-7xl font-extrabold mb-6 drop-shadow-xl leading-tight tracking-tight"
               >
                 {receita.strMeal}
               </motion.h1>
               <div className="flex flex-wrap justify-between items-end gap-6 pointer-events-auto">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="bg-orange-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide">{receita.strCategory}</span>
-                  <span className="text-white/60 text-2xl">•</span>
-                  <span className="text-xl font-medium">{receita.strArea}</span>
-                  <span className="text-white/60 text-2xl">•</span>
-                  <span className={`px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wide ${dificuldade.cor} backdrop-blur-md border border-white/10`}>
+                <div className="flex flex-wrap items-center gap-4">
+                  <span className="bg-orange-600 px-5 py-2 rounded-full text-sm font-bold tracking-wide shadow-lg">{receita.strCategory}</span>
+                  <span className={`px-5 py-2 rounded-full text-sm font-bold uppercase tracking-wide ${dificuldade.cor} backdrop-blur-md border border-white/10 shadow-lg`}>
                     {dificuldade.texto}
+                  </span>
+                  <span className="text-xl font-medium flex items-center text-gray-200">
+                    {receita.strArea}
                   </span>
                 </div>
                 
                 {/* Rating System */}
                 {eFavorito && (
-                  <div className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden pointer-events-auto">
+                  <div className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden pointer-events-auto shadow-lg">
                     {[1, 2, 3, 4, 5].map((estrela) => (
                       <button
                         key={estrela}
                         onClick={() => atualizarClassificacao(estrela)}
-                        className="focus:outline-none transform hover:scale-125 transition-transform mx-0.5"
+                        className="focus:outline-none transform hover:scale-125 transition-transform mx-1"
                       >
                         <Star 
                           size={28} 
@@ -269,42 +274,43 @@ const DetalhesReceita = () => {
           </div>
         </div>
 
-        <div className="p-8 md:p-12 relative z-20 bg-white dark:bg-gray-800" id="conteudo-receita-para-impressao">
+        <div className="p-8 md:p-16 relative z-20 bg-white dark:bg-gray-800" id="conteudo-receita-para-impressao">
           {/* Actions Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 pb-8 border-b border-gray-100 dark:border-gray-700 gap-4 print:hidden">
-            <div className="flex gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-              <button onClick={partilharReceita} className="btn-secondary flex-1 md:flex-none whitespace-nowrap">
+          <div className="flex flex-col lg:flex-row justify-between items-center mb-16 pb-10 border-b border-gray-100 dark:border-gray-700 gap-6 print:hidden">
+            <div className="flex gap-4 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
+              <button onClick={partilharReceita} className="btn-secondary flex-1 whitespace-nowrap shadow-none border-2 hover:border-gray-300 dark:hover:border-gray-600">
                 <Share2 size={20} /> Partilhar
               </button>
-              <button onClick={imprimirReceita} className="btn-secondary flex-1 md:flex-none whitespace-nowrap">
+              <button onClick={imprimirReceita} className="btn-secondary flex-1 whitespace-nowrap shadow-none border-2 hover:border-gray-300 dark:hover:border-gray-600">
                 <Printer size={20} /> Imprimir
               </button>
-              <button onClick={() => setMostrarQR(true)} className="btn-secondary flex-1 md:flex-none whitespace-nowrap">
-                <QrCode size={20} /> No Telemóvel
+              <button onClick={() => setMostrarQR(true)} className="btn-secondary flex-1 whitespace-nowrap shadow-none border-2 hover:border-gray-300 dark:hover:border-gray-600">
+                <QrCode size={20} /> Mobile
               </button>
             </div>
 
             <button
               onClick={lidarComFavorito}
               disabled={processando}
-              className={`w-full md:w-auto font-bold py-3 px-8 rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 ${eFavorito 
-                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900 hover:bg-red-100 dark:hover:bg-red-900/30' 
-                  : 'bg-orange-600 text-white hover:bg-orange-700'
+              className={`w-full lg:w-auto btn-primary text-lg py-4 px-10 ${ 
+                eFavorito 
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/20' 
+                  : ''
               }`}
             >
-              <Heart size={22} className={`mr-1 ${eFavorito ? 'fill-current' : ''}`} />
-              {eFavorito ? 'Guardado' : 'Adicionar'}
+              <Heart size={24} className={`mr-2 ${eFavorito ? 'fill-current' : ''}`} />
+              {eFavorito ? 'Receita Guardada' : 'Guardar Receita'}
             </button>
           </div>
 
           {/* Video Section */}
           {videoId && (
-            <div className="mb-12 print:hidden">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <PlayCircle className="mr-3 text-red-600" size={28} />
+            <div className="mb-16 print:hidden">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+                <PlayCircle className="mr-4 text-orange-600" size={32} />
                 Preparação em Vídeo
               </h2>
-              <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl bg-black border-4 border-white dark:border-gray-700">
+              <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl bg-black border-4 border-gray-100 dark:border-gray-700 transform hover:scale-[1.01] transition-transform duration-500">
                 <iframe
                   width="100%"
                   height="100%"
@@ -318,35 +324,37 @@ const DetalhesReceita = () => {
             </div>
           )}
 
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-12 gap-16">
             {/* Ingredients */}
-            <div className="md:col-span-1">
-              <div className="sticky top-24">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                  <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-xl mr-3">
-                    <List size={24} />
+            <div className="lg:col-span-4">
+              <div className="sticky top-32">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4">
+                    <List size={28} />
                   </div>
                   Ingredientes
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                <div className="space-y-4">
                   {ingredientes.map((item, idx) => (
-                    <div key={idx} className="card-glass p-3 flex items-center gap-3 group">
-                      <img 
-                        src={item.imagem} 
-                        alt={item.ingrediente} 
-                        className="w-12 h-12 object-contain bg-gray-50 dark:bg-gray-700/50 rounded-lg p-1 border border-gray-100 dark:border-gray-700" 
-                        onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }}
-                      />
+                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all">
+                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700">
+                        <img 
+                          src={item.imagem} 
+                          alt={item.ingrediente} 
+                          className="w-full h-full object-contain"
+                          onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }}
+                        />
+                      </div>
                       <div className="flex-grow">
-                        <span className="font-semibold block text-gray-900 dark:text-white">{item.ingrediente}</span>
-                        <span className="text-orange-600 dark:text-orange-400 text-sm font-medium">{item.medida}</span>
+                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight">{item.ingrediente}</span>
+                        <span className="text-orange-600 dark:text-orange-400 font-medium">{item.medida}</span>
                       </div>
                       <button 
                         onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida, item.imagem)}
-                        className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-full transition-colors opacity-0 group-hover:opacity-100 print:hidden"
+                        className="p-2.5 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-xl transition-colors opacity-0 group-hover:opacity-100 print:hidden focus:opacity-100"
                         title="Adicionar à Lista de Compras"
                       >
-                        <Plus size={20} />
+                        <Plus size={24} />
                       </button>
                     </div>
                   ))}
@@ -355,12 +363,12 @@ const DetalhesReceita = () => {
             </div>
 
             {/* Instructions Interativas */}
-            <div className="md:col-span-2">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-xl mr-3">
-                  <FileText size={24} />
+            <div className="lg:col-span-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4">
+                  <FileText size={28} />
                 </div>
-                Instruções
+                Instruções Passo-a-Passo
               </h2>
               
               <div className="space-y-6">
@@ -368,20 +376,24 @@ const DetalhesReceita = () => {
                   <div 
                     key={index}
                     onClick={() => alternarPasso(index)}
-                    className={`p-6 rounded-2xl border-2 transition-all cursor-pointer group relative ${passosConcluidos.includes(index)
-                        ? 'bg-green-50/50 dark:bg-green-900/10 border-green-100 dark:border-green-900/30 opacity-70' 
-                        : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800 hover:shadow-md'
+                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative ${ 
+                      passosConcluidos.includes(index)
+                        ? 'bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30' 
+                        : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1'
                     }`}
                   >
-                    <div className="absolute top-6 left-4 font-bold text-gray-200 dark:text-gray-700 text-xl select-none">
-                      {index + 1}
+                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors ${ 
+                      passosConcluidos.includes(index) ? 'text-green-200 dark:text-green-900' : 'text-gray-100 dark:text-gray-700'
+                    }`}>
+                      {String(index + 1).padStart(2, '0')}
                     </div>
-                    <div className="flex items-start gap-5 pl-8">
-                      <div className={`mt-1 flex-shrink-0 transition-colors ${passosConcluidos.includes(index) ? 'text-green-600' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
-                        {passosConcluidos.includes(index) ? <CheckCircle size={28} /> : <Circle size={28} />}
+                    <div className="flex items-start gap-6 pl-12 relative z-10">
+                      <div className={`mt-1 flex-shrink-0 transition-all duration-300 ${passosConcluidos.includes(index) ? 'text-green-500 scale-110' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
+                        {passosConcluidos.includes(index) ? <CheckCircle size={32} className="fill-green-100 dark:fill-green-900" /> : <Circle size={32} />}
                       </div>
-                      <p className={`text-lg leading-relaxed ${passosConcluidos.includes(index) 
-                          ? 'text-gray-500 dark:text-gray-500 line-through' 
+                      <p className={`text-xl leading-loose ${ 
+                        passosConcluidos.includes(index) 
+                          ? 'text-gray-500 dark:text-gray-500 line-through decoration-gray-300' 
                           : 'text-gray-800 dark:text-gray-200'
                       }`}>
                         {step}
@@ -394,7 +406,7 @@ const DetalhesReceita = () => {
           </div>
         </div>
 
-        {/* Modal QR Code */}
+        {/* Modal QR Code (Mantido igual) */}
         <AnimatePresence>
           {mostrarQR && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm print:hidden">
@@ -429,7 +441,7 @@ const DetalhesReceita = () => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

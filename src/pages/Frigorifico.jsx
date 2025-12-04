@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { filtrarPorIngrediente } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
+import { Loader2, Plus, X, Search } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Ícone SVG inline para segurança máxima
 const IconeFrigorifico = () => (
@@ -12,7 +15,7 @@ const IconeFrigorifico = () => (
 );
 
 const Frigorifico = () => {
-  const [texto, setTexto] = useState('');
+  const [inputIngrediente, setInputIngrediente] = useState('');
   const [ingredientes, setIngredientes] = useState([]);
   const [receitas, setReceitas] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,16 +23,15 @@ const Frigorifico = () => {
 
   const adicionar = (e) => {
     e.preventDefault();
-    if (!texto.trim()) return;
+    if (!inputIngrediente.trim()) return;
     
-    if (ingredientes.length > 0) {
-      setErro("Para esta versão, escolhe apenas 1 ingrediente principal.");
-      setTimeout(() => setErro(''), 3000);
+    if (ingredientes.length >= 1) {
+      toast.error("Para esta versão, escolhe apenas 1 ingrediente principal.");
       return;
     }
     
-    setIngredientes([texto.trim()]);
-    setTexto('');
+    setIngredientes([inputIngrediente.trim()]);
+    setInputIngrediente('');
     setErro('');
   };
 
@@ -66,16 +68,16 @@ const Frigorifico = () => {
         <form onSubmit={adicionar} className="flex gap-3 max-w-lg mx-auto mb-8 relative">
           <input
             type="text"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            className="flex-grow px-5 py-4 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30 focus:border-blue-500 dark:focus:border-blue-500 outline-none transition-all text-lg dark:text-white placeholder-gray-400 shadow-sm"
+            value={inputIngrediente}
+            onChange={(e) => setInputIngrediente(e.target.value)}
+            className="input-modern pl-5 pr-12 text-lg"
             placeholder="Ingrediente (Inglês)..."
             disabled={ingredientes.length >= 1}
           />
           <button 
             type="submit" 
-            className="bg-blue-600 text-white px-6 py-4 rounded-2xl hover:bg-blue-700 font-bold transition-all shadow-md hover:shadow-lg active:scale-95 disabled:opacity-50 text-xl"
-            disabled={!texto.trim() || ingredientes.length >= 1}
+            className="btn-primary px-6 text-lg"
+            disabled={!inputIngrediente.trim() || ingredientes.length >= 1}
           >
             +
           </button>
@@ -88,27 +90,32 @@ const Frigorifico = () => {
         )}
 
         <div className="flex flex-wrap gap-3 justify-center mb-10 min-h-[50px]">
-          {ingredientes.map((ing, idx) => (
-            <span key={idx} className="px-5 py-2.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-full font-bold flex items-center gap-3 border border-blue-200 dark:border-blue-800 text-lg shadow-sm animate-bounce-in">
-              {ing} 
-              <button onClick={() => { setIngredientes([]); setReceitas([]); setErro(''); }} className="hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full p-1 transition-colors">
-                ✕
-              </button>
-            </span>
-          ))}
+          <AnimatePresence>
+            {ingredientes.map((ing, idx) => (
+              <motion.span
+                key={ing}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="px-5 py-2.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-full font-bold flex items-center gap-3 border border-blue-200 dark:border-blue-800 text-lg shadow-sm"
+              >
+                {ing} 
+                <button onClick={() => { setIngredientes([]); setReceitas([]); setErro(''); }} className="text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/50 rounded-full p-1 transition-colors">
+                  <X size={18} />
+                </button>
+              </motion.span>
+            ))}
+          </AnimatePresence>
         </div>
 
         <button 
           onClick={pesquisar}
           disabled={ingredientes.length === 0 || loading}
-          className="w-full max-w-sm mx-auto flex items-center justify-center px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 disabled:opacity-50 hover:shadow-xl hover:-translate-y-1 transition-all text-lg"
+          className="w-full max-w-sm mx-auto btn-primary bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40 text-lg py-4"
         >
           {loading ? (
             <span className="flex items-center gap-2">
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
+              <Loader2 className="animate-spin h-5 w-5" />
               A pesquisar...
             </span>
           ) : 'Encontrar Receitas 🔍'}
@@ -116,7 +123,7 @@ const Frigorifico = () => {
       </div>
 
       {receitas.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 min-h-[200px] animate-fade-in-up">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {receitas.map(receita => (
             <CartaoReceita key={receita.idMeal} receita={receita} />
           ))}

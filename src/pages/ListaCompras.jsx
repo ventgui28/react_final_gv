@@ -5,24 +5,13 @@ import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useShoppingList } from '../context/ShoppingListContext';
-// import Confetti from 'react-confetti'; // REMOVIDO
+// import Confetti from 'react-confetti'; // Removido para manter simplicidade
 
 const ListaCompras = () => {
   const [lista, setLista] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const { carregarItens } = useShoppingList();
-  // REMOVIDO: const [mostrarConfetti, setMostrarConfetti] = useState(false);
-
-  // REMOVIDO: Obter largura e altura da janela (não mais necessário)
-  // REMOVIDO: const [width, setWidth] = useState(window.innerWidth);
-  // REMOVIDO: const [height, setHeight] = useState(window.innerHeight);
-
-  useEffect(() => {
-    // REMOVIDO: Listener para redimensionamento da janela (não mais necessário)
-    // REMOVIDO: const handleResize = () => { setWidth(window.innerWidth); setHeight(window.innerHeight); };
-    // REMOVIDO: window.addEventListener('resize', handleResize);
-    // REMOVIDO: return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const [mostrarMensagemCompleta, setMostrarMensagemCompleta] = useState(false); // Novo estado
 
   useEffect(() => {
     carregarLista();
@@ -41,16 +30,11 @@ const ListaCompras = () => {
     }
   };
 
-  // REMOVIDO: useEffect para controlar o Confetti
-  // REMOVIDO: useEffect(() => {
-  // REMOVIDO:   if (lista.length > 0 && lista.every(item => item.comprado)) {
-  // REMOVIDO:     setMostrarConfetti(true);
-  // REMOVIDO:     const timer = setTimeout(() => setMostrarConfetti(false), 5000);
-  // REMOVIDO:     return () => clearTimeout(timer);
-  // REMOVIDO:   } else {
-  // REMOVIDO:     setMostrarConfetti(false);
-  // REMOVIDO:   }
-  // REMOVIDO: }, [lista]);
+  useEffect(() => {
+    // Atualizar estado da mensagem de lista completa
+    const todosComprados = lista.length > 0 && lista.every(item => item.comprado);
+    setMostrarMensagemCompleta(todosComprados);
+  }, [lista]);
 
   const alternarComprado = async (item) => {
     try {
@@ -91,16 +75,11 @@ const ListaCompras = () => {
     }
   };
 
-  // Lógica para determinar se a lista está completa
-  const listaEstaCompleta = lista.length > 0 && lista.every(item => item.comprado);
-
   if (carregando) return <div className="text-center py-12 text-gray-500 dark:text-gray-400">A carregar lista...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 relative">
-      {/* REMOVIDO: Confetti
-      {mostrarConfetti && <Confetti width={width} height={height} numberOfPieces={200} recycle={false} />}
-      */}
+    <div className="max-w-3xl mx-auto space-y-8">
+      {/* Confetti foi removido */}
       
       <header className="flex items-center justify-between mb-8">
         <div>
@@ -115,13 +94,12 @@ const ListaCompras = () => {
         </div>
       </header>
 
-      {/* Mensagem de Sucesso Total - Agora permanente se a lista estiver completa */}
+      {/* Mensagem de Sucesso Total com Animação Suave de Saída */}
       <AnimatePresence>
-        {listaEstaCompleta && (
+        {mostrarMensagemCompleta && (
           <motion.div 
             initial={{ opacity: 0, y: -20, scale: 0.9 }} 
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            // REMOVIDO: exit prop para que não desapareça
             transition={{ duration: 0.5 }}
             className="bg-green-100 text-green-800 p-4 rounded-xl text-center font-bold border border-green-200 flex items-center justify-center gap-2 shadow-md"
           >

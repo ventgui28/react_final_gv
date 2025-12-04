@@ -109,5 +109,15 @@
       "rating": 2
     }
   ],
-  "shoppingList": []
+  "shoppingList": [
+    {
+      "id": "07d3",
+      "ingrediente": "Heavy Cream",
+      "medida": "2 tbs",
+      "receitaOrigem": "Hot Chocolate Fudge",
+      "comprado": true,
+      "quantidade": 1,
+      "imagem": "https://www.themealdb.com/images/ingredients/Heavy Cream.png"
+    }
+  ]
 }

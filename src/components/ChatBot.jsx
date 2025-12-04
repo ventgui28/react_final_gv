@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, ChefHat, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { obterReceitaAleatoria } from '../services/api'; // Importar API
+import { obterReceitaAleatoria } from '../services/api';
 
 const ChatBot = () => {
   const [aberto, setAberto] = useState(false);
@@ -27,11 +27,9 @@ const ChatBot = () => {
   ];
 
   const lidarComOpcao = async (opcao) => {
-    // Adicionar mensagem do utilizador
     const novaMsgUser = { id: Date.now(), tipo: 'user', texto: opcao.texto };
     setMensagens(prev => [...prev, novaMsgUser]);
 
-    // Simular "a escrever..." (pequeno delay inicial)
     await new Promise(r => setTimeout(r, 600));
 
     let respostaBot = '';
@@ -54,7 +52,7 @@ const ChatBot = () => {
           if (receita) {
             setTimeout(() => {
               navigate(`/receita/${receita.idMeal}`);
-              setAberto(false); // Fechar o chat ao navegar
+              setAberto(false);
             }, 1500);
           } else {
             respostaBot = 'Ops, não consegui encontrar uma receita agora. Tenta de novo!';
@@ -79,17 +77,17 @@ const ChatBot = () => {
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="bg-white dark:bg-gray-800 w-80 md:w-96 h-96 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden mb-4"
+            className="card-glass w-80 md:w-96 h-96 flex flex-col overflow-hidden mb-4"
           >
             {/* Cabeçalho */}
-            <div className="bg-orange-600 p-4 flex justify-between items-center text-white">
+            <div className="bg-gradient-to-r from-orange-600 to-orange-500 p-4 flex justify-between items-center text-white shadow-md">
               <div className="flex items-center gap-2">
                 <div className="bg-white/20 p-1.5 rounded-full">
                   <Bot size={20} />
                 </div>
-                <span className="font-bold">Chef Bot</span>
+                <span className="font-bold text-lg">Chef Bot</span>
               </div>
-              <button onClick={() => setAberto(false)} className="hover:bg-white/20 p-1 rounded transition-colors">
+              <button onClick={() => setAberto(false)} className="hover:bg-white/20 p-1 rounded-full transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -102,10 +100,10 @@ const ChatBot = () => {
                   className={`flex ${msg.tipo === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div 
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+                    className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
                       msg.tipo === 'user' 
                         ? 'bg-orange-600 text-white rounded-br-none' 
-                        : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-bl-none shadow-sm'
+                        : 'card-glass text-gray-800 dark:text-gray-200 rounded-bl-none'
                     }`}
                   >
                     {msg.texto}
@@ -123,7 +121,7 @@ const ChatBot = () => {
                   <button
                     key={opcao.id}
                     onClick={() => lidarComOpcao(opcao)}
-                    className="text-xs bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 px-3 py-1.5 rounded-full hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors border border-orange-200 dark:border-orange-800"
+                    className="text-xs btn-secondary px-3 py-1.5 shadow-none hover:shadow-sm"
                   >
                     {opcao.texto}
                   </button>
@@ -139,7 +137,7 @@ const ChatBot = () => {
         onClick={() => setAberto(!aberto)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="bg-orange-600 text-white p-4 rounded-full shadow-lg hover:bg-orange-700 transition-colors flex items-center justify-center"
+        className="bg-orange-600 text-white p-4 rounded-full shadow-lg hover:bg-orange-700 transition-colors flex items-center justify-center shadow-orange-500/30"
       >
         {aberto ? <X size={24} /> : <MessageCircle size={24} />}
       </motion.button>
