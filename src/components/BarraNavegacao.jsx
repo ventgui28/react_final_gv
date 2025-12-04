@@ -42,7 +42,7 @@ const BarraNavegacao = () => {
           : 'bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800'
       }`}
     >
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <NavLink to="/" className="flex items-center space-x-2 text-2xl font-bold tracking-tight group" onClick={() => setMenuAberto(false)}>
