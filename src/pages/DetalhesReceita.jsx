@@ -224,7 +224,7 @@ const DetalhesReceita = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-7xl mx-auto space-y-8"
+      className="max-w-7xl mx-auto space-y-8 print:space-y-0 print:max-w-none print:block print:font-serif print:text-black"
     >
       <button 
         onClick={() => navegar(-1)} 
@@ -234,34 +234,28 @@ const DetalhesReceita = () => {
         Voltar
       </button>
 
-      <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800">
+      <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800 print:shadow-none print:border-none print:bg-transparent print:overflow-visible">
         
         {/* Cabeçalho Específico para Impressão */}
-        <div className="hidden print:block p-8 border-b-2 border-gray-200 mb-8">
-          <div className="flex items-start gap-8">
-            <img 
-              src={receita.strMealThumb} 
-              alt={receita.strMeal} 
-              className="w-64 h-64 object-cover rounded-2xl shadow-sm"
-            />
-            <div>
-              <h1 className="text-4xl font-bold text-black mb-2">{receita.strMeal}</h1>
-              <div className="flex gap-4 text-gray-600 text-sm mb-4">
-                <span className="font-semibold bg-gray-100 px-3 py-1 rounded-full">{receita.strCategory}</span>
-                <span className="font-semibold bg-gray-100 px-3 py-1 rounded-full">{receita.strArea}</span>
-                <span className={`font-semibold px-3 py-1 rounded-full ${dificuldade.texto === 'Fácil' ? 'bg-green-100' : dificuldade.texto === 'Médio' ? 'bg-yellow-100' : 'bg-red-100'}`}>
-                  {dificuldade.texto}
-                </span>
-              </div>
-              {/* QR Code para Impressão */}
-              <div className="flex items-center gap-4 mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200 w-fit">
-                <QRCode value={window.location.href} size={64} />
-                <div className="text-xs text-gray-500">
-                  <p className="font-bold text-gray-800">Ler no telemóvel</p>
-                  <p>Digitalize para ver o vídeo</p>
-                </div>
-              </div>
+        <div className="hidden print:flex flex-row items-center gap-8 pb-8 border-b-2 border-gray-300 mb-8">
+          <img 
+            src={receita.strMealThumb} 
+            alt={receita.strMeal} 
+            className="w-48 h-48 object-cover rounded-xl shadow-sm border border-gray-200"
+          />
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold text-black mb-3 leading-tight">{receita.strMeal}</h1>
+            <div className="flex flex-wrap gap-3 text-gray-700 text-sm mb-4 font-sans">
+              <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">📂 {receita.strCategory}</span>
+              <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">🌍 {receita.strArea}</span>
+              <span className={`px-3 py-1 rounded-full border ${dificuldade.texto === 'Fácil' ? 'bg-green-50 border-green-200 text-green-800' : dificuldade.texto === 'Médio' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+                ⚡ {dificuldade.texto}
+              </span>
             </div>
+          </div>
+          <div className="flex flex-col items-center gap-2 p-3 bg-white rounded-lg border border-gray-200">
+            <QRCode value={window.location.href} size={80} />
+            <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider font-sans">Ver Vídeo</span>
           </div>
         </div>
 
@@ -319,7 +313,7 @@ const DetalhesReceita = () => {
           </div>
         </div>
 
-        <div className="p-8 md:p-16 relative z-20 bg-white dark:bg-gray-800" id="conteudo-receita-para-impressao">
+        <div className="p-8 md:p-16 relative z-20 bg-white dark:bg-gray-800 print:p-0" id="conteudo-receita-para-impressao">
           {/* Actions Bar */}
           <div className="flex flex-col lg:flex-row justify-between items-center mb-16 pb-10 border-b border-gray-100 dark:border-gray-700 gap-6 print:hidden">
             <div className="flex gap-4 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
@@ -369,30 +363,30 @@ const DetalhesReceita = () => {
             </div>
           )}
 
-          <div className="grid lg:grid-cols-12 gap-16">
+          <div className="grid lg:grid-cols-12 gap-16 print:block">
             {/* Ingredients */}
-            <div className="lg:col-span-4">
-              <div className="sticky top-32">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
-                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4">
+            <div className="lg:col-span-4 print:mb-8">
+              <div className="sticky top-32 print:static">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center print:text-xl print:border-b-2 print:border-gray-800 print:pb-2 print:mb-6 print:uppercase print:tracking-wider">
+                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4 print:hidden">
                     <List size={28} />
                   </div>
                   Ingredientes
                 </h2>
-                <div className="space-y-4 print:grid print:grid-cols-3 print:gap-4 print:space-y-0">
+                <div className="space-y-4 print:grid print:grid-cols-3 print:gap-x-6 print:gap-y-4 print:space-y-0">
                   {ingredientes.map((item, idx) => (
-                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all print:shadow-none print:border print:border-gray-200 print:rounded-lg print:p-2 print:block print:text-center">
-                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700 print:w-10 print:h-10 print:mx-auto print:mb-2">
+                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all print:shadow-none print:border print:border-gray-300 print:rounded-lg print:p-3 print:bg-white print:flex-row print:items-center print:break-inside-avoid">
+                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700 print:w-10 print:h-10 print:shrink-0 print:border-gray-200">
                         <img 
                           src={item.imagem} 
                           alt={item.ingrediente} 
-                          className="w-full h-full object-contain"
+                          className="w-full h-full object-contain mix-blend-multiply"
                           onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }}
                         />
                       </div>
-                      <div className="flex-grow">
-                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-base">{item.ingrediente}</span>
-                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-sm">{item.medida}</span>
+                      <div className="flex-grow min-w-0">
+                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-base print:truncate">{item.ingrediente}</span>
+                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-sm print:text-gray-600">{item.medida}</span>
                       </div>
                       <button 
                         onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida, item.imagem)}
@@ -408,35 +402,35 @@ const DetalhesReceita = () => {
             </div>
 
             {/* Instructions Interativas */}
-            <div className="lg:col-span-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
-                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4">
+            <div className="lg:col-span-8 print:col-span-12">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center print:text-xl print:border-b-2 print:border-gray-800 print:pb-2 print:mb-6 print:uppercase print:tracking-wider print:mt-8">
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4 print:hidden">
                   <FileText size={28} />
                 </div>
-                Instruções Passo-a-Passo
+                Modo de Preparo
               </h2>
               
-              <div className="space-y-6 print:space-y-2">
+              <div className="space-y-6 print:space-y-0">
                 {instrucoes.map((step, index) => (
                   <div 
                     key={index}
                     onClick={() => alternarPasso(index)}
-                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative print:p-0 print:border-0 print:shadow-none print:mb-4 print:bg-transparent ${ 
+                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative print:p-4 print:border-b print:border-gray-200 print:rounded-none print:border-0 print:border-t-0 print:border-x-0 print:last:border-0 print:mb-0 print:break-inside-avoid ${ 
                       passosConcluidos.includes(index)
-                        ? 'bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30' 
-                        : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1'
+                        ? 'bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30 print:bg-transparent' 
+                        : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1 print:border-transparent'
                     }`}
                   >
-                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors print:relative print:top-0 print:left-0 print:text-xl print:mb-1 print:text-black ${ 
+                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors print:static print:text-xl print:font-bold print:mb-1 print:text-black print:inline-block print:mr-3 ${ 
                       passosConcluidos.includes(index) ? 'text-green-200 dark:text-green-900' : 'text-gray-100 dark:text-gray-700'
                     }`}>
-                      {String(index + 1).padStart(2, '0')}
+                      {index + 1}.
                     </div>
-                    <div className="flex items-start gap-6 pl-12 relative z-10 print:pl-0 print:block">
+                    <div className="flex items-start gap-6 pl-12 relative z-10 print:pl-0 print:inline print:text-lg">
                       <div className={`mt-1 flex-shrink-0 transition-all duration-300 print:hidden ${passosConcluidos.includes(index) ? 'text-green-500 scale-110' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
                         {passosConcluidos.includes(index) ? <CheckCircle size={32} className="fill-green-100 dark:fill-green-900" /> : <Circle size={32} />}
                       </div>
-                      <p className={`text-xl leading-loose print:text-base print:leading-normal print:text-black ${ 
+                      <p className={`text-xl leading-loose print:inline print:text-base print:leading-relaxed print:text-gray-900 ${ 
                         passosConcluidos.includes(index) 
                           ? 'text-gray-500 dark:text-gray-500 line-through decoration-gray-300 print:no-underline' 
                           : 'text-gray-800 dark:text-gray-200'
@@ -446,6 +440,17 @@ const DetalhesReceita = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+              
+              {/* Rodapé Apenas para Impressão */}
+              <div className="hidden print:flex justify-between items-end mt-12 pt-4 border-t border-gray-300 text-sm text-gray-500 font-sans">
+                <div>
+                  <p className="font-bold text-gray-800">CookBook App</p>
+                  <p>O teu assistente culinário digital.</p>
+                </div>
+                <div className="text-right">
+                  <p>Receita obtida em {new Date().toLocaleDateString()}</p>
+                </div>
               </div>
             </div>
           </div>
