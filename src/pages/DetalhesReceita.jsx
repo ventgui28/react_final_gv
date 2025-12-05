@@ -379,10 +379,10 @@ const DetalhesReceita = () => {
                   </div>
                   Ingredientes
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-4 print:grid print:grid-cols-3 print:gap-4 print:space-y-0">
                   {ingredientes.map((item, idx) => (
-                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all">
-                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700">
+                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all print:shadow-none print:border print:border-gray-200 print:rounded-lg print:p-2 print:block print:text-center">
+                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700 print:w-10 print:h-10 print:mx-auto print:mb-2">
                         <img 
                           src={item.imagem} 
                           alt={item.ingrediente} 
@@ -391,8 +391,8 @@ const DetalhesReceita = () => {
                         />
                       </div>
                       <div className="flex-grow">
-                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight">{item.ingrediente}</span>
-                        <span className="text-orange-600 dark:text-orange-400 font-medium">{item.medida}</span>
+                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-sm">{item.ingrediente}</span>
+                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-xs">{item.medida}</span>
                       </div>
                       <button 
                         onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida, item.imagem)}
@@ -416,29 +416,29 @@ const DetalhesReceita = () => {
                 Instruções Passo-a-Passo
               </h2>
               
-              <div className="space-y-6">
+              <div className="space-y-6 print:space-y-2">
                 {instrucoes.map((step, index) => (
                   <div 
                     key={index}
                     onClick={() => alternarPasso(index)}
-                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative ${ 
+                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative print:p-0 print:border-0 print:shadow-none print:mb-4 print:bg-transparent ${ 
                       passosConcluidos.includes(index)
                         ? 'bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30' 
                         : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1'
                     }`}
                   >
-                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors ${ 
+                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors print:relative print:top-0 print:left-0 print:text-xl print:mb-1 print:text-black ${ 
                       passosConcluidos.includes(index) ? 'text-green-200 dark:text-green-900' : 'text-gray-100 dark:text-gray-700'
                     }`}>
                       {String(index + 1).padStart(2, '0')}
                     </div>
-                    <div className="flex items-start gap-6 pl-12 relative z-10">
-                      <div className={`mt-1 flex-shrink-0 transition-all duration-300 ${passosConcluidos.includes(index) ? 'text-green-500 scale-110' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
+                    <div className="flex items-start gap-6 pl-12 relative z-10 print:pl-0 print:block">
+                      <div className={`mt-1 flex-shrink-0 transition-all duration-300 print:hidden ${passosConcluidos.includes(index) ? 'text-green-500 scale-110' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
                         {passosConcluidos.includes(index) ? <CheckCircle size={32} className="fill-green-100 dark:fill-green-900" /> : <Circle size={32} />}
                       </div>
-                      <p className={`text-xl leading-loose ${ 
+                      <p className={`text-xl leading-loose print:text-base print:leading-normal print:text-black ${ 
                         passosConcluidos.includes(index) 
-                          ? 'text-gray-500 dark:text-gray-500 line-through decoration-gray-300' 
+                          ? 'text-gray-500 dark:text-gray-500 line-through decoration-gray-300 print:no-underline' 
                           : 'text-gray-800 dark:text-gray-200'
                       }`}>
                         {step}

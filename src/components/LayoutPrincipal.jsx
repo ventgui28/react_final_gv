@@ -16,7 +16,7 @@ const LayoutPrincipal = () => {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col font-sans transition-colors duration-500 ease-in-out relative overflow-x-hidden">
           
           {/* Fundo Decorativo Reforçado */}
-          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden print:hidden">
             {/* Gradiente Laranja */}
             <div className="absolute -top-[10%] -right-[10%] w-[600px] h-[600px] bg-orange-400/20 dark:bg-orange-600/10 rounded-full blur-[120px] animate-pulse-slow"></div>
             
@@ -75,12 +75,14 @@ const LayoutPrincipal = () => {
           
           {/* Conteúdo Principal */}
           <div className="relative z-10 flex flex-col min-h-screen">
-            <BarraNavegacao />
-            <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-all duration-500">
+            <div className="print:hidden">
+              <BarraNavegacao />
+            </div>
+            <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-all duration-500 print:p-0 print:w-full print:max-w-none">
               <Migalhas />
               <Outlet />
             </main>
-            <footer className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 py-10 text-center mt-auto transition-colors duration-500">
+            <footer className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 py-10 text-center mt-auto transition-colors duration-500 print:hidden">
               <div className="container mx-auto px-4">
                 <p className="font-bold text-lg mb-2">CookBook</p>
                 <p className="text-sm">O teu companheiro de cozinha digital.</p>
@@ -90,8 +92,10 @@ const LayoutPrincipal = () => {
           </div>
 
           {/* Componentes Flutuantes */}
-          <ScrollToTop />
-          <ChatBot />
+          <div className="print:hidden">
+            <ScrollToTop />
+            <ChatBot />
+          </div>
         </div>
       </ShoppingListProvider>
     </ThemeProvider>
