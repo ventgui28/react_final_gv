@@ -4,6 +4,7 @@ import { obterReceitaAleatoria } from '../services/api';
 import { obterFavoritos } from '../services/apiLocal';
 import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, Sparkles, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { traduzirTermo } from '../utils/tradutor';
 
 const Inicio = () => {
   const navigate = useNavigate();
@@ -41,7 +42,10 @@ const Inicio = () => {
   const realizarPesquisa = (e) => {
     e.preventDefault();
     if (termoPesquisa.trim()) {
-      navigate(`/pesquisa?q=${termoPesquisa}`);
+      // Traduzir o termo antes de enviar para a página de pesquisa
+      const termoTraduzido = traduzirTermo(termoPesquisa);
+      // Enviamos ambos: o termo real (q) e o termo original para visualização (label)
+      navigate(`/pesquisa?q=${termoTraduzido}&original=${termoPesquisa}`);
     }
   };
 
@@ -122,7 +126,7 @@ const Inicio = () => {
               type="text"
               value={termoPesquisa}
               onChange={(e) => setTermoPesquisa(e.target.value)}
-              placeholder="Pesquisa por 'Lasanha', 'Frango', 'Bolo'..."
+              placeholder="Pesquisa por 'Frango', 'Bolo', 'Massa'..."
               className="block w-full pl-16 pr-6 py-5 rounded-full bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 dark:focus:border-orange-500 focus:bg-white dark:focus:bg-black text-lg text-gray-900 dark:text-white placeholder-gray-400 transition-all shadow-inner outline-none"
             />
             <button 
