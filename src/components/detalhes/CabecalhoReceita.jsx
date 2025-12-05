@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Share2, Printer, QrCode, Heart, Star } from 'lucide-react';
 
@@ -12,9 +13,10 @@ const CabecalhoReceita = ({
   aoPartilhar, 
   aoImprimir, 
   aoMostrarQR
-  // yRange, // Removed
-  // opacityRange // Removed
 }) => {
+  // Estado para controlar o hover das estrelas
+  const [hoverRating, setHoverRating] = useState(0);
+
   return (
     <>
       {/* Header Image (Visível apenas no ecrã) */}
@@ -23,13 +25,9 @@ const CabecalhoReceita = ({
           src={receita.strMealThumb} 
           alt={receita.strMeal} 
           className="w-full h-full object-cover absolute top-0 left-0"
-          // style={{ y: yRange }} // Removed
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-8 md:p-16 z-10 pointer-events-none">
-          <div // Changed from motion.div
-            // style={{ opacity: opacityRange }} // Removed
-            className="text-white w-full"
-          >
+          <div className="text-white w-full">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -49,21 +47,36 @@ const CabecalhoReceita = ({
                 </span>
               </div>
               
-              {/* Rating System */}
+              {/* Rating System Interativo */}
               {eFavorito && (
-                <div className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden pointer-events-auto shadow-lg">
-                  {[1, 2, 3, 4, 5].map((estrela) => (
-                    <button
-                      key={estrela}
-                      onClick={() => aoClassificar(estrela)}
-                      className="focus:outline-none transform hover:scale-125 transition-transform mx-1"
-                    >
-                      <Star 
-                        size={28} 
-                        className={`${estrela <= classificacao ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400/50'} transition-colors`}
-                      />
-                    </button>
-                  ))}
+                <div 
+                  className="flex bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 print:hidden pointer-events-auto shadow-lg"
+                  onMouseLeave={() => setHoverRating(0)} // Reseta quando o rato sai do container
+                >
+                  {[1, 2, 3, 4, 5].map((estrela) => {
+                    // A estrela deve estar preenchida se:
+                    // 1. O rato estiver por cima (hoverRating) e for menor ou igual à estrela focada.
+                    // 2. OU se não houver hover, e for menor ou igual à classificação guardada.
+                    const preenchida = estrela <= (hoverRating || classificacao);
+
+                    return (
+                      <button
+                        key={estrela}
+                        onClick={() => aoClassificar(estrela)}
+                        onMouseEnter={() => setHoverRating(estrela)}
+                        className="focus:outline-none transform transition-transform mx-1"
+                      >
+                        <Star 
+                          size={28} 
+                          className={`transition-all duration-200 ${
+                            preenchida 
+                              ? 'text-yellow-400 fill-yellow-400 scale-110 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]' // Brilho e preenchimento
+                              : 'text-gray-400/50 scale-100'
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
