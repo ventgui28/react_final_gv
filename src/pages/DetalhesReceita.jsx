@@ -235,8 +235,38 @@ const DetalhesReceita = () => {
       </button>
 
       <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800">
-        {/* Header Image com Parallax */}
-        <div className="relative h-[500px] lg:h-[600px] overflow-hidden">
+        
+        {/* Cabeçalho Específico para Impressão */}
+        <div className="hidden print:block p-8 border-b-2 border-gray-200 mb-8">
+          <div className="flex items-start gap-8">
+            <img 
+              src={receita.strMealThumb} 
+              alt={receita.strMeal} 
+              className="w-64 h-64 object-cover rounded-2xl shadow-sm"
+            />
+            <div>
+              <h1 className="text-4xl font-bold text-black mb-2">{receita.strMeal}</h1>
+              <div className="flex gap-4 text-gray-600 text-sm mb-4">
+                <span className="font-semibold bg-gray-100 px-3 py-1 rounded-full">{receita.strCategory}</span>
+                <span className="font-semibold bg-gray-100 px-3 py-1 rounded-full">{receita.strArea}</span>
+                <span className={`font-semibold px-3 py-1 rounded-full ${dificuldade.texto === 'Fácil' ? 'bg-green-100' : dificuldade.texto === 'Médio' ? 'bg-yellow-100' : 'bg-red-100'}`}>
+                  {dificuldade.texto}
+                </span>
+              </div>
+              {/* QR Code para Impressão */}
+              <div className="flex items-center gap-4 mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200 w-fit">
+                <QRCode value={window.location.href} size={64} />
+                <div className="text-xs text-gray-500">
+                  <p className="font-bold text-gray-800">Ler no telemóvel</p>
+                  <p>Digitalize para ver o vídeo</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Header Image com Parallax (Visível apenas no ecrã) */}
+        <div className="relative h-[500px] lg:h-[600px] overflow-hidden print:hidden">
           <motion.img 
             src={receita.strMealThumb} 
             alt={receita.strMeal} 
