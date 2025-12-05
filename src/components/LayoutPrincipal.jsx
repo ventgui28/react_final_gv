@@ -3,7 +3,6 @@ import BarraNavegacao from './BarraNavegacao';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '../context/ThemeContext';
 import { ShoppingListProvider } from '../context/ShoppingListContext';
-import Neve from './Neve';
 import ChatBot from './ChatBot';
 import ScrollToTop from './ScrollToTop';
 import Migalhas from './Migalhas';
@@ -27,9 +26,6 @@ const LayoutPrincipal = () => {
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.6] dark:opacity-[0.3]"></div>
           </div>
 
-          {/* Neve (Opcional) */}
-          <Neve />
-          
           <Toaster 
             position="top-center"
             containerStyle={{

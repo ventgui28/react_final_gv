@@ -44,7 +44,6 @@ Bem-vindo ao **CookBook**, uma aplicação web moderna, responsiva e interativa 
 
 ### 🎨 Design e Personalização
 *   **🌙 Modo Escuro (Dark Mode):** Interface totalmente adaptada para ambientes com pouca luz.
-*   **❄️ Modo Natal:** Um tema festivo opcional com neve animada.
 *   **⚙️ Painel de Definições:** Gestão de dados (limpar histórico/lista) e preferências visuais.
 
 ---
