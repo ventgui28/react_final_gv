@@ -2,10 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { obterReceitaAleatoria } from '../services/api';
 import { obterFavoritos } from '../services/apiLocal';
-import { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { obterReceitaAleatoria } from '../services/api';
-import { obterFavoritos } from '../services/apiLocal';
 import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, Sparkles, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
