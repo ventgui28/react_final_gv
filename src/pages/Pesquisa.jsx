@@ -4,7 +4,6 @@ import CartaoReceita from '../components/CartaoReceita';
 import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown, ChefHat } from 'lucide-react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import SelectPersonalizado from '../components/SelectPersonalizado';
-import { traduzirTermo } from '../utils/tradutor';
 
 const Pesquisa = () => {
   const location = useLocation();
@@ -39,13 +38,10 @@ const Pesquisa = () => {
   // Efeito unificado para lidar com navegação externa (Home -> Pesquisa)
   useEffect(() => {
     const q = searchParams.get('q');
-    const original = searchParams.get('original'); // Novo parâmetro para mostrar o termo em PT
     const catState = location.state?.categoria;
 
     if (q) {
-      // Se tivermos o termo original (PT), mostramos esse na input. Se não, mostramos o q (EN)
-      setTermo(original || q); 
-      // A pesquisa é feita sempre com o termo traduzido 'q' que já vem no URL
+      setTermo(q);
       lidarComPesquisa(null, q, true); 
     } else if (catState) {
       setCategoriaSelecionada(catState);
@@ -57,19 +53,13 @@ const Pesquisa = () => {
   const lidarComPesquisa = async (e, termoOverride, isUrlSearch = false) => {
     if (e) e.preventDefault();
     
-    // Se vier do URL, termoOverride já é o termo traduzido.
-    // Se for pesquisa manual, usamos o estado 'termo' e precisamos de traduzir.
     let termoParaPesquisar = termoOverride || termo;
-    
-    if (!isUrlSearch && !termoOverride) {
-       termoParaPesquisar = traduzirTermo(termo);
-    }
     
     if (!termoParaPesquisar.trim()) return;
 
     // Atualizar URL se for uma nova pesquisa manual
     if (!isUrlSearch && !termoOverride) {
-      setSearchParams({ q: termoParaPesquisar, original: termo });
+      setSearchParams({ q: termoParaPesquisar });
     }
 
     setCarregando(true);
