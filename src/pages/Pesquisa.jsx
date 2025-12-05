@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { pesquisarReceitas, obterListaCategorias, obterListaAreas, filtrarPorCategoria, filtrarPorArea } from '../services/api';
 import CartaoReceita from '../components/CartaoReceita';
 import { Search, Loader2, XCircle, ArrowRight, Filter, ChevronDown, ChefHat } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import SelectPersonalizado from '../components/SelectPersonalizado';
 
 const Pesquisa = () => {
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   
   const [termo, setTermo] = useState('');
   const [receitas, setReceitas] = useState([]);
@@ -34,17 +35,32 @@ const Pesquisa = () => {
     carregarFiltros();
   }, []);
 
+  // Efeito unificado para lidar com navegação externa (Home -> Pesquisa)
   useEffect(() => {
-    if (location.state?.categoria) {
-      const cat = location.state.categoria;
-      setCategoriaSelecionada(cat);
-      lidarComFiltroCategoria(cat);
-    }
-  }, [location.state]);
+    const q = searchParams.get('q');
+    const catState = location.state?.categoria;
 
-  const lidarComPesquisa = async (e) => {
+    if (q) {
+      setTermo(q);
+      lidarComPesquisa(null, q);
+    } else if (catState) {
+      setCategoriaSelecionada(catState);
+      lidarComFiltroCategoria(catState);
+      // Limpar o state para não re-disparar se o user navegar internamente
+      window.history.replaceState({}, document.title);
+    }
+  }, [searchParams, location.state]);
+
+  const lidarComPesquisa = async (e, termoOverride) => {
     if (e) e.preventDefault();
-    if (!termo.trim()) return;
+    const termoParaPesquisar = termoOverride || termo;
+    
+    if (!termoParaPesquisar.trim()) return;
+
+    // Atualizar URL se for uma nova pesquisa manual
+    if (!termoOverride) {
+      setSearchParams({ q: termoParaPesquisar });
+    }
 
     setCarregando(true);
     setErro(null);
@@ -55,7 +71,7 @@ const Pesquisa = () => {
     setDificuldadeSelecionada('');
 
     try {
-      const dados = await pesquisarReceitas(termo);
+      const dados = await pesquisarReceitas(termoParaPesquisar);
       setReceitas(dados || []);
     } catch (err) {
       setErro('Erro ao pesquisar receitas. Tente novamente.');
