@@ -367,26 +367,31 @@ const DetalhesReceita = () => {
             {/* Ingredients */}
             <div className="lg:col-span-4 print:mb-8">
               <div className="sticky top-32 print:static">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center print:text-xl print:border-b-2 print:border-gray-800 print:pb-2 print:mb-6 print:uppercase print:tracking-wider">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center print:text-2xl print:font-serif print:border-b-2 print:border-black print:pb-2 print:mb-6">
                   <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4 print:hidden">
                     <List size={28} />
                   </div>
                   Ingredientes
                 </h2>
-                <div className="space-y-4 print:grid print:grid-cols-3 print:gap-x-6 print:gap-y-4 print:space-y-0">
+                <div className="space-y-4 print:grid print:grid-cols-2 print:gap-x-12 print:gap-y-3 print:space-y-0 text-sm">
                   {ingredientes.map((item, idx) => (
-                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all print:shadow-none print:border print:border-gray-300 print:rounded-lg print:p-3 print:bg-white print:flex-row print:items-center print:break-inside-avoid">
-                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700 print:w-10 print:h-10 print:shrink-0 print:border-gray-200">
+                    <div key={idx} className="card-glass p-4 flex items-center gap-4 group hover:border-orange-200 dark:hover:border-orange-800/50 transition-all print:shadow-none print:border-0 print:p-0 print:bg-transparent print:items-baseline print:break-inside-avoid">
+                      {/* Imagem apenas no ecrã */}
+                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center p-2 border border-gray-100 dark:border-gray-700 print:hidden">
                         <img 
                           src={item.imagem} 
                           alt={item.ingrediente} 
-                          className="w-full h-full object-contain mix-blend-multiply"
+                          className="w-full h-full object-contain"
                           onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/48?text=?" }}
                         />
                       </div>
-                      <div className="flex-grow min-w-0">
-                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-base print:truncate">{item.ingrediente}</span>
-                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-sm print:text-gray-600">{item.medida}</span>
+                      
+                      {/* Checkbox para impressão */}
+                      <div className="hidden print:inline-block w-4 h-4 border border-gray-800 mr-3 rounded-sm flex-shrink-0 relative top-0.5"></div>
+
+                      <div className="flex-grow min-w-0 flex flex-col print:flex-row print:gap-2 print:items-baseline">
+                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-base print:text-black print:font-serif">{item.ingrediente}</span>
+                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-gray-600 print:text-sm print:font-serif italic">({item.medida})</span>
                       </div>
                       <button 
                         onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida, item.imagem)}
@@ -403,34 +408,36 @@ const DetalhesReceita = () => {
 
             {/* Instructions Interativas */}
             <div className="lg:col-span-8 print:col-span-12">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center print:text-xl print:border-b-2 print:border-gray-800 print:pb-2 print:mb-6 print:uppercase print:tracking-wider print:mt-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center print:text-2xl print:font-serif print:border-b-2 print:border-black print:pb-2 print:mb-6 print:mt-10">
                 <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl mr-4 print:hidden">
                   <FileText size={28} />
                 </div>
                 Modo de Preparo
               </h2>
               
-              <div className="space-y-6 print:space-y-0">
+              <div className="space-y-6 print:space-y-6">
                 {instrucoes.map((step, index) => (
                   <div 
                     key={index}
                     onClick={() => alternarPasso(index)}
-                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative print:p-4 print:border-b print:border-gray-200 print:rounded-none print:border-0 print:border-t-0 print:border-x-0 print:last:border-0 print:mb-0 print:break-inside-avoid ${ 
+                    className={`p-8 rounded-3xl border-2 transition-all cursor-pointer group relative print:p-0 print:border-0 print:shadow-none print:mb-0 print:bg-transparent print:flex print:gap-6 print:break-inside-avoid ${ 
                       passosConcluidos.includes(index)
                         ? 'bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30 print:bg-transparent' 
                         : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1 print:border-transparent'
                     }`}
                   >
-                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors print:static print:text-xl print:font-bold print:mb-1 print:text-black print:inline-block print:mr-3 ${ 
+                    {/* Número do Passo (Estilo Revista) */}
+                    <div className={`absolute top-8 left-6 font-black text-3xl select-none transition-colors print:static print:text-4xl print:font-serif print:text-gray-200 print:leading-none print:w-16 print:text-right flex-shrink-0 ${ 
                       passosConcluidos.includes(index) ? 'text-green-200 dark:text-green-900' : 'text-gray-100 dark:text-gray-700'
                     }`}>
-                      {index + 1}.
+                      {index + 1}
                     </div>
-                    <div className="flex items-start gap-6 pl-12 relative z-10 print:pl-0 print:inline print:text-lg">
+
+                    <div className="flex items-start gap-6 pl-12 relative z-10 print:pl-0 print:block">
                       <div className={`mt-1 flex-shrink-0 transition-all duration-300 print:hidden ${passosConcluidos.includes(index) ? 'text-green-500 scale-110' : 'text-gray-300 dark:text-gray-600 group-hover:text-orange-500'}`}>
                         {passosConcluidos.includes(index) ? <CheckCircle size={32} className="fill-green-100 dark:fill-green-900" /> : <Circle size={32} />}
                       </div>
-                      <p className={`text-xl leading-loose print:inline print:text-base print:leading-relaxed print:text-gray-900 ${ 
+                      <p className={`text-xl leading-loose print:text-lg print:leading-relaxed print:text-black print:font-serif text-justify ${ 
                         passosConcluidos.includes(index) 
                           ? 'text-gray-500 dark:text-gray-500 line-through decoration-gray-300 print:no-underline' 
                           : 'text-gray-800 dark:text-gray-200'
@@ -443,13 +450,13 @@ const DetalhesReceita = () => {
               </div>
               
               {/* Rodapé Apenas para Impressão */}
-              <div className="hidden print:flex justify-between items-end mt-12 pt-4 border-t border-gray-300 text-sm text-gray-500 font-sans">
+              <div className="hidden print:flex justify-between items-end mt-16 pt-4 border-t border-gray-300 text-xs text-gray-400 font-sans">
                 <div>
-                  <p className="font-bold text-gray-800">CookBook App</p>
-                  <p>O teu assistente culinário digital.</p>
+                  <p className="font-bold text-gray-600 uppercase tracking-widest">CookBook App</p>
+                  <p>A tua coleção pessoal de sabores.</p>
                 </div>
                 <div className="text-right">
-                  <p>Receita obtida em {new Date().toLocaleDateString()}</p>
+                  <p>Impresso a {new Date().toLocaleDateString()} • Página 1</p>
                 </div>
               </div>
             </div>
