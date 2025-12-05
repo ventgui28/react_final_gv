@@ -31,16 +31,16 @@ Bem-vindo ao **CookBook**, uma aplicação web moderna, responsiva e interativa 
 ### 👩‍🍳 Gestão Pessoal
 *   **Favoritos (CRUD):** Guarda as tuas receitas preferidas.
 *   **Notas Pessoais:** Adiciona anotações a cada receita favorita (ex: "Usar menos sal da próxima vez").
-*   **Avaliação (Star Rating):** Classifica as tuas receitas de 1 a 5 estrelas.
+*   **Avaliação Interativa:** Classifica as tuas receitas de 1 a 5 estrelas com animações de *hover*.
 *   **Lista de Compras:** Adiciona ingredientes diretamente das receitas para uma lista de compras digital, com verificação de itens comprados.
 *   **Histórico Recente:** Acesso rápido às últimas receitas visualizadas.
 
 ### ⚙️ Ferramentas Úteis
+*   **🖨️ Modo de Impressão Inteligente:** Layout otimizado para papel que remove distrações, muda para tipografia serifada e inclui "checkboxes" para riscar ingredientes fisicamente.
 *   **🧊 "No Meu Frigorífico":** Indica um ingrediente que tens em casa e recebe sugestões de receitas.
 *   **🤖 Chef Bot (IA Simulado):** Um assistente virtual (ChatBot) para ajudar na navegação e dúvidas simples.
-*   **📝 Modo Passo-a-Passo:** Instruções interativas onde podes riscar os passos já concluídos.
-*   **🖨️ Modo Impressão:** Layout otimizado para imprimir receitas ou guardar em PDF sem distrações visuais.
-*   **📱 QR Code:** Gera um código QR para abrir a receita instantaneamente no telemóvel.
+*   **📝 Modo Passo-a-Passo:** Instruções interativas onde podes riscar os passos já concluídos digitalmente.
+*   **📱 QR Code Integrado:** Gera um código QR para abrir a receita instantaneamente no telemóvel.
 
 ### 🎨 Design e Personalização
 *   **🌙 Modo Escuro (Dark Mode):** Interface totalmente adaptada para ambientes com pouca luz.
@@ -106,6 +106,10 @@ A aplicação estará disponível em: `http://localhost:5173`
 src/
 ├── 📂 assets/        # Imagens e recursos estáticos
 ├── 📂 components/    # Componentes reutilizáveis (UI, Layouts)
+│   ├── 📂 detalhes/  # Sub-componentes da página de receita
+│   │   ├── CabecalhoImpressao.jsx
+│   │   ├── CabecalhoReceita.jsx
+│   │   └── ...
 │   ├── BarraNavegacao.jsx
 │   ├── CartaoReceita.jsx
 │   └── ...
