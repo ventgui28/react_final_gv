@@ -11,23 +11,23 @@ const CabecalhoReceita = ({
   processando, 
   aoPartilhar, 
   aoImprimir, 
-  aoMostrarQR,
-  yRange,
-  opacityRange
+  aoMostrarQR
+  // yRange, // Removed
+  // opacityRange // Removed
 }) => {
   return (
     <>
-      {/* Header Image com Parallax (Visível apenas no ecrã) */}
+      {/* Header Image (Visível apenas no ecrã) */}
       <div className="relative h-[500px] lg:h-[600px] overflow-hidden print:hidden">
         <motion.img 
           src={receita.strMealThumb} 
           alt={receita.strMeal} 
           className="w-full h-full object-cover absolute top-0 left-0"
-          style={{ y: yRange }}
+          // style={{ y: yRange }} // Removed
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-8 md:p-16 z-10 pointer-events-none">
-          <motion.div 
-            style={{ opacity: opacityRange }}
+          <div // Changed from motion.div
+            // style={{ opacity: opacityRange }} // Removed
             className="text-white w-full"
           >
             <motion.h1 
@@ -67,7 +67,7 @@ const CabecalhoReceita = ({
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 

@@ -4,7 +4,7 @@ import { obterReceitaPorId } from '../services/api';
 import { adicionarFavorito, removerFavorito, obterFavoritos, atualizarFavorito, adicionarItemLista } from '../services/apiLocal';
 import { ArrowLeft, Loader2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // Removed useScroll, useTransform
 import QRCode from 'react-qr-code';
 import { useShoppingList } from '../context/ShoppingListContext';
 
@@ -28,10 +28,10 @@ const DetalhesReceita = () => {
   const [mostrarQR, setMostrarQR] = useState(false);
   const { carregarItens } = useShoppingList();
 
-  // Parallax Effect
-  const { scrollY } = useScroll();
-  const yRange = useTransform(scrollY, [0, 500], [0, 250]);
-  const opacityRange = useTransform(scrollY, [0, 400], [1, 0]);
+  // Parallax Effect (Removed)
+  // const { scrollY } = useScroll();
+  // const yRange = useTransform(scrollY, [0, 500], [0, 250]);
+  // const opacityRange = useTransform(scrollY, [0, 400], [1, 0]);
 
   useEffect(() => {
     const carregarDetalhes = async () => {
@@ -243,8 +243,7 @@ const DetalhesReceita = () => {
             aoPartilhar={partilharReceita}
             aoImprimir={imprimirReceita}
             aoMostrarQR={setMostrarQR}
-            yRange={yRange}
-            opacityRange={opacityRange}
+            // Removed yRange and opacityRange
           />
 
           <div className="p-8 md:p-16 relative z-20 bg-white dark:bg-gray-800 print:p-0 -mt-16 md:-mt-32 print:mt-0">
