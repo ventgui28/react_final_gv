@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { obterReceitaAleatoria, obterReceitaPorId } from '../services/api';
+import { obterReceitaAleatoria } from '../services/api';
 import { obterFavoritos } from '../services/apiLocal';
-import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, Gift, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChefHat, Heart, Search, ArrowRight, Clock, Utensils, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Inicio = () => {
@@ -11,7 +11,6 @@ const Inicio = () => {
   const [contagemFavoritos, setContagemFavoritos] = useState(0);
   const [carregando, setCarregando] = useState(true);
   const [historico, setHistorico] = useState([]);
-  const [receitasNatal, setReceitasNatal] = useState([]);
   
   // Referência para o container de scroll
   const scrollContainerRef = useRef(null);
@@ -28,11 +27,6 @@ const Inicio = () => {
 
         const historicoGuardado = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
         setHistorico(historicoGuardado);
-
-        const idsNatal = ['52934', '52807', '52787'];
-        const promessasNatal = idsNatal.map(id => obterReceitaPorId(id));
-        const resultadosNatal = await Promise.all(promessasNatal);
-        setReceitasNatal(resultadosNatal.filter(r => r !== null));
 
       } catch (erro) {
         console.error("Erro ao carregar dados da página inicial:", erro);
@@ -101,12 +95,12 @@ const Inicio = () => {
       initial="hidden"
       animate="visible"
     >
-      {/* Hero Section Natalício */}
+      {/* Hero Section Padrão */}
       <motion.section 
         variants={itemVariants}
-        className="bg-gradient-to-br from-red-600 to-red-800 p-12 md:p-20 rounded-3xl shadow-xl text-center border border-red-500/50 relative overflow-hidden"
+        className="bg-gradient-to-br from-orange-500 to-orange-700 p-12 md:p-20 rounded-3xl shadow-xl text-center border border-orange-400/50 relative overflow-hidden"
       >
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
 
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
@@ -114,69 +108,23 @@ const Inicio = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="relative z-10"
         >
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight drop-shadow-md leading-tight">
-            Boas Festas e <br/> <span className="text-yellow-300">Cozinhados Felizes!</span> 🎄
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight drop-shadow-md leading-tight">
+            Descobre o Chef <br/> <span className="text-yellow-300">que há em ti!</span> 👨‍🍳
           </h1>
         </motion.div>
         
-        <p className="relative z-10 text-xl md:text-2xl text-red-50 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
-          Descobre as nossas sugestões especiais para a tua ceia de Natal e surpreende a família com sabores inesquecíveis.
+        <p className="relative z-10 text-xl md:text-2xl text-orange-50 mb-10 max-w-3xl mx-auto leading-relaxed font-medium">
+          Milhares de receitas deliciosas, dicas práticas e inspiração diária para transformares as tuas refeições.
         </p>
         
         <Link 
           to="/pesquisa" 
-          className="btn-primary inline-flex text-lg py-4 px-10 shadow-red-500/20 hover:shadow-red-500/40"
+          className="btn-primary inline-flex text-lg py-4 px-10 shadow-orange-500/20 hover:shadow-orange-500/40 bg-white text-orange-600 hover:bg-gray-50 border-none"
         >
-          <Gift className="mr-3" size={24} />
-          Ver Receitas de Natal
+          <Search className="mr-3" size={24} />
+          Começar a Explorar
         </Link>
       </motion.section>
-
-      {/* Secção Especial de Natal */}
-      {(carregando || receitasNatal.length > 0) && (
-        <motion.section variants={itemVariants}>
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-              <span className="text-3xl mr-3">🎅</span> Ementa da Consoada
-            </h2>
-          </div>
-          
-          {carregando ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="card-glass h-72 animate-pulse">
-                  <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-2xl"></div>
-                  <div className="p-4 space-y-3">
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {receitasNatal.map((receita) => (
-                <Link 
-                  key={receita.idMeal}
-                  to={`/receita/${receita.idMeal}`}
-                  className="group relative h-72 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 card-glass"
-                >
-                  <img 
-                    src={receita.strMealThumb} 
-                    alt={receita.strMeal} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 p-6 w-full">
-                    <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block shadow-sm">Natal</span>
-                    <h3 className="text-white font-bold text-2xl line-clamp-2 leading-tight">{receita.strMeal}</h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </motion.section>
-      )}
 
       {/* Categorias Populares */}
       <motion.section variants={itemVariants}>

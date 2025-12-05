@@ -52,8 +52,6 @@ const BarraNavegacao = () => {
               <div className="bg-orange-600 text-white p-1.5 rounded-lg transform group-hover:rotate-12 transition-transform">
                 <UtensilsCrossed size={24} />
               </div>
-              {/* Gorro de Natal (Opcional: remover após o Natal) */}
-              <span className="absolute -top-3 -right-2 text-xl filter drop-shadow-md animate-bounce" style={{ animationDuration: '2s' }}>🎅</span>
             </div>
             <span className="text-gray-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
               CookBook
