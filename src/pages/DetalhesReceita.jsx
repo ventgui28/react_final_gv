@@ -213,93 +213,95 @@ const DetalhesReceita = () => {
     });
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="max-w-7xl mx-auto space-y-8 print:space-y-0 print:max-w-none print:block print:font-serif print:text-black"
-    >
-      <button 
-        onClick={() => navegar(-1)} 
-        className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-bold print:hidden px-4 py-2 rounded-lg hover:bg-white dark:hover:bg-gray-800 shadow-sm relative z-20"
+    <>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto space-y-8 print:space-y-0 print:max-w-none print:block print:font-serif print:text-black"
       >
-        <ArrowLeft size={20} className="mr-2" />
-        Voltar
-      </button>
+        <button 
+          onClick={() => navegar(-1)} 
+          className="flex items-center text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-bold print:hidden px-4 py-2 rounded-lg hover:bg-white dark:hover:bg-gray-800 shadow-sm relative z-20"
+        >
+          <ArrowLeft size={20} className="mr-2" />
+          Voltar
+        </button>
 
-      <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800 print:shadow-none print:border-none print:bg-transparent print:overflow-visible">
-        
-        <CabecalhoImpressao receita={receita} dificuldade={dificuldade} />
-
-        <CabecalhoReceita 
-          receita={receita}
-          dificuldade={dificuldade}
-          eFavorito={eFavorito}
-          aoFavoritar={lidarComFavorito}
-          aoClassificar={atualizarClassificacao}
-          classificacao={classificacao}
-          processando={processando}
-          aoPartilhar={partilharReceita}
-          aoImprimir={imprimirReceita}
-          aoMostrarQR={setMostrarQR}
-          yRange={yRange}
-          opacityRange={opacityRange}
-        />
-
-        <div className="p-8 md:p-16 relative z-20 bg-white dark:bg-gray-800 print:p-0 -mt-16 md:-mt-32 print:mt-0">
+        <div className="card-glass overflow-hidden relative bg-white dark:bg-gray-800 print:shadow-none print:border-none print:bg-transparent print:overflow-visible">
           
-          <SeccaoVideo urlYoutube={receita.strYoutube} />
+          <CabecalhoImpressao receita={receita} dificuldade={dificuldade} />
 
-          <div className="grid lg:grid-cols-12 gap-16 print:block">
-            <ListaIngredientes 
-              ingredientes={ingredientes} 
-              aoAdicionar={adicionarIngredienteLista} 
-            />
+          <CabecalhoReceita 
+            receita={receita}
+            dificuldade={dificuldade}
+            eFavorito={eFavorito}
+            aoFavoritar={lidarComFavorito}
+            aoClassificar={atualizarClassificacao}
+            classificacao={classificacao}
+            processando={processando}
+            aoPartilhar={partilharReceita}
+            aoImprimir={imprimirReceita}
+            aoMostrarQR={setMostrarQR}
+            yRange={yRange}
+            opacityRange={opacityRange}
+          />
 
-            <ListaInstrucoes 
-              instrucoes={instrucoes} 
-              passosConcluidos={passosConcluidos} 
-              aoAlternar={alternarPasso} 
-            />
+          <div className="p-8 md:p-16 relative z-20 bg-white dark:bg-gray-800 print:p-0 -mt-16 md:-mt-32 print:mt-0">
+            
+            <SeccaoVideo urlYoutube={receita.strYoutube} />
+
+            <div className="grid lg:grid-cols-12 gap-16 print:block">
+              <ListaIngredientes 
+                ingredientes={ingredientes} 
+                aoAdicionar={adicionarIngredienteLista} 
+              />
+
+              <ListaInstrucoes 
+                instrucoes={instrucoes} 
+                passosConcluidos={passosConcluidos} 
+                aoAlternar={alternarPasso} 
+              />
+            </div>
           </div>
         </div>
+      </motion.div>
 
-        {/* Modal QR Code (Mantido aqui pois é um estado global da página) */}
-        <AnimatePresence>
-          {mostrarQR && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm print:hidden">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative"
+      {/* Modal QR Code (Movido para fora do container com transform para garantir o posicionamento fixed correto) */}
+      <AnimatePresence>
+        {mostrarQR && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm print:hidden">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative"
+            >
+              <button 
+                onClick={() => setMostrarQR(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
               >
-                <button 
-                  onClick={() => setMostrarQR(false)}
-                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                >
-                  <X size={24} />
-                </button>
-                
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Ler no Telemóvel</h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-6">Aponta a câmara para abrir esta receita.</p>
-                
-                <div className="bg-white p-4 rounded-xl inline-block mx-auto shadow-inner border border-gray-100">
-                  <QRCode value={window.location.href} size={200} />
-                </div>
-                
-                <button 
-                  onClick={() => setMostrarQR(false)}
-                  className="mt-8 w-full btn-primary"
-                >
-                  Fechar
-                </button>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+                <X size={24} />
+              </button>
+              
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Ler no Telemóvel</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">Aponta a câmara para abrir esta receita.</p>
+              
+              <div className="bg-white p-4 rounded-xl inline-block mx-auto shadow-inner border border-gray-100">
+                <QRCode value={window.location.href} size={200} />
+              </div>
+              
+              <button 
+                onClick={() => setMostrarQR(false)}
+                className="mt-8 w-full btn-primary"
+              >
+                Fechar
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
