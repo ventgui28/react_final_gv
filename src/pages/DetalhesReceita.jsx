@@ -391,8 +391,8 @@ const DetalhesReceita = () => {
                         />
                       </div>
                       <div className="flex-grow">
-                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-sm">{item.ingrediente}</span>
-                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-xs">{item.medida}</span>
+                        <span className="font-bold block text-gray-900 dark:text-white text-lg leading-tight print:text-base">{item.ingrediente}</span>
+                        <span className="text-orange-600 dark:text-orange-400 font-medium print:text-sm">{item.medida}</span>
                       </div>
                       <button 
                         onClick={() => adicionarIngredienteLista(item.ingrediente, item.medida, item.imagem)}
