@@ -1,10 +1,13 @@
 import { useTheme } from '../context/ThemeContext';
-import { Trash2, Moon, Sun, Info, Github, Globe, Settings } from 'lucide-react';
+import { Trash2, Moon, Sun, Info, Github, Globe, Settings, Download, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { obterListaCompras, removerItemLista } from '../services/apiLocal';
+import { obterListaCompras, removerItemLista, obterFavoritos, adicionarFavorito, removerFavorito, adicionarItemLista } from '../services/apiLocal';
+import { useRef, useState } from 'react';
 
 const Definicoes = () => {
   const { temaEscuro, alternarTema } = useTheme();
+  const fileInputRef = useRef(null);
+  const [importando, setImportando] = useState(false);
 
   const limparHistorico = () => {
     if (window.confirm("Tens a certeza? Isto vai apagar o histórico de receitas vistas.")) {
@@ -22,6 +25,97 @@ const Definicoes = () => {
       } catch (erro) {
         toast.error("Erro ao limpar lista.");
       }
+    }
+  };
+
+  const exportarDados = async () => {
+    const loadingToast = toast.loading('A preparar backup...');
+    try {
+      const favoritos = await obterFavoritos();
+      const listaCompras = await obterListaCompras();
+      const historico = JSON.parse(localStorage.getItem('historicoReceitas') || '[]');
+
+      const dadosBackup = {
+        dataExportacao: new Date().toISOString(),
+        favoritos,
+        listaCompras,
+        historico
+      };
+
+      const blob = new Blob([JSON.stringify(dadosBackup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cookbook-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('Dados exportados com sucesso!', { id: loadingToast });
+    } catch (erro) {
+      console.error(erro);
+      toast.error('Erro ao exportar dados.', { id: loadingToast });
+    }
+  };
+
+  const importarDados = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (window.confirm("ATENÇÃO: Importar dados irá SUBSTITUIR os teus dados atuais (favoritos e lista de compras). Queres continuar?")) {
+      setImportando(true);
+      const loadingToast = toast.loading('A importar dados...');
+      
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const dados = JSON.parse(e.target.result);
+          
+          if (!dados.favoritos || !dados.listaCompras) {
+            throw new Error("Formato de ficheiro inválido.");
+          }
+
+          // 1. Limpar dados atuais
+          const favsAtuais = await obterFavoritos();
+          await Promise.all(favsAtuais.map(f => removerFavorito(f.id)));
+          
+          const listaAtual = await obterListaCompras();
+          await Promise.all(listaAtual.map(i => removerItemLista(i.id)));
+
+          // 2. Importar novos dados
+          // Usamos for...of para garantir ordem e evitar sobrecarga de pedidos simultâneos excessivos
+          for (const fav of dados.favoritos) {
+            // Removemos o ID para o json-server gerar um novo e evitar conflitos
+            const { id, ...favSemId } = fav;
+            await adicionarFavorito(favSemId);
+          }
+
+          for (const item of dados.listaCompras) {
+            const { id, ...itemSemId } = item;
+            await adicionarItemLista(itemSemId);
+          }
+
+          // 3. Restaurar histórico
+          if (dados.historico) {
+            localStorage.setItem('historicoReceitas', JSON.stringify(dados.historico));
+          }
+
+          toast.success('Backup restaurado com sucesso!', { id: loadingToast });
+          // Recarregar a página para atualizar estados globais se necessário
+          setTimeout(() => window.location.reload(), 1500);
+
+        } catch (erro) {
+          console.error(erro);
+          toast.error('Erro ao importar. O ficheiro pode estar corrompido.', { id: loadingToast });
+        } finally {
+          setImportando(false);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+      };
+      reader.readAsText(file);
+    } else {
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -79,6 +173,40 @@ const Definicoes = () => {
         </div>
       </section>
 
+      {/* Backup e Restauro */}
+      <section className="card-glass p-8">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
+          <Download size={24} /> Backup e Restauro
+        </h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          <button 
+            onClick={exportarDados}
+            className="flex flex-col items-center justify-center p-6 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-100 dark:border-blue-800 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all group"
+          >
+            <Download size={32} className="text-blue-600 dark:text-blue-400 mb-2 group-hover:scale-110 transition-transform" />
+            <span className="font-bold text-gray-800 dark:text-gray-200">Exportar Dados</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">Guardar favoritos e listas num ficheiro JSON</span>
+          </button>
+
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importando}
+            className="flex flex-col items-center justify-center p-6 bg-green-50 dark:bg-green-900/20 border-2 border-green-100 dark:border-green-800 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/30 transition-all group disabled:opacity-50"
+          >
+            <Upload size={32} className="text-green-600 dark:text-green-400 mb-2 group-hover:scale-110 transition-transform" />
+            <span className="font-bold text-gray-800 dark:text-gray-200">Importar Dados</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">Restaurar backup de um ficheiro</span>
+          </button>
+          <input 
+            type="file" 
+            ref={fileInputRef}
+            onChange={importarDados}
+            accept=".json"
+            className="hidden"
+          />
+        </div>
+      </section>
+
       {/* Sobre */}
       <section className="card-glass p-8 text-center">
         <div className="bg-orange-100 dark:bg-orange-900/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-600 dark:text-orange-400 shadow-md">
@@ -88,9 +216,6 @@ const Definicoes = () => {
         <p className="text-gray-500 dark:text-gray-400 text-base mb-6">Desenvolvido com ❤️ e React.</p>
         
         <div className="flex justify-center gap-6">
-          <a href="https://github.com/ventgui28/react_final_gv" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium">
-            <Github size={20} /> Repositório GitHub
-          </a>
           {/* Link para o Website (placeholder) */}
           <a href="#" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium">
             <Globe size={20} /> Website Oficial
