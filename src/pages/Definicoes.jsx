@@ -1,5 +1,5 @@
 import { useTheme } from '../context/ThemeContext';
-import { Trash2, Moon, Sun, Info, Github, Globe, Settings, Download, Upload } from 'lucide-react';
+import { Trash2, Moon, Sun, Info, Github, Globe, Settings, Download, Upload, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { obterListaCompras, removerItemLista, obterFavoritos, adicionarFavorito, removerFavorito, adicionarItemLista } from '../services/apiLocal';
 import { useRef, useState } from 'react';
@@ -24,6 +24,30 @@ const Definicoes = () => {
         toast.success("Lista de compras limpa!");
       } catch (erro) {
         toast.error("Erro ao limpar lista.");
+      }
+    }
+  };
+
+  const resetTotal = async () => {
+    if (window.confirm("PERIGO: Esta ação é irreversível. Queres apagar TODOS os dados (Favoritos, Listas, Histórico)?")) {
+      const toastId = toast.loading("A apagar tudo...");
+      try {
+        // 1. LocalStorage
+        localStorage.removeItem('historicoReceitas');
+
+        // 2. Favoritos
+        const favoritos = await obterFavoritos();
+        await Promise.all(favoritos.map(f => removerFavorito(f.id)));
+
+        // 3. Lista Compras
+        const lista = await obterListaCompras();
+        await Promise.all(lista.map(i => removerItemLista(i.id)));
+
+        toast.success("Aplicação restaurada!", { id: toastId });
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (e) {
+        console.error(e);
+        toast.error("Erro ao apagar dados.", { id: toastId });
       }
     }
   };
@@ -204,6 +228,25 @@ const Definicoes = () => {
             accept=".json"
             className="hidden"
           />
+        </div>
+      </section>
+
+      {/* Zona de Perigo */}
+      <section className="card-glass p-8 border-2 border-red-100 dark:border-red-900/30">
+        <h2 className="text-2xl font-bold text-red-600 dark:text-red-500 mb-6 flex items-center gap-3">
+          <AlertTriangle size={24} /> Zona de Perigo
+        </h2>
+        <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/30">
+          <div>
+            <p className="font-bold text-red-700 dark:text-red-400 text-lg">Reset de Fábrica</p>
+            <p className="text-sm text-red-600/80 dark:text-red-400/80">Apaga TODOS os dados (Favoritos, Listas, Histórico).</p>
+          </div>
+          <button 
+            onClick={resetTotal} 
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg shadow-red-500/30 hover:shadow-red-500/50 transition-all active:scale-95"
+          >
+            Apagar Tudo
+          </button>
         </div>
       </section>
 
