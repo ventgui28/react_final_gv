@@ -256,7 +256,7 @@ const Inicio = () => {
 
       {/* Visto Recentemente */}
       {Array.isArray(historico) && historico.length > 0 && (
-        <motion.section variants={itemVariants} className="relative">
+        <section className="relative animate-fade-in-up">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <Clock className="text-orange-600" /> Continuar a ver
