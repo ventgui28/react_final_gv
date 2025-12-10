@@ -256,7 +256,12 @@ const Inicio = () => {
 
       {/* Visto Recentemente */}
       {Array.isArray(historico) && historico.length > 0 && (
-        <section className="relative animate-fade-in-up">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.5 }} 
+          className="relative"
+        >
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <Clock className="text-orange-600" /> Continuar a ver
