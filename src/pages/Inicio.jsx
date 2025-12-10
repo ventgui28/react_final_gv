@@ -26,7 +26,10 @@ const Inicio = () => {
         setContagemFavoritos(favoritos.length);
 
         const historicoGuardado = JSON.parse(localStorage.getItem('historicoReceitas')) || [];
-        setHistorico(historicoGuardado);
+        const historicoFiltrado = Array.isArray(historicoGuardado) 
+          ? historicoGuardado.filter(item => item && item.id && item.nome && item.imagem)
+          : [];
+        setHistorico(historicoFiltrado);
 
       } catch (erro) {
         console.error("Erro ao carregar dados da página inicial:", erro);
@@ -252,7 +255,7 @@ const Inicio = () => {
       </motion.section>
 
       {/* Visto Recentemente */}
-      {historico.length > 0 && (
+      {Array.isArray(historico) && historico.length > 0 && (
         <motion.section variants={itemVariants} className="relative">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
