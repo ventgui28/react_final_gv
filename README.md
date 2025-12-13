@@ -69,20 +69,14 @@ Para o projeto funcionar na totalidade (com persistência de dados), precisas de
 
 ### Pré-requisitos
 *   [Node.js](https://nodejs.org/) (v18+)
-*   [Git](https://git-scm.com/)
 
-### 1. Clonar o Projeto
-```bash
-git clone https://github.com/ventgui28/react_final_gv.git
-cd react_final_gv
-```
-
-### 2. Instalar Dependências
+### 1. Instalar Dependências
+No diretório do projeto, abre um terminal e executa:
 ```bash
 npm install
 ```
 
-### 3. Iniciar o Backend (JSON Server)
+### 2. Iniciar o Backend (JSON Server)
 Este comando inicia a base de dados local na porta `3001`. **Mantém este terminal aberto.**
 ```bash
 npx json-server --watch db.json --port 3001
