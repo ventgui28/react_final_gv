@@ -32,6 +32,7 @@ Bem-vindo ao **CookBook**, uma aplicação web moderna, responsiva e interativa 
 *   **Avaliação Interativa:** Sistema de classificação de 5 estrelas com animações de *hover*.
 *   **Lista de Compras:** Adiciona ingredientes diretamente das receitas para uma lista digital, com opção de marcar como comprado.
 *   **Backup e Restauro:** Exporta todos os teus dados (favoritos, listas, histórico) para um ficheiro JSON e importa-os noutro dispositivo.
+*   **Reset de Fábrica:** Apaga todos os dados guardados localmente (favoritos, listas, histórico) com um clique.
 
 ### ⚙️ Utilitários de Cozinha
 *   **🖨️ Modo de Impressão Inteligente:** Layout limpo e económico (sem imagens de fundo), com tipografia serifada e "checkboxes" reais para riscar ingredientes no papel.
@@ -87,7 +88,7 @@ Este comando inicia a base de dados local na porta `3001`. **Mantém este termin
 npx json-server --watch db.json --port 3001
 ```
 
-### 4. Iniciar o Frontend (Aplicação)
+### 4. Iniciar o Frontend (Aplicacão)
 Abre um **novo terminal** e executa:
 ```bash
 npm run dev
