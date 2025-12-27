@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import LayoutPrincipal from './components/LayoutPrincipal';
 import Inicio from './pages/Inicio';
@@ -104,7 +104,7 @@ const PageTransition = ({ children }) => {
 
 function App() {
   return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }} basename={import.meta.env.BASE_URL}>
+    <Router>
       <AnimatedRoutes />
     </Router>
   );
